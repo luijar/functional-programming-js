@@ -278,14 +278,14 @@ QUnit.test("CH02 - Translate a point", function (assert) {
 QUnit.test("CH02 - List of Persons", function (assert) {
 
 
-    var p1 = new Person().setFirstname('Alonzo').setAge(30).setLastname('Church');
-    var p2 = new Person().setFirstname('Haskell').setAge(80).setLastname('Curry');
-    var p3 = new Person().setFirstname('Guy').setAge(62).setLastname('Steele');
+    var p1 = new Person().setFirstname('Alonzo').setBirth(30).setLastname('Church');
+    var p2 = new Person().setFirstname('Haskell').setBirth(80).setLastname('Curry');
+    var p3 = new Person().setFirstname('Guy').setBirth(62).setLastname('Steele');
 
     var arr = [p3, p2, p1];
 
     arr.sort(function (p1, p2) {
-        return p1.getAge() - p2.getAge();
+        return p1.getBirth() - p2.getBirth();
     });
 
     assert.equal(arr[0].getFirstname(), 'Alonzo');
@@ -340,9 +340,9 @@ QUnit.test("CH02 - Block Scope Hoisting 2", function (assert) {
 
 QUnit.test("CH02 - Infamous loop issue", function (assert) {
 
-    var p1 = new Person().setFirstname('Alonzo').setAge(30).setLastname('Church');
-    var p2 = new Person().setFirstname('Haskell').setAge(80).setLastname('Curry');
-    var p3 = new Person().setFirstname('Guy').setAge(62).setLastname('Steele');
+    var p1 = new Person().setFirstname('Alonzo').setBirth(30).setLastname('Church');
+    var p2 = new Person().setFirstname('Haskell').setBirth(80).setLastname('Curry');
+    var p3 = new Person().setFirstname('Guy').setBirth(62).setLastname('Steele');
 
     var people = [p1, p2, p3];
     var ids = [];
@@ -362,9 +362,9 @@ QUnit.test("CH02 - Infamous loop issue", function (assert) {
 
 QUnit.test("CH02 - Infamous loop issue solved", function (assert) {
 
-    var p1 = new Person().setFirstname('Alonzo').setAge(30).setLastname('Church');
-    var p2 = new Person().setFirstname('Haskell').setAge(80).setLastname('Curry');
-    var p3 = new Person().setFirstname('Guy').setAge(62).setLastname('Steele');
+    var p1 = new Person().setFirstname('Alonzo').setBirth(30).setLastname('Church');
+    var p2 = new Person().setFirstname('Haskell').setBirth(80).setLastname('Curry');
+    var p3 = new Person().setFirstname('Guy').setBirth(62).setLastname('Steele');
 
     var people = [p1, p2, p3];
     var ids = [];
@@ -386,9 +386,9 @@ QUnit.test("CH02 - Infamous loop issue solved", function (assert) {
 
 QUnit.test("CH02 - Infamous loop issue solved 3", function (assert) {
 
-    var p1 = new Person().setFirstname('Alonzo').setAge(30).setLastname('Church');
-    var p2 = new Person().setFirstname('Haskell').setAge(80).setLastname('Curry');
-    var p3 = new Person().setFirstname('Guy').setAge(62).setLastname('Steele');
+    var p1 = new Person().setFirstname('Alonzo').setBirth(30).setLastname('Church');
+    var p2 = new Person().setFirstname('Haskell').setBirth(80).setLastname('Curry');
+    var p3 = new Person().setFirstname('Guy').setBirth(62).setLastname('Steele');
 
     var people = [p1, p2, p3];
 
@@ -410,9 +410,9 @@ QUnit.test("CH02 - Infamous loop issue solved 3", function (assert) {
 
 QUnit.test("CH02 - Infamous loop issue solved 4", function (assert) {
 
-    var p1 = new Person().setFirstname('Alonzo').setAge(30).setLastname('Church').setAddress('Florida', 'US');
-    var p2 = new Person().setFirstname('Haskell').setAge(80).setLastname('Curry').setAddress('Florida', 'US');
-    var p3 = new Person().setFirstname('Guy').setAge(62).setLastname('Steele').setAddress('Florida', 'US');
+    var p1 = new Person().setFirstname('Alonzo').setBirth(30).setLastname('Church').setAddress('Florida', 'US');
+    var p2 = new Person().setFirstname('Haskell').setBirth(80).setLastname('Curry').setAddress('Florida', 'US');
+    var p3 = new Person().setFirstname('Guy').setBirth(62).setLastname('Steele').setAddress('Florida', 'US');
 
     var people = [p1, p2, p3];
 

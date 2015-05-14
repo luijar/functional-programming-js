@@ -45,7 +45,7 @@ var Address = function (st, city, zip, state, country) {
 };
 
 // A person object (has Address)
-var Person = function (first, last, gender, age) {
+var Person = function (first, last, gender, birth) {
     // private instance variables
     this.ssn = '';
     this.firstname = first;
@@ -53,7 +53,7 @@ var Person = function (first, last, gender, age) {
     this.gender = gender;
     this.friends = [];
     this.address = null;
-    this.age = age || 0;
+    this.birth = birth || 0;
 
     // Exposed (privileged) methods
     this.toString = function () {
@@ -70,13 +70,13 @@ Person.prototype.getFirstname = function () {
     return this.firstname;
 };
 Person.prototype.setFirstname = function (fname) {
-    return new Person(fname, this.lastname, this.gender, this.age);
+    return new Person(fname, this.lastname, this.gender, this.birth);
 };
 Person.prototype.getLastName = function () {
     return this.lastname;
 };
 Person.prototype.setLastname = function (lname) {
-    return new Person(this.firstname, lname, this.gender, this.age);
+    return new Person(this.firstname, lname, this.gender, this.birth);
 };
 Person.prototype.getFullName = function () {
     return [this.firstname, this.lastname].join(" ");
@@ -85,7 +85,7 @@ Person.prototype.getAddress = function () {
     return this.address;
 };
 Person.prototype.setAddress = function (city, country) {
-    var p = new Person(this.firstname, this.lastname, this.gender, this.age);
+    var p = new Person(this.firstname, this.lastname, this.gender, this.birth);
     p.address = new Address(null, city, null, null, country);
     return p;
 };
@@ -104,17 +104,17 @@ Person.prototype.addFriend = function (f) {
 Person.prototype.getFriendsBy = function (pred) {
     return this.friends.filter(pred, this);
 };
-Person.prototype.getAge = function (pred) {
-    return this.age;
+Person.prototype.getBirth = function () {
+    return this.birth;
 };
-Person.prototype.setAge = function (age) {
-    return new Person(this.firstname, this.lastname, this.gender, age);
+Person.prototype.setBirth = function (b) {
+    return new Person(this.firstname, this.lastname, this.gender, b);
 };
 Person.prototype.getGender = function () {
     return this.gender;
 };
 Person.prototype.setGender = function (g) {
-    return new Person(this.firstname, this.lastname, g, this.age);
+    return new Person(this.firstname, this.lastname, g, this.birth);
 };
 
 function Student(first, last, school) {
@@ -436,3 +436,15 @@ var FunctionLogger = (function () {
         }
     }
 })();
+
+var Tuple = function() {
+    var args = Array.prototype.slice.call(arguments, 0);
+    args.map(function(val, index) {
+        this['_' + (++index)] = val;
+    }, this);
+};
+Tuple.prototype.toString = function() {
+    return '(' + Object.keys(this).map(function(k) {
+            return this[k];
+            }, this).join(', ') + ')';
+};

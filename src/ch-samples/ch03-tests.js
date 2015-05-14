@@ -53,7 +53,7 @@ QUnit.test("CH03 - Polymorphic functions", function (assert) {
         return p.getNationality() === 'American';
     };
 
-    var result = _([s1, p1, s2, p2]).filter(isAmerican).map(getFullName).join(' and ');
+    var result = Lazy([s1, p1, s2, p2]).filter(isAmerican).map(getFullName).join(' and ');
     assert.equal(result, 'Alonzo Church and Haskell Curry');
 });
 
@@ -172,9 +172,9 @@ QUnit.test("CH03 - Map 1", function (assert) {
 
 QUnit.test("CH03 - Method Chaining 1", function (assert) {
 
-    var person = new Person().setFirstname('Luis').setLastname('Atencio').setGender('M').setAge(31);
+    var person = new Person().setFirstname('Luis').setLastname('Atencio').setGender('M').setBirth(31);
     assert.equal(person.getFullName(), 'Luis Atencio');
-    assert.equal(person.getAge(), 31);
+    assert.equal(person.getBirth(), 31);
 });
 
 QUnit.test("CH03 - Map 2", function (assert) {
@@ -285,7 +285,7 @@ QUnit.test("CH03 - The Unix Philosophy", function (assert) {
         return acc;
     };
 
-    var result = _(words).map(tr).reduce(unique, []).sort();
+    var result = Lazy(words).map(tr).reduce(unique, []).sort();
 
     assert.equal(result[0], 'curry');
     assert.equal(result[1], 'functional');
@@ -347,7 +347,7 @@ QUnit.test("CH03 - Some", function (assert) {
     }
 
     var validate = function (args) {
-        return !(_(args).some(isNotValid));
+        return !(Lazy(args).some(isNotValid));
     };
 
     assert.ok(!validate(['string', 0, null, undefined]));
@@ -362,7 +362,7 @@ QUnit.test("CH03 - Every", function (assert) {
     }
 
     var validate = function (args) {
-        return _(args).every(isValid);
+        return Lazy(args).every(isValid);
     };
 
     assert.ok(!validate(['string', 0, null]));
@@ -685,7 +685,7 @@ QUnit.test("CH03 - Chain 1", function (assert) {
         return acc;
     };
 
-    result = _(names).map(_.startCase).reduce(unique, []).sort();
+    result = Lazy(names).map(_.startCase).reduce(unique, []).sort();
     assert.equal(result[0], 'Alonzo Church');
     assert.equal(result[1], 'Haskell Curry');
 
