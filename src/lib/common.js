@@ -437,14 +437,47 @@ var FunctionLogger = (function () {
     }
 })();
 
-var Tuple = function() {
-    var args = Array.prototype.slice.call(arguments, 0);
-    args.map(function(val, index) {
-        this['_' + (++index)] = val;
-    }, this);
-};
-Tuple.prototype.toString = function() {
-    return '(' + Object.keys(this).map(function(k) {
-            return this[k];
+var Tuple = function( /* types */ ) {
+    var prototype = Array.prototype.slice.call(arguments, 0);
+
+    var _T =  function( /* values */ ) {
+
+        var values = Array.prototype.slice.call(arguments, 0);
+
+        if(values.length !== prototype.length) {
+            throw new TypeError('Tuple arity does not math its prototype');
+        }
+
+        values.map(function(val, index) {
+            this['_' + (index + 1)] = typeOf(prototype[index])(val);
+        }, this);
+        Object.freeze(this);
+    };
+
+    _T.prototype.toString = function() {
+        return '(' + Object.keys(this).map(function(k) {
+                return this[k];
             }, this).join(', ') + ')';
+    };
+    return _T;
 };
+
+
+
+// Type Checks (curry it)
+var typeOf = function(type) {
+    return function(t) {
+        if(typeof t === type) {
+            return t;
+        }
+        else {
+            throw new TypeError('Type mismatch. Expected [' + type + '] but found [' + typeof t + ']');
+        }
+    }
+};
+
+function log(str) {
+    if(console.log) {
+        console.log(str);
+    }
+}
