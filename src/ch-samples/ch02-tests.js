@@ -190,7 +190,7 @@ QUnit.test("CH02 - Closure example 2 - free vars", function (assert) {
         function student(first, last) {
             var s = new Student(first, last, school);
             s.setMajor(major);
-            s.setId(count++);
+            s.setSsn(++count);
             return s;
         }
         var major = 'Mathematics';
@@ -200,8 +200,7 @@ QUnit.test("CH02 - Closure example 2 - free vars", function (assert) {
     var princetonStudent = makeStudent('Princeton');
     var alonzoc = princetonStudent('Alonzo', 'Church');
     var stephenk = princetonStudent('Stephen', 'Kleene');
-    assert.equal(alonzoc.getId(), 0);
-    assert.equal(stephenk.getId(), 1);
+    assert.equal(alonzoc.getSsn(), 0);
 });
 
 

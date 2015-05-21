@@ -43,6 +43,19 @@ QUnit.test("CH04 - Tuple 2", function (assert) {
     }
 });
 
+QUnit.test("CH04 - Tuple 3 with Error", function (assert) {
+
+    var Pair = Tuple('string', 'string');
+
+    try {
+        new Pair(null, 'Barkley');
+        assert.fail('Error in test!');
+    }
+    catch(e) {
+        assert.ok(e instanceof ReferenceError);
+    }
+});
+
 QUnit.test("CH04 - Compose 1", function (assert) {
 
     var trim = function (str) {
@@ -72,4 +85,70 @@ QUnit.test("CH04 - Compose 1", function (assert) {
 });
 
 
+QUnit.test("CH04 - Curry 1", function (assert) {
 
+   function curry2(fn) {
+        return function(secondArg) {
+            return function(firstArg) {
+                return fn(firstArg, secondArg);
+            };
+        };
+    }
+
+    var parseHex = curry2(parseInt)(16);
+    assert.equal(parseHex('A'), 10);
+});
+
+QUnit.test("CH04 - Curry 1 Right", function (assert) {
+
+    function curry2(fn) {
+        return function(firstArg) {
+            return function(secondArg) {
+                return fn(firstArg, secondArg);
+            };
+        };
+    }
+
+    var toBase = curry2(parseInt)('111');
+    assert.equal(toBase(2), 7);
+    assert.equal(toBase(10), 111);
+});
+
+QUnit.test("CH04 - Curry Function Templates", function (assert) {
+
+    var student = _.curry(function (school, lname, fname) {
+        return new Student(fname, lname, school);
+    });
+
+    var princeton = student('Princeton');
+    var church = princeton('Church', 'Alonzo');
+    var turing = princeton('Turing', 'Alan');
+    assert.equal(church.getFullName(), 'Alonzo Church');
+    assert.equal(turing.getFullName(), 'Alan Turing');
+    assert.equal(church.getSchool(), 'Princeton');
+
+});
+
+QUnit.test("CH04 - Curry Function Templates Logger", function (assert) {
+
+    var logger = _.curry(function (appender, layout, name, level, message) {
+        var appenders = {
+            'alert': new Log4js.JSAlertAppender(),
+            'console': new Log4js.BrowserConsoleAppender()
+        };
+        var layouts = {
+            'basic': new Log4js.BasicLayout(),
+            'json': new Log4js.JSONLayout(),
+            'xml' : new Log4js.XMLLayout()
+        };
+        var appender = appenders[appender];
+        appender.setLayout(layouts[layout]);
+        var logger = new Log4js.getLogger(name);
+        logger.addAppender(appender);
+        logger.log(level, message, null);
+    });
+
+    var log = logger('alert', 'json', 'FJS');
+    log('ERROR', 'Error condition detected!!');
+    assert.ok(true);
+});

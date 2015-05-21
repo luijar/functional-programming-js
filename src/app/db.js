@@ -49,6 +49,33 @@ function fetchStudent(ssn, callback) {
 }
 
 // Fetch Student after DB has been set up
-//setInterval(function() {
-//    fetchStudent(1);
-//}, 2000);
+var int = setInterval(function() {
+    saveStudent(normalizeObj(new Student('Luis', 'Atencio', 'Princeton', '666-66-6666')));
+}, 2000);
+
+function saveStudent(student) {
+
+    var transaction = db.transaction([OBJ_STORE], 'readwrite');
+    var objectStore = transaction.objectStore(OBJ_STORE);
+    var request = objectStore.add(student);
+    request.onerror = function(event) {
+        log('Student save error' + this.error);
+    };
+    request.onsuccess = function(event) {
+        log('Student saved sucessfully');
+    };
+    clearInterval(int);
+}
+
+function normalizeObj(student) {
+    delete student.friends;
+    delete student.address;
+    return JSON.parse(JSON.stringify(student));
+
+    //return {ssn:student.getSsn(), firstname:student.getFirstname(), lastname: student.getLastName()};
+    //return student;
+}
+
+
+
+

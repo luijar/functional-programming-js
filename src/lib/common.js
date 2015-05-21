@@ -47,7 +47,7 @@ var Address = function (st, city, zip, state, country) {
 // A person object (has Address)
 var Person = function (first, last, gender, birth) {
     // private instance variables
-    this.ssn = '';
+    this.ssn = 0;
     this.firstname = first;
     this.lastname = last;
     this.gender = gender;
@@ -58,13 +58,18 @@ var Person = function (first, last, gender, birth) {
     // Exposed (privileged) methods
     this.toString = function () {
         return 'Person [firstname: ' + this.firstname + '| lastname: ' + this.lastname +
-            '| gender: ' + this.gender + '| address: ' + this.getAddress() + '| friends: ' + this.friends.length + ']';
+            '| gender: ' + this.gender + '| address: ' + this.address + '| friends: ' + this.friends.length + ']';
     };
 };
 
 // Public methods
 Person.prototype.getSsn = function () {
     return this.ssn;
+};
+Person.prototype.setSsn = function(ssn) {
+    var p = new Person(this.firstname, this.lastname, this.gender, this.birth);
+    p.ssn = ssn;
+    return p;
 };
 Person.prototype.getFirstname = function () {
     return this.firstname;
@@ -121,7 +126,6 @@ function Student(first, last, school) {
     Person.call(this, first, last);
     this.school = school;
     this.major = 'Undeclared';
-    this.id = 0;
 }
 Student.prototype = Object.create(Person.prototype);
 Student.prototype.constructor = Student;
@@ -133,9 +137,6 @@ Student.prototype.setMajor = function (m) {
 };
 Student.prototype.getMajor = function () {
   return this.major;
-};
-Student.prototype.setId = function (id) {
-    return this.id = id;
 };
 Student.prototype.getId = function () {
     return this.id;
@@ -444,10 +445,17 @@ var Tuple = function( /* types */ ) {
 
         var values = Array.prototype.slice.call(arguments, 0);
 
+        // Check nulls
+        if(values.some(function(val){ return val === null || val === undefined})) {
+            throw new ReferenceError('Tuples may not have any null values');
+        }
+
+        // Check arity
         if(values.length !== prototype.length) {
             throw new TypeError('Tuple arity does not math its prototype');
         }
 
+        // Check types
         values.map(function(val, index) {
             this['_' + (index + 1)] = typeOf(prototype[index])(val);
         }, this);
@@ -461,7 +469,6 @@ var Tuple = function( /* types */ ) {
     };
     return _T;
 };
-
 
 
 // Type Checks (curry it)
