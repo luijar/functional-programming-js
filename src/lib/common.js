@@ -474,11 +474,12 @@ var Tuple = function( /* types */ ) {
 // Type Checks (curry it)
 var typeOf = function(type) {
     return function(t) {
-        if(typeof t === type) {
+        var _type =({}).toString.call(t).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
+        if(_type === type) {
             return t;
         }
         else {
-            throw new TypeError('Type mismatch. Expected [' + type + '] but found [' + typeof t + ']');
+            throw new TypeError('Type mismatch. Expected [' + type + '] but found [' + _type + ']');
         }
     }
 };

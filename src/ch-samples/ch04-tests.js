@@ -148,7 +148,59 @@ QUnit.test("CH04 - Curry Function Templates Logger", function (assert) {
         logger.log(level, message, null);
     });
 
-    var log = logger('alert', 'json', 'FJS');
+    var log = logger('console', 'json', 'FJS');
     log('ERROR', 'Error condition detected!!');
     assert.ok(true);
+});
+
+
+QUnit.test("CH04 - Curry Function Templates Logger", function (assert) {
+
+    // Mock payment service
+    var PaymentService = function () {
+        return {
+            submit: function (money) {
+                console.log('Paid in full: ' + money);
+                return money;
+            }
+        }
+    };
+
+    function getCurrentTaxRateFor(addr) {
+        if(addr.getCity() === 'New Jersey') {
+            return .07;
+        }
+        return .06;
+    }
+
+    var processPayment = _.curry(function (service, taxRate, currency, amount) {
+        var total = amount + (taxRate * amount);
+        var Money = Tuple('number', 'string');
+        return service.submit(new Money(total, currency));
+    });
+
+    function makePayment(student, amount) {
+
+        var payment = processPayment(new PaymentService());
+
+        var taxRate = getCurrentTaxRateFor(student.getAddress());
+        payment = payment(taxRate);
+
+        if(student.getAddress().getCountry() === 'USA') {
+            var pay = payment('USD');
+        }
+        else {
+            pay = payment('Other');
+        }
+
+        return pay(amount);
+    }
+
+
+    var student = new Student('Alonzo', 'Church', 'Princeton')
+        .setAddress('New Jersey', 'USA');
+
+    var result = makePayment(student, 100);
+    assert.equal(result._1, 107);
+    assert.equal(result._2, 'USD');
 });
