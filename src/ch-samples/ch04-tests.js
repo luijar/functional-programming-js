@@ -101,14 +101,6 @@ QUnit.test("CH04 - Curry 1", function (assert) {
 
 QUnit.test("CH04 - Curry 1 Right", function (assert) {
 
-    function curry2(fn) {
-        return function(firstArg) {
-            return function(secondArg) {
-                return fn(firstArg, secondArg);
-            };
-        };
-    }
-
     var toBase = curry2(parseInt)('111');
     assert.equal(toBase(2), 7);
     assert.equal(toBase(10), 111);
@@ -131,30 +123,13 @@ QUnit.test("CH04 - Curry Function Templates", function (assert) {
 
 QUnit.test("CH04 - Curry Function Templates Logger", function (assert) {
 
-    var logger = _.curry(function (appender, layout, name, level, message) {
-        var appenders = {
-            'alert': new Log4js.JSAlertAppender(),
-            'console': new Log4js.BrowserConsoleAppender()
-        };
-        var layouts = {
-            'basic': new Log4js.BasicLayout(),
-            'json': new Log4js.JSONLayout(),
-            'xml' : new Log4js.XMLLayout()
-        };
-        var appender = appenders[appender];
-        appender.setLayout(layouts[layout]);
-        var logger = new Log4js.getLogger(name);
-        logger.addAppender(appender);
-        logger.log(level, message, null);
-    });
-
-    var log = logger('console', 'json', 'FJS');
+    var log = _.curry(logger)('console', 'json', 'FJS Curry');
     log('ERROR', 'Error condition detected!!');
     assert.ok(true);
 });
 
 
-QUnit.test("CH04 - Curry Function Templates Logger", function (assert) {
+QUnit.test("CH04 - Curry Function Builder", function (assert) {
 
     // Mock payment service
     var PaymentService = function () {
@@ -203,4 +178,126 @@ QUnit.test("CH04 - Curry Function Templates Logger", function (assert) {
     var result = makePayment(student, 100);
     assert.equal(result._1, 107);
     assert.equal(result._2, 'USD');
+});
+
+QUnit.test("CH04 - Check Type with Curry 2", function (assert) {
+
+    // Type Checks (curry it)
+    var checkType = curry2(function(typeDef, actualType) {
+        var _type =({}).toString.call(actualType).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
+        if(_type === typeDef) {
+            return _type;
+        }
+        else {
+            throw new TypeError('Type mismatch. Expected [' + typeDef + '] but found [' + _type + ']');
+        }
+    });
+
+    assert.equal(checkType('string')('Luis'), 'string');
+    assert.equal(checkType('number')(3), 'number');
+    assert.equal(checkType('date')(new Date()), 'date');
+    assert.equal(checkType('object')({}), 'object');
+});
+
+QUnit.test("CH04 - Partial 1", function (assert) {
+
+    // Logger function with partial
+    var log = _.partial(logger, 'console', 'json', 'FJS Partial');
+    log('ERROR', 'Error condition detected!!');
+
+    var errorLog = _.partial(log, 'ERROR');
+    errorLog('Error condition detected (using partial)!');
+    assert.ok(true);
+});
+
+QUnit.test("CH04 - Bind 1", function (assert) {
+
+    // Logger function with partial
+    var log = logger.bind(undefined, 'console', 'json', 'FJS Binding');
+    log('ERROR', 'Error condition detected!!');
+
+    assert.ok(true);
+});
+
+QUnit.test("CH04 - Partial 2", function (assert) {
+
+    var logger2 = function (level, message, name, appender, layout) {
+        var appenders = {
+            'alert': new Log4js.JSAlertAppender(),
+            'console': new Log4js.BrowserConsoleAppender()
+        };
+        var layouts = {
+            'basic': new Log4js.BasicLayout(),
+            'json': new Log4js.JSONLayout(),
+            'xml' : new Log4js.XMLLayout()
+        };
+        var appender = appenders[appender];
+        appender.setLayout(layouts[layout]);
+        var logger = new Log4js.getLogger(name);
+        logger.addAppender(appender);
+        logger.log(level, message, null);
+    };
+
+    // Logger function with partial
+    var log = _.partial(logger2, _, _, 'FJS', 'console', 'json');
+    log('DEBUG', 'Writing a debug message to the browser console!');
+    assert.ok(true);
+});
+
+QUnit.test("CH04 - Binding 2", function (assert) {
+
+    var Scheduler = (function () {
+        var timedFn = _.bind(setTimeout, null, _, _);
+
+        return {
+            delay5:  _.partial(timedFn, _, 5),
+            delay10: _.partial(timedFn, _, 10),
+            delay:   _.partial(timedFn, _, _)
+        };
+    })();
+
+    Scheduler.delay(function () {
+        console.log('once!')
+    }, 20);
+    assert.ok(true);
+});
+
+
+QUnit.test("CH04 - Partial 3", function (assert) {
+
+    String.prototype.first = _.partial(String.prototype.substring, 0, _);
+    assert.equal('Functional'.first(3), 'Fun');
+});
+
+
+QUnit.test("CH04 - Partial 4", function (assert) {
+
+    String.prototype.asName = _.partial(String.prototype.replace, /(\w+)\s(\w+)/, '$2, $1');
+    assert.equal('Alonzo Church'.asName(), 'Church, Alonzo');
+});
+
+
+QUnit.test("CH04 - Partial 5 (Needs Traceur)", function (assert) {
+
+    // Runs with traceur turned on
+    //Array.prototype.head = _.partial(Array.prototype.filter, (elt, idx) => idx === 0);
+    //assert.equal([1,2,3].head(), 1);
+    //assert.equal(['apple',2,3].head(), 'apple');
+
+    //Array.prototype.tail = _.partial(Array.prototype.filter, (elt, idx) => idx > 0);
+    assert.ok(true);
+});
+
+
+
+
+QUnit.test("CH04 - Compose 1 Compute Highest Grade", function (assert) {
+
+    var students = ['Rosser', 'Turing', 'Kleene', 'Church'];
+    var grades   = [80, 100, 90, 99];
+
+
+    var highestGrade = R.compose(R.head, R.pluck(0), R.reverse, R.sortBy(R.prop(1)), R.zip);
+    var result = highestGrade(students, grades);
+    assert.equal(result, 'Turing');
 });

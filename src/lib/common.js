@@ -484,8 +484,35 @@ var typeOf = function(type) {
     }
 };
 
-function log(str) {
+function log(obj) {
     if(console.log) {
-        console.log(str);
+        console.log(obj);
     }
+    return obj; // good for composition
 }
+
+
+function curry2(fn) {
+    return function(firstArg) {
+        return function(secondArg) {
+            return fn(firstArg, secondArg);
+        };
+    };
+}
+
+var logger = function (appender, layout, name, level, message) {
+    var appenders = {
+        'alert': new Log4js.JSAlertAppender(),
+        'console': new Log4js.BrowserConsoleAppender()
+    };
+    var layouts = {
+        'basic': new Log4js.BasicLayout(),
+        'json': new Log4js.JSONLayout(),
+        'xml' : new Log4js.XMLLayout()
+    };
+    var appender = appenders[appender];
+    appender.setLayout(layouts[layout]);
+    var logger = new Log4js.getLogger(name);
+    logger.addAppender(appender);
+    logger.log(level, message, null);
+};
