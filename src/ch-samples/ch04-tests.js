@@ -15,7 +15,7 @@ QUnit.test("CH04 - Tuple 1", function (assert) {
         var result = _(arr).find(function (p) {
             return p.getBirth() === year;
         });
-        var person = Tuple('string', 'number');
+        var person = Tuple(String, Number);
         return new person(result.getFullName(), result.getBirth());
     }
 
@@ -29,7 +29,7 @@ QUnit.test("CH04 - Tuple 1", function (assert) {
 
 QUnit.test("CH04 - Tuple 2", function (assert) {
 
-    var Pair = Tuple('string', 'string');
+    var Pair = Tuple(String, String);
     var name = new Pair('Barkley', 'Rosser');
     assert.equal(name._1, 'Barkley');
     assert.equal(name._2, 'Rosser')
@@ -45,7 +45,7 @@ QUnit.test("CH04 - Tuple 2", function (assert) {
 
 QUnit.test("CH04 - Tuple 3 with Error", function (assert) {
 
-    var Pair = Tuple('string', 'string');
+    var Pair = Tuple(String, String);
 
     try {
         new Pair(null, 'Barkley');
@@ -150,7 +150,7 @@ QUnit.test("CH04 - Curry Function Builder", function (assert) {
 
     var processPayment = _.curry(function (service, taxRate, currency, amount) {
         var total = amount + (taxRate * amount);
-        var Money = Tuple('number', 'string');
+        var Money = Tuple(Number, String);
         return service.submit(new Money(total, currency));
     });
 
@@ -184,19 +184,20 @@ QUnit.test("CH04 - Check Type with Curry 2", function (assert) {
 
     // Type Checks (curry it)
     var checkType = curry2(function(typeDef, actualType) {
-        var _type =({}).toString.call(actualType).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
-        if(_type === typeDef) {
-            return _type;
+        if(R.is(typeDef, actualType)) {
+            return actualType;
         }
         else {
-            throw new TypeError('Type mismatch. Expected [' + typeDef + '] but found [' + _type + ']');
+            throw new TypeError('Type mismatch. Expected [' + typeDef + '] but found [' + typeof actualType + ']');
         }
     });
 
-    assert.equal(checkType('string')('Luis'), 'string');
-    assert.equal(checkType('number')(3), 'number');
-    assert.equal(checkType('date')(new Date()), 'date');
-    assert.equal(checkType('object')({}), 'object');
+    assert.ok(checkType(String)('Luis'));
+    assert.ok(checkType(Number)(3));
+    assert.ok(checkType(Date)(new Date()));
+    assert.ok(checkType(Object)({}));
+    assert.ok(checkType(Boolean)(true));
+    assert.ok(!checkType(Boolean)("A"));
 });
 
 QUnit.test("CH04 - Partial 1", function (assert) {
@@ -402,12 +403,11 @@ QUnit.test("CH04 - Simple composition", function (assert) {
 
 QUnit.test("CH04 - Lens 1", function (assert) {
 
-     var person = new Person('Alonzo', 'Church'),
-     lastnameLens = objectLens('lastname'),
-     store = lastnameLens.run(person);
+     var person = new Person('Alonzo', 'Church');
+     var lastnameLens = R.lensProp('lastname');
 
-     assert.equal(store.get(), 'Church');
-     var mourning = store.set('Mourning');
+     assert.equal(lastnameLens(person), 'Church');
+     var mourning = lastnameLens.set('Mourning', person);
      assert.equal(mourning.getLastName(), 'Mourning');
 });
 
@@ -420,12 +420,101 @@ QUnit.test("CH04 - Lens 2", function (assert) {
         'Princeton', ZipCode('08544','1234'),
         'NJ', 'USA');
 
+    var addressLens = R.lensProp('address');
+    var zipLens = R.lensProp('zip');
+
+    assert.equal(addressLens(person).city, 'Princeton');
+    assert.equal(zipLens(person.address).code(), '08544');
+
+    //assert.equal(addressZipLens.location(), '1234');
+});
+
+QUnit.test("CH04 - Lens 3", function (assert) {
+
+    var person = new Person('Alonzo', 'Church');
+    person.address = new Address(
+        'Alexander St.',
+        'Princeton', ZipCode('08544','1234'),
+        'NJ', 'USA');
+
     var addressLens = objectLens('address');
     var zipLens = objectLens('zip');
 
-    assert.equal(addressLens.run(person).get().city, 'Princeton');
-    var store = addressLens.andThen(zipLens).run(person);
+    var addressZipLens = zipLens.compose(addressLens);
+    var store = addressZipLens.run(person);
 
     assert.equal(store.get().code(), '08544');
-    //assert.equal(store.get().location(), '1234');
+    assert.equal(store.get().location(), '1234');
 });
+
+QUnit.test("CH04 - Lens 4", function (assert) {
+
+    var p1 = new Person().setFirstname('Alonzo').setLastname('Church');
+    var p2 = new Person().setFirstname('Haskell').setLastname('Curry');
+    var p3 = new Person().setFirstname('Guy').setLastname('Steele');
+
+    var students = [p1, p2, p3];
+    var grades   = [80, 100, 90];
+
+    var lastnameLens = objectLens('lastname');
+
+    var getLastname = function (obj) {
+        return lastnameLens.run(obj).get();
+    };
+
+    var setLastname = R.curry(function (val, obj) {
+        return lastnameLens.run(obj).set(val);
+    });
+
+    var fn = R.compose(R.map(getLastname), R.map(setLastname('Smith')));
+    var result = fn(students);
+    assert.equal(result[0], 'Smith');
+    assert.equal(result[1], 'Smith');
+    assert.equal(result[2], 'Smith');
+
+});
+
+QUnit.test("CH04 - Lens 5", function (assert) {
+
+    var Person = function (firstname, lastname, year) {
+
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.year = year;
+
+    };
+    var person = new Person('Alonzo', 'Church', 1903);
+
+    var setter = function (prop, val) {
+        var propLens = R.lensProp(prop);
+        return propLens.set(val, this);
+    };
+
+    _.mixin(person, {'set': setter});
+
+    assert.equal(person.firstname, 'Alonzo');
+    var person2 = person.set('firstname', 'Bob');
+    assert.ok(person !== person2);
+    assert.equal(person2.firstname, 'Bob');
+
+});
+
+
+QUnit.test("CH04 - Lens 6 With Ramda", function (assert) {
+
+    var person = new Person('Alonzo', 'Church');
+    person.address = new Address(
+        'Alexander St.',
+        'Princeton', ZipCode('08544','1234'),
+        'NJ', 'USA');
+
+    var addressLens = R.lensProp('address');
+    var zipLens = R.lensProp('zip');
+
+    var addressZipLens = R.composeL(zipLens, addressLens);
+    var zip = addressZipLens(person);
+
+    assert.equal(zip.code(), '08544');
+    assert.equal(zip.location(), '1234');
+});
+
