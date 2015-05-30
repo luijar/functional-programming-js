@@ -72,13 +72,13 @@ QUnit.test("CH04 - Compose 1", function (assert) {
 
     var checkLengthSsn = validLength.bind(undefined, 9);
 
-    var sanitizeSsn = _.compose(normalize, trim);
-    var isValidSsn = _.compose(checkLengthSsn, sanitizeSsn);
+    var sanitizeSsn = R.compose(normalize, trim);
+    var isValidSsn = R.compose(checkLengthSsn, sanitizeSsn);
 
     assert.equal(sanitizeSsn(' 444-44-4444 '), '444444444');
     assert.ok(isValidSsn(' 444-44-4444 '));
 
-    Function.prototype.compose = _.compose;
+    Function.prototype.compose = R.compose;
 
     var isValidSsn2 = checkLengthSsn.compose(normalize).compose(trim);
     assert.ok(isValidSsn2(' 444-44-4444 '));
@@ -257,7 +257,7 @@ QUnit.test("CH04 - Binding 2", function (assert) {
     })();
 
     Scheduler.delay(function () {
-        console.log('once!')
+        log('once!')
     }, 20);
     assert.ok(true);
 });
@@ -272,7 +272,7 @@ QUnit.test("CH04 - Partial 3", function (assert) {
 
 QUnit.test("CH04 - Partial 4", function (assert) {
 
-    String.prototype.asName = _.partial(String.prototype.replace, /(\w+)\s(\w+)/, '$2, $1');
+    String.prototype.asName = R.partial(String.prototype.replace, /(\w+)\s(\w+)/, '$2, $1');
     assert.equal('Alonzo Church'.asName(), 'Church, Alonzo');
 });
 
@@ -285,10 +285,9 @@ QUnit.test("CH04 - Partial 5 (Needs Traceur)", function (assert) {
     //assert.equal(['apple',2,3].head(), 'apple');
 
     //Array.prototype.tail = _.partial(Array.prototype.filter, (elt, idx) => idx > 0);
+
     assert.ok(true);
 });
-
-
 
 
 QUnit.test("CH04 - Compose 1 Compute Highest Grade", function (assert) {
@@ -296,8 +295,137 @@ QUnit.test("CH04 - Compose 1 Compute Highest Grade", function (assert) {
     var students = ['Rosser', 'Turing', 'Kleene', 'Church'];
     var grades   = [80, 100, 90, 99];
 
-
-    var highestGrade = R.compose(R.head, R.pluck(0), R.reverse, R.sortBy(R.prop(1)), R.zip);
-    var result = highestGrade(students, grades);
+    var smartestStudent = R.compose(R.head, R.pluck(0), R.reverse, R.sortBy(R.prop(1)), R.zip);
+    var result = smartestStudent(students, grades);
     assert.equal(result, 'Turing');
+});
+
+
+
+QUnit.test("CH04 - Compose 2 Process Payment", function (assert) {
+
+
+    // Mock DB service
+    var DB = function(objectStore) {
+        return {
+            getRecord: function(ssn) {
+                log('Fetching student by SSN from ' + objectStore);
+                return new Student('Alonzo', 'Church');
+            }
+        };
+    };
+
+    // Mock payment service
+    var PaymentService = function (money, rate) {
+        return {
+            submit: function (student) {
+                console.log(student.getFullName() + ' paid in full: ' + money);
+                return new Money(money._1 + (money._1 * rate), money._2);
+            }
+        }
+    };
+
+
+    var EvenBus = function (config) {
+
+        var Scheduler = (function () {
+            var timedFn = _.bind(setTimeout, null, _, _);
+
+            return {
+                delay5:  _.partial(timedFn, _, 5),
+                delay10: _.partial(timedFn, _, 10),
+                delay:   _.partial(timedFn, _, _)
+            };
+        })();
+
+        return {
+            fireEvent: function(str) {
+                if(config && config.delay === 'none') {
+                    Scheduler.delay(log(str), 0);
+                }
+                else {
+                    Scheduler.delay10(log(str));
+                }
+            }
+        };
+    };
+
+    // fetchStudent :: DB, string -> Student
+    var fetchStudent = R.curry(function (db, studentId) {
+        return db.getRecord(studentId);
+    });
+
+    // sendPayment :: Payment -> Money
+    var sendPayment = R.curry(function (payment, student) {
+        return payment.submit(student)
+    });
+
+    // sendNotification :: EventQ, Money -> void
+    var fireNotification = R.curry(function(eventQueue, money) {
+        eventQueue.fireEvent('Payment sent: '+ money);
+        return money;
+    });
+
+    var processPayment = R.compose(fireNotification(EvenBus({delay: 'none'})), log,
+        sendPayment(PaymentService(new Money(100, 'USD'),  .06)),log,  fetchStudent(DB('students')));
+
+    var result = processPayment('444-44-4444');
+    assert.equal(result._1, 106);
+
+    var processPaymentPipe = R.pipe(fetchStudent(DB('students')),
+        sendPayment(PaymentService(new Money(100, 'USD'),  .06)), fireNotification(EvenBus({delay: 'none'})));
+    result = processPaymentPipe('444-44-4444');
+    assert.equal(result._1, 106);
+});
+
+
+QUnit.test("CH04 - Point-free [ tr 'A-Z' 'a-z' <names.in | uniq | sort ] ", function (assert) {
+
+    var words = ['Functional', 'Programming', 'Curry', 'Memoization', 'Partial', 'Curry', 'Programming'];
+    var _ = R;
+    var program = _.pipe(_.map(_.toLower), _.uniq, _.sortBy(_.identity));
+
+    var result = program(words);
+
+    assert.equal(result[0], 'curry');
+    assert.equal(result[1], 'functional');
+});
+
+
+
+QUnit.test("CH04 - Simple composition", function (assert) {
+
+    var square = function (x) {return x*x};
+    var sumsOfSquares = R.compose(R.sum, R.map(square));
+    assert.equal(sumsOfSquares([1,2,3]),14);
+});
+
+QUnit.test("CH04 - Lens 1", function (assert) {
+
+     var person = new Person('Alonzo', 'Church'),
+     lastnameLens = objectLens('lastname'),
+     store = lastnameLens.run(person);
+
+     assert.equal(store.get(), 'Church');
+     var mourning = store.set('Mourning');
+     assert.equal(mourning.getLastName(), 'Mourning');
+});
+
+
+QUnit.test("CH04 - Lens 2", function (assert) {
+
+    var person = new Person('Alonzo', 'Church');
+    person.address = new Address(
+        'Alexander St.',
+        'Princeton', ZipCode('08544','1234'),
+        'NJ', 'USA');
+
+    var addressLens = objectLens('address');
+    var zipLens = objectLens('zip');
+
+    assert.equal(addressLens.run(person).get().city, 'Princeton');
+    var store = addressLens.andThen(zipLens).run(person);
+
+    assert.equal(store.get().code(), '08544');
+    //assert.equal(store.get().location(), '1234');
 });

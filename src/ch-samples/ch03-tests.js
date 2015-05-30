@@ -285,7 +285,7 @@ QUnit.test("CH03 - The Unix Philosophy", function (assert) {
         return acc;
     };
 
-    var result = Lazy(words).map(tr).reduce(unique, []).sort();
+    var result = _.chain(words).map(tr).uniq().sort().value();
 
     assert.equal(result[0], 'curry');
     assert.equal(result[1], 'functional');

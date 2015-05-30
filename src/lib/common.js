@@ -26,21 +26,26 @@ function perimeter(w, h) {
 
 // A person's address
 var Address = function (st, city, zip, state, country) {
-    var _city = city;
-    var _country = country;
-    var _zip = zip;
+    this.street = st;
+    this.city = city;
+    this.country = country;
+    this.zip = zip;
+    this.state = state;
 
     this.getCity = function () {
-        return _city;
+        return this.city;
     };
     this.getCountry = function () {
-        return _country;
+        return this.country;
     };
     this.getZip = function () {
-        return _zip;
+        return this.zip;
+    };
+    this.getStreet = function () {
+      return this.street;
     };
     this.toString = function () {
-        return 'Address [city: ' + _city + ' country: ' + _country + ']';
+        return 'Address [city: ' + this.city + ' country: ' + this.country + ']';
     };
 };
 
@@ -441,7 +446,7 @@ var FunctionLogger = (function () {
 var Tuple = function( /* types */ ) {
     var prototype = Array.prototype.slice.call(arguments, 0);
 
-    var _T =  function( /* values */ ) {
+    var _tuple =  function( /* values */ ) {
 
         var values = Array.prototype.slice.call(arguments, 0);
 
@@ -462,13 +467,15 @@ var Tuple = function( /* types */ ) {
         Object.freeze(this);
     };
 
-    _T.prototype.toString = function() {
+    _tuple.prototype.toString = function() {
         return '(' + Object.keys(this).map(function(k) {
                 return this[k];
             }, this).join(', ') + ')';
     };
-    return _T;
+    return _tuple;
 };
+
+var Money = Tuple('number', 'string');
 
 
 // Type Checks (curry it)
@@ -486,7 +493,7 @@ var typeOf = function(type) {
 
 function log(obj) {
     if(console.log) {
-        console.log(obj);
+        console.log(obj.toString());
     }
     return obj; // good for composition
 }
@@ -516,3 +523,121 @@ var logger = function (appender, layout, name, level, message) {
     logger.addAppender(appender);
     logger.log(level, message, null);
 };
+
+
+var Store = function (setter, getter) {
+    this.set = setter;
+    this.get = getter;
+    this.map = function (f) {
+        return store(R.compose(f, this.set), this.get);
+    };
+};
+
+function store(setter, getter) {
+    return new Store(setter, getter);
+}
+
+var Lens = function (f) {
+    this.run = function (obj) {
+        return f(obj);
+    };
+};
+Lens.prototype.compose = function (b) {
+    var a = this;
+    return lens(function (target) {
+        var c = b.run(target),
+            d = a.run(c.get());
+        return store(R.compose(c.set, d.set), d.get);
+    });
+};
+
+Lens.prototype.andThen = function (b) {
+    return b.compose(this);
+};
+
+function lens(f) {
+    return new Lens(f);
+}
+
+function objectLens(prop) {
+    return lens(function(o) {
+        return store(function(s) {
+                var r = {}, k;
+                for(k in o) {
+                    r[k] = o[k];
+                }
+                r[prop] = s;
+                return r;
+            },
+            function() {
+                return o[prop];
+            });
+    });
+}
+
+/*
+
+ // Methods
+ Lens.id = function() {
+ return Lens(function(target) {
+ return Store(
+ C.identity,
+ function() {
+ return target;
+ }
+ );
+ });
+ };
+ Lens.prototype.compose = function(b) {
+ var a = this;
+ return Lens(function(target) {
+ var c = b.run(target),
+ d = a.run(c.get());
+ return Store(
+ C.compose(c.set)(d.set),
+ d.get
+ );
+ });
+ };
+ Lens.prototype.andThen = function(b) {
+ return b.compose(this);
+ };
+ Lens.prototype.toPartial = function() {
+ var self = this;
+ return PartialLens(function(target) {
+ return Option.Some(self.run(target));
+ });
+ };
+ Lens.objectLens = function(property) {
+ return Lens(function(o) {
+ return Store(
+ function(s) {
+ var r = {},
+ k;
+ for(k in o) {
+ r[k] = o[k];
+ }
+ r[property] = s;
+ return r;
+ },
+ function() {
+ return o[property];
+ }
+ );
+ });
+ };
+ Lens.arrayLens = function(index) {
+ return Lens(function(a) {
+ return Store(
+ function(s) {
+ var r = a.concat();
+ r[index] = s;
+ return r;
+ },
+ function() {
+ return a[index];
+ }
+ );
+ });
+ };
+ */
