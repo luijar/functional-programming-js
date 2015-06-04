@@ -491,7 +491,7 @@ var typeOf = function(type) {
 };
 
 function log(obj) {
-    if(console.log) {
+    if(console.log && obj) {
         console.log(obj.toString());
     }
     return obj; // good for composition
@@ -565,6 +565,13 @@ function objectLens(prop) {
             });
     });
 }
+
+function splat (fn) {
+    return function (list) {
+        return Array.prototype.map.call(list, fn)
+    }
+}
+
  //
  //
  //// Methods
