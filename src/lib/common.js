@@ -24,6 +24,46 @@ function perimeter(w, h) {
     return 2 * (w + h);
 }
 
+var School = function (name, address) {
+    this.name = name;
+    this.address = address;
+};
+School.prototype.getName = function () {
+  return this.name;
+};
+School.prototype.getAddress = function () {
+    return this.address;
+};
+
+var School2 = function (name, address) {
+    this.name = Optional.ofNullable(name);
+    this.address = Optional.ofNullable(address);
+};
+School2.prototype.getName = function () {
+    return this.name;
+};
+School2.prototype.getAddress = function () {
+    return this.school;
+};
+
+// A person's address (using optional)
+var Address2 = function (city, country) {
+
+    this.city = city;
+    this.country = country;
+
+    this.getCity = function () {
+        return this.city;
+    };
+    this.getCountry = function () {
+        return this.country;
+    };
+    this.toString = function () {
+        return 'Address [city: ' + this.city + ' country: ' + this.country + ']';
+    };
+};
+
+
 // A person's address
 var Address = function (st, city, zip, state, country) {
     this.street = st;
@@ -137,6 +177,12 @@ Student.prototype.constructor = Student;
 Student.prototype.getSchool = function() {
   return this.school;
 };
+Student.prototype.setSchool = function(school) {
+    this.school = school;
+};
+Student.prototype.getSchool = function() {
+    return this.school;
+};
 Student.prototype.setMajor = function (m) {
     return this.major = m;
 };
@@ -146,6 +192,7 @@ Student.prototype.getMajor = function () {
 Student.prototype.getId = function () {
     return this.id;
 };
+
 
 function ZipCode(code, location) {
     var _code = code;

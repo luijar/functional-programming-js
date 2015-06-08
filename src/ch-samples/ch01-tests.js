@@ -503,3 +503,33 @@ QUnit.test("CH01 - Students enrolled in more than 1 class", function (assert) {
     assert.equal(average2(roster), average);
 
 });
+
+QUnit.test("CH01 - Fucntional version of getCountry", function (assert) {
+
+    var princeton = new School('Princeton', new Address2('London','England'));
+    var student = new Student('Alan', 'Turing', princeton);
+
+    var getCountry = function(student) {
+        return Optional.of(student).map('getSchool').map('getAddress').map('getCountry').getOrElse('Unknown');
+    };
+
+    assert.equal(getCountry(student), 'England');
+
+    // Imperative version
+    //function getCountry(student) {
+    //    var school = student.getSchool();
+    //    if(school !== null) {
+    //        var addr = school.getAddress();
+    //        if(addr !== null) {
+    //            var country = addr.getCountry();
+    //            return country;
+    //        }
+    //        return null;
+    //    }
+    //    return null;
+    //}
+});
+
+
+
+
