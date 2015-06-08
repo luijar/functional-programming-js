@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Functional JavaScript Programming | Luis Atencio</title>
+
+    <script src="../lib/bacon.min.js"></script>
+    <script src="../lib/jquery.js"></script>
+    <script src="../lib/bacon.jquery.min.js"></script>
+</head>
+<body>
+    <div>
+        <table id="student-form">
+            <form>
+                <tr>
+                    <td>
+                        <label>Student ID:</label>
+                    </td>
+                    <td>
+                        <input id="student-id" type="text">
+                    </td>
+                </tr>
+                <!--<tr>-->
+                    <!--<td>-->
+                        <!--<label>Student First Name:</label>-->
+                    <!--</td>-->
+                    <!--<td>-->
+                        <!--<input type="text">-->
+                    <!--</td>-->
+                <!--</tr>-->
+                <!--<tr>-->
+                    <!--<td>-->
+                        <!--<label>Student Last Name:</label>-->
+                    <!--</td>-->
+                    <!--<td>-->
+                        <!--<input type="text">-->
+                    <!--</td>-->
+                <!--</tr>-->
+                <!--<tr>-->
+                    <!--<td><input type="submit"></td>-->
+                <!--</tr>-->
+            </form>
+        </table>
+        <h1><span id="message">Finding user for ID: {{form.id}}</span></h1>
+    </div>
+<script>
+    var changes = $('#student-id').asEventStream('keyup').map(function(event) { return $(event.target).val() }).toProperty("");
+    changes.onValue(function(val) {
+        $('#message').text(val);
+    });
+</script>
+</body>
+</html>
