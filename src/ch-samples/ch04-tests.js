@@ -287,7 +287,14 @@ QUnit.test("CH04 - Partial 5 (Needs Traceur)", function (assert) {
 
     //Array.prototype.tail = _.partial(Array.prototype.filter, (elt, idx) => idx > 0);
 
-    assert.ok(true);
+    Array.prototype.shallowCopy = _.partial(Array.prototype.map, _.identity);
+    var arr1 = [1,2,3];
+    assert.equal(arr1.length, 3);
+    var arr2 = arr1.shallowCopy();
+    assert.equal(arr2.length, 3);
+    arr2.push(4);
+    assert.equal(arr1.length, 3);
+    assert.equal(arr2.length, 4);
 });
 
 
