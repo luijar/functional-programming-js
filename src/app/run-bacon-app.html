@@ -7,17 +7,19 @@
     <script src="../lib/bacon.min.js"></script>
     <script src="../lib/jquery.js"></script>
     <script src="../lib/bacon.jquery.min.js"></script>
+    <script src="../lib/ramda.js"></script>
 </head>
 <body>
     <div>
+        <h1><span id="banner">[name]</span></h1>
         <table id="student-form">
             <form>
                 <tr>
                     <td>
-                        <label>Student ID:</label>
+                        <label>Enter name:</label>
                     </td>
                     <td>
-                        <input id="student-id" type="text">
+                        <input id="student-name" type="text">
                     </td>
                 </tr>
                 <!--<tr>-->
@@ -41,13 +43,36 @@
                 <!--</tr>-->
             </form>
         </table>
-        <h1><span id="message">Finding user for ID: {{form.id}}</span></h1>
     </div>
 <script>
-    var changes = $('#student-id').asEventStream('keyup').map(function(event) { return $(event.target).val() }).toProperty("");
-    changes.onValue(function(val) {
-        $('#message').text(val);
+
+    var getValue = function(event) {
+        return $(event.target).val();
+    };
+
+    var cleanValue = function(val) {
+        return R.isNil(val) ? 'Anonymous' : val;
+    };
+
+    var processTargetObject = R.compose(cleanValue, getValue);
+
+    var idField = $('#student-name').asEventStream('keyup')
+            .map(processTargetObject)
+            .toProperty();
+
+    idField.onValue(function(val) {
+        $('#banner').text(val);
     });
+
+//    The JQuery version
+//    $('#student-name').keyup(function(event) {
+//        var val = $(this).val();
+//        if(val == null || val == undefined || val.length == 0) {
+//            val = 'Anonymous';
+//        }
+//        $('#banner').text('Welcome: ' + val);
+//    })
+
 </script>
 </body>
 </html>
