@@ -402,7 +402,7 @@ QUnit.test("CH01 - Data processing - non functional", function (assert) {
         var usFriends = [];
         for (var idx in this.friends) {
             var friend = this.friends[idx];
-            if (friend.getCountry() === 'US') {
+            if (friend.country === 'US') {
                 usFriends.push(friend);
             }
         }
@@ -412,7 +412,7 @@ QUnit.test("CH01 - Data processing - non functional", function (assert) {
         var nonUsFriends = [];
         for (var idx in this.friends) {
             var friend = this.friends[idx];
-            if (friend.getCountry() !== 'US') {
+            if (friend.country !== 'US') {
                 nonUsFriends.push(friend);
             }
         }

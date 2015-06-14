@@ -248,7 +248,7 @@ QUnit.test("CH04 - Partial 2", function (assert) {
 QUnit.test("CH04 - Binding 2", function (assert) {
 
     var Scheduler = (function () {
-        var timedFn = _.bind(setTimeout, null, _, _);
+        var timedFn = _.bind(setTimeout, undefined, _, _);
 
         return {
             delay5:  _.partial(timedFn, _, 5),
@@ -278,14 +278,7 @@ QUnit.test("CH04 - Partial 4", function (assert) {
 });
 
 
-QUnit.test("CH04 - Partial 5 (Needs Traceur)", function (assert) {
-
-    // Runs with traceur turned on
-    //Array.prototype.head = _.partial(Array.prototype.filter, (elt, idx) => idx === 0);
-    //assert.equal([1,2,3].head(), 1);
-    //assert.equal(['apple',2,3].head(), 'apple');
-
-    //Array.prototype.tail = _.partial(Array.prototype.filter, (elt, idx) => idx > 0);
+QUnit.test("CH04 - Partial 5", function (assert) {
 
     Array.prototype.shallowCopy = _.partial(Array.prototype.map, _.identity);
     var arr1 = [1,2,3];
@@ -295,6 +288,21 @@ QUnit.test("CH04 - Partial 5 (Needs Traceur)", function (assert) {
     arr2.push(4);
     assert.equal(arr1.length, 3);
     assert.equal(arr2.length, 4);
+
+
+    String.prototype.parseCsv = _.partial(String.prototype.split, /,\s*/);
+    var results = "Haskell, Curry, Princeton".parseCsv();
+    assert.equal(results[0], 'Haskell');
+
+    String.prototype.parseUrl = _.partial(String.prototype.match, /(http[s]?|ftp):\/\/([^:\/\s]+)\.([^:\/\s]{2,5})/); //:\/\/([^:\/\s]+)\.([^:\/\s]]{2,5})
+    assert.equal('http://manning.com'.parseUrl()[1], 'http');
+
+    var str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    String.prototype.explode = _.partial(String.prototype.match, /[\w]/gi);
+    assert.equal(str.explode()[0], 'A');
+    assert.equal(str.explode()[1], 'B');
+
+
 });
 
 
@@ -337,7 +345,7 @@ QUnit.test("CH04 - Compose 2 Process Payment", function (assert) {
     var EvenBus = function (config) {
 
         var Scheduler = (function () {
-            var timedFn = _.bind(setTimeout, null, _, _);
+            var timedFn = _.bind(setTimeout, undefined, _, _);
 
             return {
                 delay5:  _.partial(timedFn, _, 5),
@@ -580,7 +588,7 @@ QUnit.test("CH04 - OR combinator", function (assert) {
     var EvenBus = function (config) {
 
         var Scheduler = (function () {
-            var timedFn = _.bind(setTimeout, null, _, _);
+            var timedFn = _.bind(setTimeout, undefined, _, _);
 
             return {
                 delay5:  _.partial(timedFn, _, 5),
@@ -714,4 +722,57 @@ QUnit.test("CH034 - Fork combinator", function (assert) {
 
     var computeAverageGrade = R.compose(getLetterGrade, forkJoin(R.divide, R.sum, R.length));
     assert.equal(computeAverageGrade([99, 80, 89]), 'B');
+});
+
+
+QUnit.test("CH034 - Fork combinator", function (assert) {
+
+    var Tuple = function( /* types */ ) {
+        var prototype = Array.prototype.slice.call(arguments, 0);
+
+        var _tuple =  function( /* values */ ) {
+
+            var values = Array.prototype.slice.call(arguments, 0);
+
+            // Check nulls
+            if(values.some(function(val){ return val === null || val === undefined})) {
+                return null;
+            }
+
+            // Check arity
+            if(values.length !== prototype.length) {
+                throw new TypeError('Tuple arity does not math its prototype');
+            }
+
+            // Check types
+            values.map(function(val, index) {
+                this['_' + (index + 1)] = val;
+            }, this);
+            Object.freeze(this);
+        };
+
+        _tuple.prototype.toString = function() {
+            return '(' + Object.keys(this).map(function(k) {
+                    return this[k];
+                }, this).join(', ') + ')';
+        };
+        return _tuple;
+    };
+
+    var Node = Tuple(Object, Tuple);
+
+    var element = R.curry(function(val, tuple) {
+        return new Node(val, tuple);
+    });
+
+    var numbers = element(1, element(2, element(3, element(4, null))));
+
+    assert.equal(numbers._1, 1);
+    assert.equal(numbers._2._1, 2);
+
+    var val = numbers._1, next = numbers._2;
+    do {
+        log(val);
+        val = next._1; next = next._2;
+    } while(next !== undefined);
 });
