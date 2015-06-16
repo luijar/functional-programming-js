@@ -11,6 +11,12 @@
 //
 //});
 
+QUnit.test("CH05 - Chainig example", function (assert) {
+
+    var result = _(['f', 'u', 'n', 'c', 't', 'i', 'o', 'n', 'a', 'l']).take(3).map( function(s) { return s.toUpperCase()} ).join('');
+    assert.equal(result, 'FUN');
+});
+
 
 var Wrapper = function (val) {
     this.val = val;
@@ -44,13 +50,13 @@ QUnit.test("CH05 - Wrapper 1", function (assert) {
 });
 
 
-QUnit.test("CH05 - Wrapper with Ramda", function (assert) {
-
-    var map = function (f, val) {
-        if(val !== null) {
-            return f(val);
-        }
-    };
-
-    var value = R.wrap(R.identity, map);
-});
+//QUnit.test("CH05 - Wrapper with Ramda", function (assert) {
+//
+//    var map = function (f, val) {
+//        if(val !== null) {
+//            return f(val);
+//        }
+//    };
+//
+//    var value = R.wrap(R.identity, map);
+//});
