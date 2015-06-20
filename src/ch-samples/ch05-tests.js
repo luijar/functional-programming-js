@@ -20,17 +20,27 @@ QUnit.test("CH05 - Chainig example", function (assert) {
 
 var Wrapper = function (val) {
     this.val = val;
+
+    this.get = function () {
+        return this.val;
+    }
 };
 Wrapper.prototype.map = function (f) {
    if(this.val !== null) {
         return f(this.val);
    }
 };
+Wrapper.prototype.fmap = function (f) {
+    if(this.val !== null) {
+        return wrap(this.map(f));
+    }
+};
 
 // helper function
 var wrap = function (val) {
   return new Wrapper(val);
 };
+
 
 
 QUnit.test("CH05 - Wrapper 1", function (assert) {
@@ -50,13 +60,24 @@ QUnit.test("CH05 - Wrapper 1", function (assert) {
 });
 
 
-//QUnit.test("CH05 - Wrapper with Ramda", function (assert) {
-//
-//    var map = function (f, val) {
-//        if(val !== null) {
-//            return f(val);
-//        }
-//    };
-//
-//    var value = R.wrap(R.identity, map);
-//});
+QUnit.test("CH05 - Addition with simple functor", function (assert) {
+
+    var two = wrap(2);
+
+    var plus = _.curry(function (a, b) {
+        return a + b;
+    });
+
+    var plus3 = plus(3);
+    assert.equal(two.fmap(plus3).val, 5);
+
+});
+
+
+QUnit.test("CH05 - Functor law 1", function (assert) {
+
+    var wrappedValue = wrap('Alonzo');
+
+    // extract the value
+    assert.equal(wrappedValue.fmap(R.identity).get(), 'Alonzo');
+});

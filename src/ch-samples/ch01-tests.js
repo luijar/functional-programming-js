@@ -499,9 +499,19 @@ QUnit.test("CH01 - Students enrolled in more than 1 class", function (assert) {
             }) / grades.length;
     }
 
+    _.mixin({
+        'average': calcAverage
+    });
+
     var average2 = _.compose(Math.floor, calcAverage, getStudents);
     assert.equal(average2(roster), average);
 
+    var average3 = function(roster) {
+        return _.chain(roster).filter(function (student) {
+                return student.enrolled > 1
+            }).pluck('grade').average().value();
+    };
+    assert.equal(average3(roster), average);
 });
 
 QUnit.test("CH01 - Fucntional version of getCountry", function (assert) {
@@ -530,6 +540,47 @@ QUnit.test("CH01 - Fucntional version of getCountry", function (assert) {
     //}
 });
 
+
+QUnit.test("CH01 - Fucntional version of getCountry", function (assert) {
+
+    var grades = [100, 80, 90];
+
+    function append(grades, newGrade) {
+        var newGrades = grades.slice(0);
+        newGrades.push(newGrade);
+        return newGrades;
+    }
+
+    assert.equal(append(grades, 95).length, 4);
+    assert.equal(grades.length, 3);
+
+    function addAndcomputeAverageGrade1(grades, newGrade) {
+        var totalGrades = 0;
+        var validNumGrades = 0;
+        grades.push(newGrade);
+        for(var i = 0; i < grades.length; i++) {
+            if(grades[i] !== null || grades[i] !== undefined) {
+                totalGrades+= grades[i];
+                validNumGrades ++;
+            }
+        }
+        var newAverage = totalGrades / validNumGrades;
+        return Math.round(newAverage);
+    }
+
+    function average(grades) {
+        return grades.reduce(function (total, current) { return total + current; })
+            / grades.length;
+
+    }
+
+    var addAndcomputeAverageGrade2 = R.compose(Math.round, average, append);
+
+    assert.equal(addAndcomputeAverageGrade1(grades, 100), 93);
+
+    grades = [100, 80, 90];
+    assert.equal(addAndcomputeAverageGrade2(grades, 100), 93);
+});
 
 
 
