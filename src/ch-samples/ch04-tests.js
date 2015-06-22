@@ -704,7 +704,7 @@ QUnit.test("CH04 - Tap combinator", function (assert) {
 });
 
 
-QUnit.test("CH034 - Fork combinator", function (assert) {
+QUnit.test("CH03 - Fork combinator", function (assert) {
 
     var getLetterGrade = function (grade) {
         if (grade >= 90) return 'A';
