@@ -195,3 +195,35 @@ QUnit.test("CH05 - Maybe monad 3", function (assert) {
     var result = findStudent('444-44-4444').map(R.prop('firstname'));
     assert.equal(result.getOrElse('Unknown'), 'Unknown');
 });
+
+QUnit.test("CH05 - Maybe monad 3", function (assert) {
+
+    var NullDAO = function(db) {
+        return {
+            get: function (id) {
+                return null;
+            },
+            save: function (s) {
+                console.log('student has been saved');
+            }
+        };
+    };
+
+    var fetchStudentById = R.curry(function (studentDao, id) {
+        return Maybe.fromNullable(studentDao.get(id));
+    });
+
+    var saveStudentObject = R.curry(function (studentDao, maybeStudent) {
+        return studentDao.save(maybeStudent.getOrElse(new Student()));
+    });
+
+    var findStudent = fetchStudentById(NullDAO('student'));
+    var saveStudent = saveStudentObject(NullDAO('student'));
+
+    var result = findStudent('444-44-4444').map(R.prop('firstname'));
+
+    findStudent('444-44-4444').map(R.prop('firstname'));
+
+
+    assert.equal(result.getOrElse('Unknown'), 'Unknown');
+});
