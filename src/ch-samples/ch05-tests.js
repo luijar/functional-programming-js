@@ -149,3 +149,49 @@ QUnit.test("CH05 - Join Identity monad", function (assert) {
     var value = Id.of(Id.of(Id.of(42)));
     assert.equal(value.join().extract(), 42);
 });
+
+
+QUnit.test("CH05 - Maybe monad 1", function (assert) {
+
+    var value = Maybe.of(42);
+    assert.equal(value.get(), 42);
+});
+
+QUnit.test("CH05 - Maybe monad 2", function (assert) {
+
+    var DAO = function(db) {
+        return {
+            get: function (id) {
+                return new Student('Alonzo', 'Church', 'Princeton');
+            }
+        };
+    };
+
+    var fetchStudentById = R.curry(function (studentDao, id) {
+        return Maybe.fromNullable(studentDao.get(id));
+    });
+
+    var findStudent = fetchStudentById(DAO('student'));
+    var result = findStudent('444-44-4444').map(R.prop('firstname'));
+    assert.equal(result.get(), 'Alonzo');
+});
+
+QUnit.test("CH05 - Maybe monad 3", function (assert) {
+
+    var NullDAO = function(db) {
+        return {
+            get: function (id) {
+                return null;
+            }
+        };
+    };
+
+    var fetchStudentById = R.curry(function (studentDao, id) {
+        return Maybe.fromNullable(studentDao.get(id));
+    });
+
+
+    var findStudent = fetchStudentById(NullDAO('student'));
+    var result = findStudent('444-44-4444').map(R.prop('firstname'));
+    assert.equal(result.getOrElse('Unknown'), 'Unknown');
+});

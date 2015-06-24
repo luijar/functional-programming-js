@@ -714,6 +714,9 @@ Id.prototype.extract = function() {
     return this.value;
 };
 
+Id.prototype.toString = function () {
+  return 'Id [' + this.value + ']';
+};
 
  //
  //
