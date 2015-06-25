@@ -415,11 +415,11 @@ QUnit.test("CH03 - Lift with Every", function (assert) {
     }
 
     assert.ok(!(function () {
-        return _(_.flatten(_.toArray(arguments))).every(isValid);
+        return _(arguments).flatten().every(isValid);
     })(['string', 0, null]));
 
     assert.ok((function () {
-        return _(_.flatten(_.toArray(arguments))).every(isValid);
+        return _(arguments).flatten().every(isValid);
     })('string', 0, {}));
 });
 
@@ -678,14 +678,14 @@ QUnit.test("CH03 - Chain 1", function (assert) {
     assert.equal(result[0], 'Alonzo Church');
     assert.equal(result[1], 'Haskell Curry');
 
-    var unique = function (acc, value) {
-        if (!_.includes(acc, value)) {
-            acc.push(value);
-        }
-        return acc;
-    };
+    //var unique = function (acc, value) {
+    //    if (!_.includes(acc, value)) {
+    //        acc.push(value);
+    //    }
+    //    return acc;
+    //};
 
-    result = Lazy(names).map(_.startCase).reduce(unique, []).sort();
+    result = _.unique(names).map(_.startCase).sort();
     assert.equal(result[0], 'Alonzo Church');
     assert.equal(result[1], 'Haskell Curry');
 
@@ -725,7 +725,7 @@ QUnit.test("CH03 - Recursion trees", function (assert) {
     Node.prototype.hasChildren = function () {
         return this.children.length > 0;
     };
-    Node.prototype.getValue = function () {
+    Node.prototype.get = function () {
         return this.val;
     };
     Node.prototype.append = function (child) {
@@ -739,7 +739,7 @@ QUnit.test("CH03 - Recursion trees", function (assert) {
 
         var _visit = function (node, callback) {
 
-            callback(node.getValue());
+            callback(node.get());
 
             if (!node.hasChildren()) {
                 return; // end of path
@@ -791,6 +791,8 @@ QUnit.test("CH03 - Recursion trees", function (assert) {
     var gandy = node(new Person('Robert', 'Gandy'));
     var mendelson = node(new Person('Elliot', 'Mendelson'));
     var sacks = node(new Person('Gerald', 'Sacks'));
+
+
 
     church = church.append(rosser).append(turing).append(kleene);
     kleene = kleene.append(nelson).append(constable);
@@ -867,6 +869,7 @@ QUnit.test("CH03 - Recursion trees", function (assert) {
     };
 
     var BiNode = function (val) {
+        Pair.call(this);
         this.val = val;
         this.parent = parent;
     };
@@ -876,7 +879,7 @@ QUnit.test("CH03 - Recursion trees", function (assert) {
     BiNode.prototype.isRoot = function () {
         return _.isUndefined(this.parent);
     };
-    BiNode.prototype.getValue = function () {
+    BiNode.prototype.get = function () {
         return this.val;
     };
     BiNode.prototype.append = function (left, right) {
@@ -898,7 +901,7 @@ QUnit.test("CH03 - Recursion trees", function (assert) {
             }
 
             // call on parent node
-            callback.call(this, node.getValue());
+            callback.call(this, node.get());
 
             //traverse the right subtree
             if (node.getRight()) {
@@ -951,6 +954,8 @@ QUnit.test("CH03 - Recursion trees", function (assert) {
 
 QUnit.test("CH03 - Map skips null", function (assert) {
 
-    var result = _.map([1,2,3,null,5], _.identity);
+    var result = _.map([1,undefined,3,null,5], _.identity);
     assert.equal(result.length, 5);
+    assert.equal(result[3], null);
+    assert.equal(result[1], null);
 });
