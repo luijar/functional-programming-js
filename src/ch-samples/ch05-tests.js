@@ -214,7 +214,7 @@ QUnit.test("CH05 - Maybe monad 3", function (assert) {
     });
 
     var saveStudentObject = R.curry(function (studentDao, maybeStudent) {
-        return studentDao.save(maybeStudent.getOrElse(new Student()));
+        return Maybe.fromNullable(studentDao.save(maybeStudent.getOrElse(new Student())));
     });
 
     var findStudent = fetchStudentById(NullDAO('student'));
@@ -222,8 +222,40 @@ QUnit.test("CH05 - Maybe monad 3", function (assert) {
 
     var result = findStudent('444-44-4444').map(R.prop('firstname'));
 
-    findStudent('444-44-4444').map(R.prop('firstname'));
+    assert.equal(result.getOrElse('Enter user name'), 'Enter user name');
+});
+
+QUnit.test("CH05 - Number Maybe ", function (assert) {
 
 
-    assert.equal(result.getOrElse('Unknown'), 'Unknown');
+    function NumberMaybe() {
+        Maybe.call(this);
+    }
+    NumberMaybe.prototype = Object.create(Maybe.prototype);
+    NumberMaybe.prototype.constructor = NumberMaybe;
+
+    NumberMaybe.fromNullable = function (a) {
+        return a != null &&  !(isNaN(a) || a === Infinity) ? new Just(a)
+            : new Nothing()
+    };
+    NumberMaybe.prototype.fromNullable = NumberMaybe.fromNullable;
+
+
+    assert.equal(1/0, Infinity);
+    assert.ok(isNaN(parseInt("blabla")));
+
+    var plus = _.curry(function (a, b) {
+        return a + b;
+    });
+
+    var plus3 = plus(3);
+
+    var result = NumberMaybe.fromNullable(1 / 0).map(plus3).getOrElse(0);
+    assert.equal(result, 0);
+
+    var result = NumberMaybe.fromNullable(parseInt("blabla")).map(plus3).getOrElse(0);
+    assert.equal(result, 0);
+
+    var result = NumberMaybe.fromNullable(parseInt("100")).map(plus3).getOrElse(0);
+    assert.equal(result, 103);
 });

@@ -165,7 +165,7 @@ Just.prototype.isJust = true;
  * @summary α → Maybe[α]
  */
 Maybe.of = function (a) {
-    return Maybe.prototype.Just(a)
+    return Maybe.prototype.Just(a);
 };
 Maybe.prototype.of = Maybe.of;
 
@@ -183,11 +183,11 @@ Maybe.prototype.of = Maybe.of;
 Maybe.prototype.ap = unimplemented;
 
 Nothing.prototype.ap = function (b) {
-    return b
+    return b;
 };
 
 Just.prototype.ap = function (b) {
-    return b.map(this.value)
+    return b.map(this.value);
 };
 
 
@@ -204,7 +204,7 @@ Maybe.prototype.map = unimplemented;
 Nothing.prototype.map = noop;
 
 Just.prototype.map = function (f) {
-    return this.of(f(this.value))
+    return this.of(f(this.value));
 };
 
 
@@ -221,7 +221,7 @@ Maybe.prototype.chain = unimplemented;
 Nothing.prototype.chain = noop;
 
 Just.prototype.chain = function (f) {
-    return f(this.value)
+    return f(this.value);
 };
 
 
@@ -301,59 +301,4 @@ Nothing.prototype.getOrElse = function (a) {
 
 Just.prototype.getOrElse = function (_) {
     return this.value
-};
-
-
-/**
- * Transforms a failure into a new `Maybe[α]` structure. Does nothing if the
- * structure already contains a value.
- *
- * @method
- * @summary @Maybe[α] => (Void → Maybe[α]) → Maybe[α]
- */
-Maybe.prototype.orElse = unimplemented;
-
-Nothing.prototype.orElse = function (f) {
-    return f()
-};
-
-Just.prototype.orElse = function (_) {
-    return this
-};
-
-
-/**
- * Catamorphism.
- *
- * @method
- * @summary @Maybe[α] => { Nothing: Void → β, Just: α → β } → β
- */
-Maybe.prototype.cata = unimplemented;
-
-Nothing.prototype.cata = function (pattern) {
-    return pattern.Nothing()
-};
-
-Just.prototype.cata = function (pattern) {
-    return pattern.Just(this.value);
-};
-
-
-/**
- * JSON serialisation
- *
- * @method
- * @summary @Maybe[α] => Void → Object
- */
-Maybe.prototype.toJSON = unimplemented;
-
-Nothing.prototype.toJSON = function () {
-    return {'#type': 'folktale:Maybe.Nothing'}
-};
-
-Just.prototype.toJSON = function () {
-    return {
-        '#type': 'folktale:Maybe.Just'
-        , value: this.value
-    }
 };
