@@ -262,46 +262,6 @@ Pair.prototype.getRight = function () {
     return this.right;
 };
 
-/**
- * Either class for error handling.
- *
- * It has a private constructor, so use functions Either.left(..) or Either.right(..) to instantiate it.
- *
- * Downside is that 'instanceof' and 'typeof' don't return 'Either'
- */
-var Either = (function () {
-
-    // private constructor
-    function Either(a, b) {
-        var _left = a;
-        var _right = b;
-
-        // Either will inherit getLeft and getRight from Pair
-        Pair.call(this, _left, _right);
-
-        // public methods
-        this.isLeft = function () {
-            return _left !== undefined && _left !== null;
-        };
-
-        this.isRight = function () {
-            return _right !== undefined && _right !== null;
-        };
-    }
-
-    Either.prototype = Object.create(Pair.prototype);
-    Either.prototype.constructor = Either;
-
-    // Static Factory methods
-    return {
-        left: function (a) {
-            return Object.freeze(new Either(a, null));
-        },
-        right: function (b) {
-            return Object.freeze(new Either(null, b));
-        }
-    }
-})();
 
 /**
  * A container object which may or may not contain a non-null value. If a value is present, isPresent() will return true and get() will return the value.

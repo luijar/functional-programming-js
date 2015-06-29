@@ -259,3 +259,175 @@ QUnit.test("CH05 - Number Maybe ", function (assert) {
     var result = NumberMaybe.fromNullable(parseInt("100")).map(plus3).getOrElse(0);
     assert.equal(result, 103);
 });
+
+QUnit.test("CH05 - Either monad 1", function (assert) {
+
+    // Fake DAO
+    var NullDAO = function() {
+        return {
+            get: function (id) {
+                return null;
+            }
+        };
+    };
+
+    var fetchStudentById = R.curry(function (studentDao, id) {
+        var student = studentDao.get(id);
+        if(student) {
+            return Either.of(student);
+        }
+        return Either.Left('Student not found with ID: ' + id);
+    });
+
+    var findStudent = fetchStudentById(NullDAO('student'));
+
+    var errorLogger = _.partial(logger, 'console', 'basic', 'MyLogger', 'ERROR');
+
+    findStudent('444-44-4444').orElse(errorLogger);
+    assert.ok(true);
+});
+
+
+QUnit.test("CH05 - Either monad 2", function (assert) {
+
+    function decode(url) {
+        try {
+            var result = decodeURIComponent(url); // throws URIError
+            return Either.of(result);
+        }
+        catch (uriError) {
+            return Either.Left(uriError.message);
+        }
+    }
+
+    assert.equal(decode('%').orElse(_.identity), 'URI malformed');
+    assert.equal(decode('http%3A%2F%2Fexample.com').get(), 'http://example.com');
+});
+
+
+QUnit.test("CH05 - Composition Monad 1", function (assert) {
+
+    // Mock DB service
+    var Store = function(_) {
+        return {
+            getRecord: function(id) {
+                var s = new Student('Alonzo', 'Church');
+                s.ssn = id;
+                return s;
+                //return null;
+            }
+        };
+    };
+
+    // Mock payment service
+    var PaymentService = function (money, rate) {
+        return {
+            submit: function (student) {
+                console.log(student.getFullName() + ' paid in full: ' + money);
+                return new Money(money._1 + (money._1 * rate), money._2);
+            }
+        }
+    };
+
+
+    var EvenBus = function (config) {
+
+        var Scheduler = (function () {
+            var timedFn = _.bind(setTimeout, undefined, _, _);
+
+            return {
+                delay5:  _.partial(timedFn, _, 5),
+                delay10: _.partial(timedFn, _, 10),
+                delay:   _.partial(timedFn, _, _)
+            };
+        })();
+
+        return {
+            fireEvent: function(str) {
+                if(config && config.delay === 'none') {
+                    Scheduler.delay(log(str), 0);
+                }
+                else {
+                    Scheduler.delay10(log(str));
+                }
+            }
+        };
+    };
+
+    // fetchStudent :: DB, string -> Student
+    var fetchRecord = R.curry(function (dao, studentId) {
+        var student = dao.getRecord(studentId);
+        if(student) {
+            return Either.of(student);
+        }
+        return Either.Left('Student not found with ID: ' + studentId);
+    });
+
+    // sendPayment :: Payment -> Money
+    var sendPayment = R.curry(function (payment, student) {
+        return payment.submit(student)
+    });
+
+    // sendNotification :: EventQ, Money -> void
+    var fireNotification = R.curry(function(eventQueue, money) {
+        eventQueue.fireEvent('Payment sent: '+ money);
+        return money;
+    });
+
+    var trace = _.partial(logger, 'console', 'basic', 'Monad Example', 'TRACE');
+    var errorLog = _.partial(logger, 'console', 'basic', 'Monad Example', 'ERROR');
+
+
+    var trim = function (str) {
+        return str.replace(/^\s*|\s*$/g, '');
+    };
+
+    var normalize = function (str) {
+        return str.replace(/\-/g, '');
+    };
+
+    var validLength = function(len, str) {
+        if(str.length === len) {
+            return Either.of(str);
+        }
+        return Either.Left('Input: ' + str + ' length does is not equal to: ' + len);
+    };
+
+    var cleanInput = R.compose(R.tap(trace), normalize, R.tap(trace), trim);
+
+    var checkLengthSsn = validLength.bind(undefined, 9);
+
+    function processPayment(studentId) {
+        return Maybe.fromNullable(studentId)
+            .map(cleanInput)
+            .chain(checkLengthSsn)
+            .chain(fetchStudent)
+            .map(sendPayment(PaymentService(new Money(100, 'USD'),  .06)))
+            .map(fireNotification(EvenBus({delay: 'none'})));
+    }
+
+    var unit = function (val) {
+        return Either.fromNullable(val);
+    };
+
+    var bind = R.curry(function (f, container) {
+        return container.map(f);
+    });
+
+    var chain = R.curry(function (f, container) {
+        return container.chain(f);
+    });
+
+    var processPayment2 = R.compose(
+        bind(fireNotification(EvenBus({delay: 'none'}))),
+        bind(sendPayment  (PaymentService(new Money(100, 'USD'),  .06))),
+        chain(fetchRecord (Store('students'))),
+        chain(checkLengthSsn),
+        bind(cleanInput),
+        unit);
+
+    var studentId = '444-44-4444';
+
+    processPayment(studentId).orElse(errorLog);
+    assert.ok(true);
+});
