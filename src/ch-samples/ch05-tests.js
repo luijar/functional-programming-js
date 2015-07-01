@@ -354,8 +354,8 @@ QUnit.test("CH05 - Composition Monad 1", function (assert) {
         };
     };
 
-    // fetchStudent :: DB, string -> Student
-    var fetchRecord = R.curry(function (dao, studentId) {
+    // safefetchRecord :: Store, string -> Either<Student>
+    var safefetchRecord = R.curry(function (dao, studentId) {
         var student = dao.getRecord(studentId);
         if(student) {
             return Either.of(student);
@@ -399,18 +399,18 @@ QUnit.test("CH05 - Composition Monad 1", function (assert) {
 
     function processPayment(studentId) {
         return Maybe.fromNullable(studentId)
-            .map(cleanInput)
+            .map  (cleanInput)
             .chain(checkLengthSsn)
-            .chain(fetchStudent)
-            .map(sendPayment(PaymentService(new Money(100, 'USD'),  .06)))
-            .map(fireNotification(EvenBus({delay: 'none'})));
+            .chain(safefetchRecord (Store('students')))
+            .map  (sendPayment     (PaymentService(new Money(100, 'USD'),  .06)))
+            .map  (fireNotification(EvenBus({delay: 'none'})));
     }
 
     var unit = function (val) {
         return Either.fromNullable(val);
     };
 
-    var bind = R.curry(function (f, container) {
+    var map = R.curry(function (f, container) {
         return container.map(f);
     });
 
@@ -419,12 +419,12 @@ QUnit.test("CH05 - Composition Monad 1", function (assert) {
     });
 
     var processPayment2 = R.compose(
-        bind(fireNotification(EvenBus({delay: 'none'}))),
-        bind(sendPayment  (PaymentService(new Money(100, 'USD'),  .06))),
-        chain(fetchRecord (Store('students'))),
+        map(fireNotification(EvenBus({delay: 'none'}))),
+        map(sendPayment  (PaymentService(new Money(100, 'USD'),  .06))),
+        chain(safefetchRecord (Store('students'))),
         chain(checkLengthSsn),
-        bind(cleanInput),
-        unit);
+        map(cleanInput),
+        Maybe.fromNullable);
 
     var studentId = '444-44-4444';
 

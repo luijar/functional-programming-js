@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Functional JavaScript Programming | Luis Atencio</title>
+
+    <script src="../lib/jquery.js"></script>
+</head>
+<body>
+    <div style="display: none;">
+        <h1><span id="banner">[name]</span></h1>
+        <div id="bigbanner" style="display: none"></div>
+        <table id="student-form">
+            <form>
+                <tr>
+                    <td>
+                        <label>Enter name:</label>
+                    </td>
+                    <td>
+                        <input id="student-name" type="text">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>Student First Name:</label>
+                    </td>
+                    <td>
+                        <input type="text">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>Student Last Name:</label>
+                    </td>
+                    <td>
+                        <input type="text">
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="submit"></td>
+                </tr>
+            </form>
+        </table>
+    </div>
+<script>
+    $(document).ready(function () {
+        $('div').map(function (index, $elem) {
+            $(this).show();
+        });
+
+        $('#bigbanner').fadeIn('slow', function () {
+
+        });
+    });
+</script>
+</body>
+</html>
