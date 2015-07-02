@@ -82,7 +82,7 @@
             return template(student);
         };
 
-        // addToTable :: Payment -> Money
+
         var addToTable = R.curry(function (elementId, rowInfo) {
             $('#' + elementId + ' tr:last').after('<tr>' + rowInfo + '</tr>');
             return $('#' + elementId + ' tr').length - 1; // exclude header
