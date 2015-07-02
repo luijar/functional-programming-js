@@ -5,52 +5,114 @@
     <title>Functional JavaScript Programming | Luis Atencio</title>
 
     <script src="../lib/jquery.js"></script>
+    <script src="../lib/lodash.js"></script>
+    <script src="../lib/stream-min.js"></script>
+    <script src="../lib/common.js"></script>
+    <script src="../lib/log4js.js"></script>
+    <script src="../lib/ramda.js"></script>
+    <script src="../lib/maybe.js"></script>
+    <script src="../lib/id.js"></script>
+    <script src="../lib/either.js"></script>
 </head>
 <body>
-    <div style="display: none;">
-        <h1><span id="banner">[name]</span></h1>
-        <div id="bigbanner" style="display: none"></div>
-        <table id="student-form">
-            <form>
-                <tr>
-                    <td>
-                        <label>Enter name:</label>
-                    </td>
-                    <td>
-                        <input id="student-name" type="text">
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label>Student First Name:</label>
-                    </td>
-                    <td>
-                        <input type="text">
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label>Student Last Name:</label>
-                    </td>
-                    <td>
-                        <input type="text">
-                    </td>
-                </tr>
-                <tr>
-                    <td><input type="submit"></td>
-                </tr>
-            </form>
+    <div>
+        <h1><span id="banner">Roster</span></h1>
+        <table id="studentRoster">
+            <thead>
+                <tr><td>SSN</td><td>Name</td><td>Address</td></tr>
+            </thead>
         </table>
     </div>
 <script>
     $(document).ready(function () {
-        $('div').map(function (index, $elem) {
-            $(this).show();
+
+        // Mock DB service
+        var Store = function(index) {
+
+            var students = {
+                '444444444': new Student('Alonzo', 'Church').setSsn('444-44-4444'),
+                '555555555': new Student('Alan', 'Turing').setSsn('555-55-5555')
+            };
+
+            return {
+                getRecord: function(id) {
+                    if(index === 'students') {
+                        return students[id];
+                    }
+                }
+            };
+        };
+
+        // safefetchRecord :: Store, string -> Either<Student>
+        var safefetchRecord = R.curry(function (store, studentId) {
+            var student = store.getRecord(studentId);
+            if(student) {
+                return Either.of(student);
+            }
+            return Either.Left('Student not found with ID: ' + studentId);
         });
 
-        $('#bigbanner').fadeIn('slow', function () {
+        var toRowInfo = function (student) {
+            var template =  _.template('<td><%= ssn %></td><td><%= firstname %> <%= lastname %></td> ');
+            return template(student);
+        };
 
+        // addToTable :: Payment -> Money
+        var addToTable = R.curry(function (elementId, rowInfo) {
+            $('#' + elementId + ' tr:last').after('<tr>' + rowInfo + '</tr>');
+            return $('#' + elementId + ' tr').length - 1; // exclude header
         });
+
+
+        var debugLog = _.partial(logger, 'console', 'basic', 'Monad Example', 'TRACE');
+        var errorLog = _.partial(logger, 'console', 'basic', 'Monad Example', 'ERROR');
+        var trace = R.curry(function (msg, obj) {debugLog(msg + ':' + obj);});
+
+        var trim = function (str) {
+            return str.replace(/^\s*|\s*$/g, '');
+        };
+
+        var normalize = function (str) {
+            return str.replace(/\-/g, '');
+        };
+
+        var validLength = function(len, str) {
+            if(str.length === len) {
+                return Either.of(str);
+            }
+            return Either.Left('Input: ' + str + ' length does is not equal to: ' + len);
+        };
+
+        var cleanInput = R.compose(R.tap(trace), normalize, R.tap(trace), trim);
+
+        var checkLengthSsn = validLength.bind(undefined, 9);
+
+        var map = R.curry(function (f, container) {
+            return container.map(f);
+        });
+
+        var chain = R.curry(function (f, container) {
+            return container.chain(f);
+        });
+
+        var lift = R.curry(function (f, value) {
+            return Maybe.fromNullable(value).map(f);
+        });
+
+        var processPayment2 = R.compose(
+                R.tap(trace('Students added to roster')),
+                map(addToTable('studentRoster')),
+                R.tap(trace('Student converted to row')),
+                map(toRowInfo),
+                R.tap(trace('Record fetched successfully!')),
+                chain(safefetchRecord (Store('students'))),
+                R.tap(trace('Input was valid')),
+                chain(checkLengthSsn),
+                lift(cleanInput));
+
+        var studentId = '444-44-4444';
+        var result = processPayment2(studentId).getOrElse(0);
+        alert(result);
     });
 </script>
 </body>

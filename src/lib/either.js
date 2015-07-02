@@ -1,8 +1,6 @@
 /**
  * @module lib/either
  */
-module.exports = Either
-
 // -- Aliases ----------------------------------------------------------
 var clone         = Object.create
 var unimplemented = function(){ throw new Error('Not implemented.') }

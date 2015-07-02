@@ -374,9 +374,9 @@ QUnit.test("CH05 - Composition Monad 1", function (assert) {
         return money;
     });
 
-    var trace = _.partial(logger, 'console', 'basic', 'Monad Example', 'TRACE');
+    var debugLog = _.partial(logger, 'console', 'basic', 'Monad Example', 'TRACE');
     var errorLog = _.partial(logger, 'console', 'basic', 'Monad Example', 'ERROR');
-
+    var trace = R.curry(function (msg, _) {debugLog(msg);});
 
     var trim = function (str) {
         return str.replace(/^\s*|\s*$/g, '');
@@ -420,8 +420,11 @@ QUnit.test("CH05 - Composition Monad 1", function (assert) {
 
     var processPayment2 = R.compose(
         map(fireNotification(EvenBus({delay: 'none'}))),
+        R.tap(trace('Payment has been submitted')),
         map(sendPayment  (PaymentService(new Money(100, 'USD'),  .06))),
+        R.tap(trace('Record fetched successfully!')),
         chain(safefetchRecord (Store('students'))),
+        R.tap(trace('Input was valid')),
         chain(checkLengthSsn),
         map(cleanInput),
         Maybe.fromNullable);

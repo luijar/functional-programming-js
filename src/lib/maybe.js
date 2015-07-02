@@ -22,7 +22,6 @@
 /**
  * @module lib/maybe
  */
-module.exports = Maybe;
 
 // -- Aliases ----------------------------------------------------------
 var clone = Object.create;
