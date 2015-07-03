@@ -135,8 +135,18 @@
                 chain(checkLengthSsn),
                 lift(cleanInput));
 
+
+        function processPayment(studentId) {
+            return Maybe.fromNullable(studentId)
+                    .map  (cleanInput)
+                    .chain(checkLengthSsn)
+                    .chain(safefetchRecord (Store('students')))
+                    .map  (toRowInfo)
+                    .map  (addToTable('studentRoster'));
+        }
+
         var studentId = '444-44-4444';
-        var result = processPayment2(studentId).getOrElse(0);
+        var result = processPayment(studentId).getOrElse(0);
     });
 </script>
 </body>
