@@ -1,9 +1,12 @@
 /**
+ * Functional Programming in JavaScript
+ *
  * Unit tests for Chapter 04 code
+ *
+ * Curry, Partial application, and Composition
  *
  * Author: Luis Atencio
  */
-
 "use strict";
 
 QUnit.test("CH04 - Tuple 1", function (assert) {

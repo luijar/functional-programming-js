@@ -1,9 +1,12 @@
 /**
+ * Functional Programming in JavaScript
+ *
  * Unit tests for Chapter 03 code
+ *
+ * Chains with Map, Reduce, and Filter
  *
  * Author: Luis Atencio
  */
-
 "use strict";
 
 QUnit.test("CH03 - Polymorphic functions", function (assert) {

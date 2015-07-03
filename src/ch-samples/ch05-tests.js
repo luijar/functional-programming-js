@@ -1,5 +1,9 @@
 /**
+ * Functional Programming in JavaScript
+ *
  * Unit tests for Chapter 05 code
+ *
+ * Functors, Monads, and wrappers
  *
  * Author: Luis Atencio
  */
