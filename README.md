@@ -1,5 +1,11 @@
 # Functional JavaScript Programming
 
+Since this code uses ES6 artifacts, you must transpile your JavaScript code with either:
+
+* Babel
+* Traceur
+
+
 In this code repository you will find:
 
 * All code samples (as runnable unit tests) of code used in chapters
