@@ -200,7 +200,7 @@ QUnit.test("CH06 - JSCheck Custom Specifier for SSN", function (assert) {
             return verdict(validateSsn(ssn));
         },
         [
-            JSC.SSN(JSC.integer(100, 999), JSC.integer(10, 99), JSC.integer(1000,9999))
+            JSC.SSN(JSC.integer(100, 999), JSC.integer(10, 99), JSC.integer(1000,9999))  // make it fail by misconfiguring a parameter
         ],
         function (ssn) {
             return 'Testing Custom SSN:  ' + ssn;
