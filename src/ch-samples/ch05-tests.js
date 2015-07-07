@@ -9,14 +9,14 @@
  */
 
 "use strict";
-
-QUnit.test("CH05 - Chainig example", function (assert) {
+QUnit.module( "Chapter 5" );
+QUnit.test("Chainig example", function (assert) {
 
     var result = _(['f', 'u', 'n', 'c', 't', 'i', 'o', 'n', 'a', 'l']).take(3).map( function(s) { return s.toUpperCase()} ).join('');
     assert.equal(result, 'FUN');
 });
 
-QUnit.test("CH05 - Wrapper 1", function (assert) {
+QUnit.test("Wrapper 1", function (assert) {
 
     var wrappedValue = wrap('Alonzo');
 
@@ -33,7 +33,7 @@ QUnit.test("CH05 - Wrapper 1", function (assert) {
 });
 
 
-QUnit.test("CH05 - Addition with simple functor", function (assert) {
+QUnit.test("Addition with simple functor", function (assert) {
 
     var two = wrap(2);
 
@@ -47,7 +47,7 @@ QUnit.test("CH05 - Addition with simple functor", function (assert) {
 });
 
 
-QUnit.test("CH05 - Functor law 1", function (assert) {
+QUnit.test("Functor law 1", function (assert) {
 
     var wrappedValue = wrap('Alonzo');
 
@@ -56,7 +56,7 @@ QUnit.test("CH05 - Functor law 1", function (assert) {
 });
 
 
-QUnit.test("CH05 - Functor and Logging", function (assert) {
+QUnit.test("Functor and Logging", function (assert) {
 
 
     var infoLogger = _.partial(logger, 'console', 'basic', 'MyLogger', 'INFO');
@@ -73,7 +73,7 @@ QUnit.test("CH05 - Functor and Logging", function (assert) {
 
 
 
-QUnit.test("CH05 - Functor and composition", function (assert) {
+QUnit.test("Functor and composition", function (assert) {
 
     var plus = _.curry(function (a, b) {
         return a + b;
@@ -90,7 +90,7 @@ QUnit.test("CH05 - Functor and composition", function (assert) {
     assert.equal(add.get(), 5);
 });
 
-QUnit.test("CH05 - Maybe function", function (assert) {
+QUnit.test("Maybe function", function (assert) {
 
     function maybe(fn, value) {
         return value === null || value === undefined ? value : fn(value);
@@ -113,7 +113,7 @@ QUnit.test("CH05 - Maybe function", function (assert) {
 });
 
 
-QUnit.test("CH05 - Nesting wrappers", function (assert) {
+QUnit.test("Nesting wrappers", function (assert) {
 
     var DAO = function(db) {
         return {
@@ -136,7 +136,7 @@ QUnit.test("CH05 - Nesting wrappers", function (assert) {
 });
 
 
-QUnit.test("CH05 - Identity Monad", function (assert) {
+QUnit.test("Identity Monad", function (assert) {
 
     var student = new Student('Alonzo', 'Church', 'Princeton')
         .setAddress('New Jersey', 'USA');
@@ -148,20 +148,20 @@ QUnit.test("CH05 - Identity Monad", function (assert) {
 
 });
 
-QUnit.test("CH05 - Join Identity monad", function (assert) {
+QUnit.test("Join Identity monad", function (assert) {
 
     var value = Id.of(Id.of(Id.of(42)));
     assert.equal(value.join().extract(), 42);
 });
 
 
-QUnit.test("CH05 - Maybe monad 1", function (assert) {
+QUnit.test("Maybe monad 1", function (assert) {
 
     var value = Maybe.of(42);
     assert.equal(value.get(), 42);
 });
 
-QUnit.test("CH05 - Maybe monad 2", function (assert) {
+QUnit.test("Maybe monad 2", function (assert) {
 
     var DAO = function(db) {
         return {
@@ -180,7 +180,7 @@ QUnit.test("CH05 - Maybe monad 2", function (assert) {
     assert.equal(result.get(), 'Alonzo');
 });
 
-QUnit.test("CH05 - Maybe monad 3", function (assert) {
+QUnit.test("Maybe monad 3", function (assert) {
 
     var NullDAO = function(db) {
         return {
@@ -200,7 +200,7 @@ QUnit.test("CH05 - Maybe monad 3", function (assert) {
     assert.equal(result.getOrElse('Unknown'), 'Unknown');
 });
 
-QUnit.test("CH05 - Maybe monad 3", function (assert) {
+QUnit.test("Maybe monad 3", function (assert) {
 
     var NullDAO = function(db) {
         return {
@@ -229,7 +229,7 @@ QUnit.test("CH05 - Maybe monad 3", function (assert) {
     assert.equal(result.getOrElse('Enter user name'), 'Enter user name');
 });
 
-QUnit.test("CH05 - Number Maybe ", function (assert) {
+QUnit.test("Number Maybe ", function (assert) {
 
 
     function NumberMaybe() {
@@ -264,7 +264,7 @@ QUnit.test("CH05 - Number Maybe ", function (assert) {
     assert.equal(result, 103);
 });
 
-QUnit.test("CH05 - Either monad 1", function (assert) {
+QUnit.test("Either monad 1", function (assert) {
 
     // Fake DAO
     var NullDAO = function() {
@@ -292,7 +292,7 @@ QUnit.test("CH05 - Either monad 1", function (assert) {
 });
 
 
-QUnit.test("CH05 - Either monad 2", function (assert) {
+QUnit.test("Either monad 2", function (assert) {
 
     function decode(url) {
         try {
@@ -309,7 +309,7 @@ QUnit.test("CH05 - Either monad 2", function (assert) {
 });
 
 
-QUnit.test("CH05 - Composition Monad 1", function (assert) {
+QUnit.test("Composition Monad 1", function (assert) {
 
     // Mock DB service
     var Store = function(_) {

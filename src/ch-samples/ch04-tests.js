@@ -8,8 +8,8 @@
  * Author: Luis Atencio
  */
 "use strict";
-
-QUnit.test("CH04 - Tuple 1", function (assert) {
+QUnit.module( "Chapter 4" );
+QUnit.test("Tuple 1", function (assert) {
 
     var p1 = new Person().setFirstname('Alonzo').setLastname('Church').setBirth(1903);
     var p2 = new Person().setFirstname('Stephen').setLastname('Kleene').setBirth(1909);
@@ -30,7 +30,7 @@ QUnit.test("CH04 - Tuple 1", function (assert) {
     assert.equal(tuple + "", '(Alonzo Church, 1903)');
 });
 
-QUnit.test("CH04 - Tuple 2", function (assert) {
+QUnit.test("Tuple 2", function (assert) {
 
     var Pair = Tuple(String, String);
     var name = new Pair('Barkley', 'Rosser');
@@ -46,7 +46,7 @@ QUnit.test("CH04 - Tuple 2", function (assert) {
     }
 });
 
-QUnit.test("CH04 - Tuple 3 with Error", function (assert) {
+QUnit.test("Tuple 3 with Error", function (assert) {
 
     var Pair = Tuple(String, String);
 
@@ -59,7 +59,7 @@ QUnit.test("CH04 - Tuple 3 with Error", function (assert) {
     }
 });
 
-QUnit.test("CH04 - Compose 1", function (assert) {
+QUnit.test("Compose 1", function (assert) {
 
     var trim = function (str) {
         return str.replace(/^\s*|\s*$/g, '');
@@ -88,7 +88,7 @@ QUnit.test("CH04 - Compose 1", function (assert) {
 });
 
 
-QUnit.test("CH04 - Curry 1", function (assert) {
+QUnit.test("Curry 1", function (assert) {
 
    function curry2(fn) {
         return function(secondArg) {
@@ -102,14 +102,14 @@ QUnit.test("CH04 - Curry 1", function (assert) {
     assert.equal(parseHex('A'), 10);
 });
 
-QUnit.test("CH04 - Curry 1 Right", function (assert) {
+QUnit.test("Curry 1 Right", function (assert) {
 
     var toBase = curry2(parseInt)('111');
     assert.equal(toBase(2), 7);
     assert.equal(toBase(10), 111);
 });
 
-QUnit.test("CH04 - Curry Function Templates", function (assert) {
+QUnit.test("Curry Function Templates", function (assert) {
 
     var student = _.curry(function (school, lname, fname) {
         return new Student(fname, lname, school);
@@ -124,7 +124,7 @@ QUnit.test("CH04 - Curry Function Templates", function (assert) {
 
 });
 
-QUnit.test("CH04 - Curry Function Templates Logger", function (assert) {
+QUnit.test("Curry Function Templates Logger", function (assert) {
 
     var log = _.curry(logger)('console', 'json', 'FJS Curry');
     log('ERROR', 'Error condition detected!!');
@@ -132,7 +132,7 @@ QUnit.test("CH04 - Curry Function Templates Logger", function (assert) {
 });
 
 
-QUnit.test("CH04 - Curry Function Builder", function (assert) {
+QUnit.test("Curry Function Builder", function (assert) {
 
     // Mock payment service
     var PaymentService = function () {
@@ -183,7 +183,7 @@ QUnit.test("CH04 - Curry Function Builder", function (assert) {
     assert.equal(result._2, 'USD');
 });
 
-QUnit.test("CH04 - Check Type with Curry 2", function (assert) {
+QUnit.test("Check Type with Curry 2", function (assert) {
 
     // Type Checks (curry it)
     var checkType = curry2(function(typeDef, actualType) {
@@ -203,7 +203,7 @@ QUnit.test("CH04 - Check Type with Curry 2", function (assert) {
     //assert.ok(!checkType(Boolean)("A"));
 });
 
-QUnit.test("CH04 - Partial 1", function (assert) {
+QUnit.test("Partial 1", function (assert) {
 
     // Logger function with partial
     var log = _.partial(logger, 'console', 'json', 'FJS Partial');
@@ -214,7 +214,7 @@ QUnit.test("CH04 - Partial 1", function (assert) {
     assert.ok(true);
 });
 
-QUnit.test("CH04 - Bind 1", function (assert) {
+QUnit.test("Bind 1", function (assert) {
 
     // Logger function with partial
     var log = logger.bind(undefined, 'console', 'json', 'FJS Binding');
@@ -223,7 +223,7 @@ QUnit.test("CH04 - Bind 1", function (assert) {
     assert.ok(true);
 });
 
-QUnit.test("CH04 - Partial 2", function (assert) {
+QUnit.test("Partial 2", function (assert) {
 
     var logger2 = function (level, message, name, appender, layout) {
         var appenders = {
@@ -248,7 +248,7 @@ QUnit.test("CH04 - Partial 2", function (assert) {
     assert.ok(true);
 });
 
-QUnit.test("CH04 - Binding 2", function (assert) {
+QUnit.test("Binding 2", function (assert) {
 
     var Scheduler = (function () {
         var timedFn = _.bind(setTimeout, undefined, _, _);
@@ -267,21 +267,21 @@ QUnit.test("CH04 - Binding 2", function (assert) {
 });
 
 
-QUnit.test("CH04 - Partial 3", function (assert) {
+QUnit.test("Partial 3", function (assert) {
 
     String.prototype.first = _.partial(String.prototype.substring, 0, _);
     assert.equal('Functional'.first(3), 'Fun');
 });
 
 
-QUnit.test("CH04 - Partial 4", function (assert) {
+QUnit.test("Partial 4", function (assert) {
 
     String.prototype.asName = R.partial(String.prototype.replace, /(\w+)\s(\w+)/, '$2, $1');
     assert.equal('Alonzo Church'.asName(), 'Church, Alonzo');
 });
 
 
-QUnit.test("CH04 - Partial 5", function (assert) {
+QUnit.test("Partial 5", function (assert) {
 
     Array.prototype.shallowCopy = _.partial(Array.prototype.map, _.identity);
     var arr1 = [1,2,3];
@@ -309,7 +309,7 @@ QUnit.test("CH04 - Partial 5", function (assert) {
 });
 
 
-QUnit.test("CH04 - Compose 1 Compute Highest Grade", function (assert) {
+QUnit.test("Compose 1 Compute Highest Grade", function (assert) {
 
     var students = ['Rosser', 'Turing', 'Kleene', 'Church'];
     var grades   = [80, 100, 90, 99];
@@ -321,7 +321,7 @@ QUnit.test("CH04 - Compose 1 Compute Highest Grade", function (assert) {
 
 
 
-QUnit.test("CH04 - Compose 2 Process Payment", function (assert) {
+QUnit.test("Compose 2 Process Payment", function (assert) {
 
 
     // Mock DB service
@@ -398,7 +398,7 @@ QUnit.test("CH04 - Compose 2 Process Payment", function (assert) {
 });
 
 
-QUnit.test("CH04 - Point-free [ tr 'A-Z' 'a-z' <names.in | uniq | sort ] ", function (assert) {
+QUnit.test("Point-free [ tr 'A-Z' 'a-z' <names.in | uniq | sort ] ", function (assert) {
 
     var words = ['Functional', 'Programming', 'Curry', 'Memoization', 'Partial', 'Curry', 'Programming'];
     var _ = R;
@@ -412,14 +412,14 @@ QUnit.test("CH04 - Point-free [ tr 'A-Z' 'a-z' <names.in | uniq | sort ] ", func
 
 
 
-QUnit.test("CH04 - Simple composition", function (assert) {
+QUnit.test("Simple composition", function (assert) {
 
     var square = function (x) {return x*x};
     var sumsOfSquares = R.compose(R.sum, R.map(square));
     assert.equal(sumsOfSquares([1,2,3]),14);
 });
 
-QUnit.test("CH04 - Lens 1", function (assert) {
+QUnit.test("Lens 1", function (assert) {
 
      var person = new Person('Alonzo', 'Church');
      var lastnameLens = R.lensProp('lastname');
@@ -430,7 +430,7 @@ QUnit.test("CH04 - Lens 1", function (assert) {
 });
 
 
-QUnit.test("CH04 - Lens 2", function (assert) {
+QUnit.test("Lens 2", function (assert) {
 
     var person = new Person('Alonzo', 'Church');
     person.address = new Address(
@@ -447,7 +447,7 @@ QUnit.test("CH04 - Lens 2", function (assert) {
     //assert.equal(addressZipLens.location(), '1234');
 });
 
-QUnit.test("CH04 - Lens 3", function (assert) {
+QUnit.test("Lens 3", function (assert) {
 
     var person = new Person('Alonzo', 'Church');
     person.address = new Address(
@@ -465,7 +465,7 @@ QUnit.test("CH04 - Lens 3", function (assert) {
     assert.equal(store.get().location(), '1234');
 });
 
-QUnit.test("CH04 - Lens 4", function (assert) {
+QUnit.test("Lens 4", function (assert) {
 
     var p1 = new Person().setFirstname('Alonzo').setLastname('Church');
     var p2 = new Person().setFirstname('Haskell').setLastname('Curry');
@@ -492,7 +492,7 @@ QUnit.test("CH04 - Lens 4", function (assert) {
 
 });
 
-QUnit.test("CH04 - Lens 5", function (assert) {
+QUnit.test("Lens 5", function (assert) {
 
     var Person = function (firstname, lastname, year) {
 
@@ -518,7 +518,7 @@ QUnit.test("CH04 - Lens 5", function (assert) {
 });
 
 
-QUnit.test("CH04 - Lens 6 With Ramda", function (assert) {
+QUnit.test("Lens 6 With Ramda", function (assert) {
 
     var person = new Person('Alonzo', 'Church');
     person.address = new Address(
@@ -543,7 +543,7 @@ var spread = R.curryN(2, function(cf, args) {
     }, cf);
 });
 
-QUnit.test("CH04 - Curry Spread", function (assert) {
+QUnit.test("Curry Spread", function (assert) {
 
     var add = R.curry(function (x, y, z) {
         return x + y + z;
@@ -554,7 +554,7 @@ QUnit.test("CH04 - Curry Spread", function (assert) {
 });
 
 
-QUnit.test("CH04 - Curry Spread 2", function (assert) {
+QUnit.test("Curry Spread 2", function (assert) {
 
     var computeFinalGrade = R.curry(function (hw1, hw2, midterm, final) {
         return Math.round((hw1 + hw2 + midterm + final) / 4);
@@ -565,7 +565,7 @@ QUnit.test("CH04 - Curry Spread 2", function (assert) {
     assert.equal(spread(computeFinalGrade)([98, 99, null, 87]), 71);
 });
 
-QUnit.test("CH04 - OR combinator", function (assert) {
+QUnit.test("OR combinator", function (assert) {
 
     // Mock DB service
     var DB = function(objectStore) {
@@ -681,7 +681,7 @@ QUnit.test("CH034 - Splat combinator", function (assert) {
 
 
 
-QUnit.test("CH04 - Tap combinator", function (assert) {
+QUnit.test("Tap combinator", function (assert) {
 
     var trim = function (str) {
         return str.replace(/^\s*|\s*$/g, '');

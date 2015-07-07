@@ -9,8 +9,8 @@
  */
 
 "use strict";
-
-QUnit.test("CH06 - RT example", function (assert) {
+QUnit.module( "Chapter 6" );
+QUnit.test("RT example", function (assert) {
 
     var increment = function (val) {
         return val + 1;
@@ -23,7 +23,7 @@ QUnit.test("CH06 - RT example", function (assert) {
     assert.equal(template({ 'years': age, 'increment':increment }), template2({ 'years': age, 'increment':increment }));
 });
 
-QUnit.test("CH06 - JSCheck", function (assert) {
+QUnit.test("JSCheck", function (assert) {
 
     var trace = _.curry(logger)('console', 'json', 'JSCheck', 'TRACE');
     var debug = _.curry(logger)('console', 'json', 'JSCheck', 'DEBUG');
@@ -64,7 +64,7 @@ QUnit.test("CH06 - JSCheck", function (assert) {
     assert.ok(true);
 });
 
-QUnit.test("CH06 - JSCheck 1", function (assert) {
+QUnit.test("JSCheck 1", function (assert) {
 
     Array.prototype.equals = function (array) {
         // if the other array is a falsy value, return
@@ -141,7 +141,7 @@ QUnit.test("CH06 - JSCheck 1", function (assert) {
     assert.ok(true);
 });
 
-QUnit.test("CH06 - JSCheck Custom Specifier for SSN", function (assert) {
+QUnit.test("JSCheck Custom Specifier for SSN", function (assert) {
 
     var trace = _.curry(logger)('console', 'json', 'JSCheck', 'TRACE');
     var debug = _.curry(logger)('console', 'json', 'JSCheck', 'DEBUG');

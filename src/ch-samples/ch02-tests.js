@@ -4,9 +4,9 @@
  * Author: Luis Atencio
  */
 
+QUnit.module( "Chapter 2" );
 "use strict";
-
-QUnit.test("CH02 - Freeze", function (assert) {
+QUnit.test("Freeze", function (assert) {
 
     var p = new Student('Luis', 'Atencio', 'Princeton');
     p.address = new Address('3111 World Dr', 'Orlando', 'FL', 'US');
@@ -19,7 +19,7 @@ QUnit.test("CH02 - Freeze", function (assert) {
 });
 
 
-QUnit.test("CH02 - Value Objects", function (assert) {
+QUnit.test("Value Objects", function (assert) {
 
     function Point(x, y) {
         var _x = x;
@@ -56,14 +56,14 @@ QUnit.test("CH02 - Value Objects", function (assert) {
 });
 
 
-QUnit.test("CH02 - First-class function", function (assert) {
+QUnit.test("First-class function", function (assert) {
 
     var multiplier = new Function('a', 'b', 'return a * b');
 
     assert.equal(multiplier(2, 3), 6);
 });
 
-QUnit.test("CH02 - High-order function", function (assert) {
+QUnit.test("High-order function", function (assert) {
 
     var multiplier = new Function('a', 'b', 'return a * b');
 
@@ -81,7 +81,7 @@ QUnit.test("CH02 - High-order function", function (assert) {
     assert.equal(add(7)(3), 10);
 });
 
-QUnit.test("CH02 - Call and Apply", function (assert) {
+QUnit.test("Call and Apply", function (assert) {
 
     function negate(func) {
         return function () {
@@ -100,7 +100,7 @@ QUnit.test("CH02 - Call and Apply", function (assert) {
 });
 
 
-QUnit.test("CH02 - Call and Apply 2", function (assert) {
+QUnit.test("Call and Apply 2", function (assert) {
 
     function defer(func, wait, args) {
         return setTimeout(function () {
@@ -117,7 +117,7 @@ QUnit.test("CH02 - Call and Apply 2", function (assert) {
     assert.ok(true);
 });
 
-QUnit.test("CH02 - Call and Apply 3", function (assert) {
+QUnit.test("Call and Apply 3", function (assert) {
 
     var person = new Person('Haskell', 'Curry');
 
@@ -136,7 +136,7 @@ QUnit.test("CH02 - Call and Apply 3", function (assert) {
     assert.ok(true);
 });
 
-QUnit.test("CH02 - Calling 'call' in strict-mode", function (assert) {
+QUnit.test("Calling 'call' in strict-mode", function (assert) {
 
     function doWork() {
 
@@ -152,7 +152,7 @@ QUnit.test("CH02 - Calling 'call' in strict-mode", function (assert) {
 });
 
 
-QUnit.test("CH02 - Function return", function (assert) {
+QUnit.test("Function return", function (assert) {
 
     function doNothing() { }
     var result1 = doNothing();
@@ -160,7 +160,7 @@ QUnit.test("CH02 - Function return", function (assert) {
 });
 
 
-QUnit.test("CH02 - Closure example", function (assert) {
+QUnit.test("Closure example", function (assert) {
 
     var outerVar = 'Outer';
 
@@ -181,7 +181,7 @@ QUnit.test("CH02 - Closure example", function (assert) {
 });
 
 
-QUnit.test("CH02 - Closure example 2 - free vars", function (assert) {
+QUnit.test("Closure example 2 - free vars", function (assert) {
 
     var count = 0;
 
@@ -204,7 +204,7 @@ QUnit.test("CH02 - Closure example 2 - free vars", function (assert) {
 });
 
 
-QUnit.test("CH02 - Closure practical - Hiding private vars", function (assert) {
+QUnit.test("Closure practical - Hiding private vars", function (assert) {
 
     var makeCounter = function () {
         var _counter = 0;
@@ -240,7 +240,7 @@ QUnit.test("CH02 - Closure practical - Hiding private vars", function (assert) {
 });
 
 
-QUnit.test("CH02 - Translate a point", function (assert) {
+QUnit.test("Translate a point", function (assert) {
 
     function Point(x, y) {
         var _x = x;
@@ -274,7 +274,7 @@ QUnit.test("CH02 - Translate a point", function (assert) {
 });
 
 
-QUnit.test("CH02 - List of Persons", function (assert) {
+QUnit.test("List of Persons", function (assert) {
 
 
     var p1 = new Person().setFirstname('Alonzo').setBirth(30).setLastname('Church');
@@ -290,7 +290,7 @@ QUnit.test("CH02 - List of Persons", function (assert) {
     assert.equal(arr[0].getFirstname(), 'Alonzo');
 });
 
-QUnit.test("CH02 - Block Scope", function (assert) {
+QUnit.test("Block Scope", function (assert) {
 
     function doWork() {
         if (!myVar) {
@@ -315,7 +315,7 @@ QUnit.test("CH02 - Block Scope", function (assert) {
     assert.equal(student, 'Alonzo');
 });
 
-QUnit.test("CH02 - Block Scope Hoisting 2", function (assert) {
+QUnit.test("Block Scope Hoisting 2", function (assert) {
 
     var arr = [1, 2, 3, 4];
 
@@ -337,7 +337,7 @@ QUnit.test("CH02 - Block Scope Hoisting 2", function (assert) {
 });
 
 
-QUnit.test("CH02 - Infamous loop issue", function (assert) {
+QUnit.test("Infamous loop issue", function (assert) {
 
     var p1 = new Person().setFirstname('Alonzo').setBirth(30).setLastname('Church');
     var p2 = new Person().setFirstname('Haskell').setBirth(80).setLastname('Curry');
@@ -359,7 +359,7 @@ QUnit.test("CH02 - Infamous loop issue", function (assert) {
 });
 
 
-QUnit.test("CH02 - Infamous loop issue solved", function (assert) {
+QUnit.test("Infamous loop issue solved", function (assert) {
 
     var p1 = new Person().setFirstname('Alonzo').setBirth(30).setLastname('Church');
     var p2 = new Person().setFirstname('Haskell').setBirth(80).setLastname('Curry');
@@ -383,7 +383,7 @@ QUnit.test("CH02 - Infamous loop issue solved", function (assert) {
 });
 
 
-QUnit.test("CH02 - Infamous loop issue solved 3", function (assert) {
+QUnit.test("Infamous loop issue solved 3", function (assert) {
 
     var p1 = new Person().setFirstname('Alonzo').setBirth(30).setLastname('Church');
     var p2 = new Person().setFirstname('Haskell').setBirth(80).setLastname('Curry');
@@ -407,7 +407,7 @@ QUnit.test("CH02 - Infamous loop issue solved 3", function (assert) {
     assert.equal(people[1].id, 101);
 });
 
-QUnit.test("CH02 - Infamous loop issue solved 4", function (assert) {
+QUnit.test("Infamous loop issue solved 4", function (assert) {
 
     var p1 = new Person().setFirstname('Alonzo').setBirth(30).setLastname('Church').setAddress('Florida', 'US');
     var p2 = new Person().setFirstname('Haskell').setBirth(80).setLastname('Curry').setAddress('Florida', 'US');
@@ -435,7 +435,7 @@ QUnit.test("CH02 - Infamous loop issue solved 4", function (assert) {
     assert.ok(true);
 });
 
-QUnit.test("CH02 - Problem with encapsulation", function (assert) {
+QUnit.test("Problem with encapsulation", function (assert) {
 
     var person = new Person('Alan', 'Turing');
     person.firstname = 'No Encapsulation';
@@ -445,7 +445,7 @@ QUnit.test("CH02 - Problem with encapsulation", function (assert) {
 });
 
 
-QUnit.test("CH02 - Problem with encapsulation", function (assert) {
+QUnit.test("Problem with encapsulation", function (assert) {
 
     var fruit = ['Cherries', 'apples', 'bananas'];
     fruit.sort();
@@ -457,7 +457,7 @@ QUnit.test("CH02 - Problem with encapsulation", function (assert) {
 });
 
 
-QUnit.test("CH02 - Closures 2", function (assert) {
+QUnit.test("Closures 2", function (assert) {
 
     function makeAddFunction(amount) {
         function add(number) {

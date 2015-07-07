@@ -5,9 +5,10 @@
  * Book: Functional Programming in JavaScript
  */
 
+QUnit.module( "Chapter 1" );
 "use strict";
 
-QUnit.test("CH01 - Rectangle", function (assert) {
+QUnit.test(" Rectangle", function (assert) {
 
     var rectangle = new Rectangle(10, 20);
 
@@ -17,7 +18,7 @@ QUnit.test("CH01 - Rectangle", function (assert) {
     assert.equal(area(10, 20), 200, 'Get Area');
 });
 
-QUnit.test("CH01 - Test Array Reduce", function (assert) {
+QUnit.test(" Test Array Reduce", function (assert) {
 
 
     var result1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].reduce(function (previousValue, currentValue, index, array) {
@@ -34,7 +35,7 @@ QUnit.test("CH01 - Test Array Reduce", function (assert) {
 });
 
 
-QUnit.test("CH01 - Factorials", function (assert) {
+QUnit.test(" Factorials", function (assert) {
 
     // Recursive approach
     function fact(n) {
@@ -58,7 +59,7 @@ QUnit.test("CH01 - Factorials", function (assert) {
     }
 });
 
-QUnit.test("CH01 - Simple examples 01", function (assert) {
+QUnit.test(" Simple examples 01", function (assert) {
 
     var echo = function (msg) {
         return function () {
@@ -73,7 +74,7 @@ QUnit.test("CH01 - Simple examples 01", function (assert) {
     assert.equal(shoutHelloWorld(), 'Hello World!', 'Shout Hello World!');
 });
 
-QUnit.test("CH01 - Function with side effects", function (assert) {
+QUnit.test(" Function with side effects", function (assert) {
 
     var students = [];
 
@@ -111,7 +112,7 @@ QUnit.test("CH01 - Function with side effects", function (assert) {
 });
 
 
-QUnit.test("CH01 - Function order of execution matters", function (assert) {
+QUnit.test(" Function order of execution matters", function (assert) {
 
     var isInit = false;
 
@@ -130,7 +131,7 @@ QUnit.test("CH01 - Function order of execution matters", function (assert) {
     assert.ok(true);
 });
 
-QUnit.test("CH01 - Mutable swap function", function (assert) {
+QUnit.test(" Mutable swap function", function (assert) {
 
     var test = [1, 2, 3];
 
@@ -145,7 +146,7 @@ QUnit.test("CH01 - Mutable swap function", function (assert) {
     assert.equal(test[1], 1);
 });
 
-QUnit.test("CH01 - Immutable swap function", function (assert) {
+QUnit.test(" Immutable swap function", function (assert) {
 
     // Array.from polyfill
     if (!Array.from) {
@@ -247,7 +248,7 @@ QUnit.test("CH01 - Immutable swap function", function (assert) {
     assert.equal(swapTest[1], 1);
 });
 
-QUnit.test("CH01 - Compose swap, split, and join", function (assert) {
+QUnit.test(" Compose swap, split, and join", function (assert) {
 
     function swap(items, firstIndex, secondIndex) {
         var copy = Array.from(items);
@@ -284,7 +285,7 @@ QUnit.test("CH01 - Compose swap, split, and join", function (assert) {
 });
 
 
-QUnit.test("CH01 - Function composition", function (assert) {
+QUnit.test(" Function composition", function (assert) {
 
     function stripNonAlpha(str) {
         return str.replace(/[^a-z]*/ig, '');
@@ -296,7 +297,7 @@ QUnit.test("CH01 - Function composition", function (assert) {
 });
 
 
-QUnit.test("CH01 - Function composition", function (assert) {
+QUnit.test(" Function composition", function (assert) {
 
     function stripNonAlpha(str) {
         return str.replace(/[^a-z]*/ig, '');
@@ -307,7 +308,7 @@ QUnit.test("CH01 - Function composition", function (assert) {
     assert.equal(stripEncode('#$#$^&ABC&*&*&'), 'QUJD', true);
 });
 
-QUnit.test("CH01 - RT Volume and Area", function (assert) {
+QUnit.test(" RT Volume and Area", function (assert) {
 
     function areaSquare(a) {
         return a * a;
@@ -321,14 +322,14 @@ QUnit.test("CH01 - RT Volume and Area", function (assert) {
 });
 
 
-QUnit.test("CH01 - Filtering", function (assert) {
+QUnit.test(" Filtering", function (assert) {
 
     var result = [[], null, undefined, {}, 'String', 1, false].filter(_.isObject);
 
     assert.equal(result.length, 2, 'Filtered out objects');
 });
 
-QUnit.test("CH01 - Take and Repeat", function (assert) {
+QUnit.test(" Take and Repeat", function (assert) {
 
 
     var naturalNumbers = Stream.range(); // naturalNumbers is now 1, 2, 3, ...
@@ -348,7 +349,7 @@ QUnit.test("CH01 - Take and Repeat", function (assert) {
     assert.ok(true);
 });
 
-QUnit.test("CH01 - Data processing", function (assert) {
+QUnit.test(" Data processing", function (assert) {
 
     var luis = new Person().setFirstname('Luis').setAddress('Ft. Lauderdale', 'US');
 
@@ -384,7 +385,7 @@ QUnit.test("CH01 - Data processing", function (assert) {
 });
 
 
-QUnit.test("CH01 - Data processing - non functional", function (assert) {
+QUnit.test(" Data processing - non functional", function (assert) {
 
     function Person2(name, country) {
         this.name = name;
@@ -431,7 +432,7 @@ QUnit.test("CH01 - Data processing - non functional", function (assert) {
     assert.equal(friendsNotInUs.length, 1);
 });
 
-QUnit.test("CH01 - Recursion vs Looping", function (assert) {
+QUnit.test(" Recursion vs Looping", function (assert) {
 
     var foo = _.rest(['a']);
     assert.equal(foo.length, 0);
@@ -463,7 +464,7 @@ QUnit.test("CH01 - Recursion vs Looping", function (assert) {
 });
 
 
-QUnit.test("CH01 - Students enrolled in more than 1 class", function (assert) {
+QUnit.test(" Students enrolled in more than 1 class", function (assert) {
 
     var roster = [{name: 'Alonzo', enrolled: 3, grade: 99},
         {name: 'Rosser', enrolled: 1, grade: 80},
@@ -514,7 +515,7 @@ QUnit.test("CH01 - Students enrolled in more than 1 class", function (assert) {
     assert.equal(average3(roster), average);
 });
 
-QUnit.test("CH01 - Fucntional version of getCountry", function (assert) {
+QUnit.test(" Fucntional version of getCountry", function (assert) {
 
     var princeton = new School('Princeton', new Address2('London','England'));
     var student = new Student('Alan', 'Turing', princeton);
@@ -541,7 +542,7 @@ QUnit.test("CH01 - Fucntional version of getCountry", function (assert) {
 });
 
 
-QUnit.test("CH01 - Fucntional version of getCountry", function (assert) {
+QUnit.test(" Functional version of getCountry", function (assert) {
 
     var grades = [100, 80, 90];
 

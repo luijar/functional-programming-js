@@ -8,8 +8,8 @@
  * Author: Luis Atencio
  */
 "use strict";
-
-QUnit.test("CH03 - Polymorphic functions", function (assert) {
+QUnit.module( "Chapter 3" );
+QUnit.test("Polymorphic functions", function (assert) {
 
     function Person(first, last, born, nationality) {
         this.firstname = first;
@@ -61,7 +61,7 @@ QUnit.test("CH03 - Polymorphic functions", function (assert) {
 });
 
 
-QUnit.test("CH03 - Pair", function (assert) {
+QUnit.test("Pair", function (assert) {
 
     function Pair(a, b) {
 
@@ -122,7 +122,7 @@ QUnit.test("CH03 - Pair", function (assert) {
 });
 
 
-QUnit.test("CH03 - Map 1", function (assert) {
+QUnit.test("Map 1", function (assert) {
 
     function Person(ssn, first, last) {
         this.social = ssn;
@@ -150,7 +150,7 @@ QUnit.test("CH03 - Map 1", function (assert) {
 
 });
 
-QUnit.test("CH03 - Map 1", function (assert) {
+QUnit.test("Map 1", function (assert) {
 
     var arr = [1, 2, 3, 4];
 
@@ -173,14 +173,14 @@ QUnit.test("CH03 - Map 1", function (assert) {
     assert.equal(result[2], 30);
 });
 
-QUnit.test("CH03 - Method Chaining 1", function (assert) {
+QUnit.test("Method Chaining 1", function (assert) {
 
     var person = new Person().setFirstname('Luis').setLastname('Atencio').setGender('M').setBirth(31);
     assert.equal(person.getFullName(), 'Luis Atencio');
     assert.equal(person.getBirth(), 31);
 });
 
-QUnit.test("CH03 - Map 2", function (assert) {
+QUnit.test("Map 2", function (assert) {
 
     function Person(ssn, first, last) {
         this.social = ssn;
@@ -215,7 +215,7 @@ QUnit.test("CH03 - Map 2", function (assert) {
 });
 
 
-QUnit.test("CH03 - Map 3", function (assert) {
+QUnit.test("Map 3", function (assert) {
 
     var getLetterGrade = function (grade) {
         if (grade >= 90) return 'A';
@@ -235,7 +235,7 @@ QUnit.test("CH03 - Map 3", function (assert) {
 });
 
 
-QUnit.test("CH03 - Reduce 1", function (assert) {
+QUnit.test("Reduce 1", function (assert) {
 
     function Person(first, last, nationality) {
         this.firstname = first;
@@ -272,7 +272,7 @@ QUnit.test("CH03 - Reduce 1", function (assert) {
 });
 
 
-QUnit.test("CH03 - The Unix Philosophy", function (assert) {
+QUnit.test("The Unix Philosophy", function (assert) {
 
     //tr 'A-Z' 'a-z' <names.in | uniq | sort
     var words = ['Functional', 'Programming', 'Curry', 'Memoization', 'Partial', 'Curry', 'Programming'];
@@ -294,7 +294,7 @@ QUnit.test("CH03 - The Unix Philosophy", function (assert) {
     assert.equal(result[1], 'functional');
 });
 
-QUnit.test("CH03 - The Unix Philosophy (imperative version)", function (assert) {
+QUnit.test("The Unix Philosophy (imperative version)", function (assert) {
 
     var words = ['Functional', 'Programming', 'Curry', 'Memoization', 'Partial', 'Curry', 'Programming'];
     var result = [];
@@ -312,7 +312,7 @@ QUnit.test("CH03 - The Unix Philosophy (imperative version)", function (assert) 
     assert.equal(result[1], 'functional');
 });
 
-QUnit.test("CH03 - Group by", function (assert) {
+QUnit.test("Group by", function (assert) {
 
     function Person(first, last, nationality) {
         this.firstname = first;
@@ -343,7 +343,7 @@ QUnit.test("CH03 - Group by", function (assert) {
     assert.equal(stats['Greek'].length, 1);
 });
 
-QUnit.test("CH03 - Some", function (assert) {
+QUnit.test("Some", function (assert) {
 
     function isNotValid(val) {
         return _.isUndefined(val) || _.isNull(val);
@@ -358,7 +358,7 @@ QUnit.test("CH03 - Some", function (assert) {
 });
 
 
-QUnit.test("CH03 - Every", function (assert) {
+QUnit.test("Every", function (assert) {
 
     function isValid(val) {
         return !_.isUndefined(val) && !_.isNull(val);
@@ -372,7 +372,7 @@ QUnit.test("CH03 - Every", function (assert) {
     assert.ok(validate(['string', 0, {}]));
 });
 
-QUnit.test("CH03 - Map/Reduce 1", function (assert) {
+QUnit.test("Map/Reduce 1", function (assert) {
 
     function Person(first, last, nationality) {
         this.firstname = first;
@@ -411,7 +411,7 @@ QUnit.test("CH03 - Map/Reduce 1", function (assert) {
     assert.equal(stats['Greek'], 1);
 });
 
-QUnit.test("CH03 - Lift with Every", function (assert) {
+QUnit.test("Lift with Every", function (assert) {
 
     function isValid(val) {
         return !_.isUndefined(val) && !_.isNull(val);
@@ -426,7 +426,7 @@ QUnit.test("CH03 - Lift with Every", function (assert) {
     })('string', 0, {}));
 });
 
-QUnit.test("CH03 - Reduce Left-Right vs Right-Left", function (assert) {
+QUnit.test("Reduce Left-Right vs Right-Left", function (assert) {
 
     var result = _([1, 3, 4, 5]).reduce(_.add);
     var result2 = _([1, 3, 4, 5]).reduceRight(_.add);
@@ -442,7 +442,7 @@ QUnit.test("CH03 - Reduce Left-Right vs Right-Left", function (assert) {
 });
 
 
-QUnit.test("CH03 - Filter 1", function (assert) {
+QUnit.test("Filter 1", function (assert) {
 
     function Person(first, last, birthYear) {
         this.firstname = first;
@@ -475,7 +475,7 @@ QUnit.test("CH03 - Filter 1", function (assert) {
 });
 
 
-QUnit.test("CH03 - Lodash chain", function (assert) {
+QUnit.test("Lodash chain", function (assert) {
 
     function Person(first, last, nationality) {
         this.firstname = first;
@@ -528,7 +528,7 @@ QUnit.test("CH03 - Lodash chain", function (assert) {
 });
 
 
-QUnit.test("CH03 - Lodash SQL", function (assert) {
+QUnit.test("Lodash SQL", function (assert) {
 
     function Person(first, last, nationality, birth) {
         this.firstname = first;
@@ -584,7 +584,7 @@ QUnit.test("CH03 - Lodash SQL", function (assert) {
 });
 
 
-QUnit.test("CH03 - Recursion 1", function (assert) {
+QUnit.test("Recursion 1", function (assert) {
 
     var nums = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
@@ -610,7 +610,7 @@ QUnit.test("CH03 - Recursion 1", function (assert) {
     assert.equal(add(nums), 45);
 });
 
-QUnit.test("CH03 - Lift function", function (assert) {
+QUnit.test("Lift function", function (assert) {
 
     var getLetterGrade = function (grade) {
         if (grade >= 90) return 'A';
@@ -635,7 +635,7 @@ QUnit.test("CH03 - Lift function", function (assert) {
 });
 
 
-QUnit.test("CH03 - Lift function", function (assert) {
+QUnit.test("Lift function", function (assert) {
 
 
     Array.prototype.customFilter = function (predicate, thisArg) {
@@ -659,7 +659,7 @@ QUnit.test("CH03 - Lift function", function (assert) {
     assert.equal(result.length, 1);
 });
 
-QUnit.test("CH03 - Chain 1", function (assert) {
+QUnit.test("Chain 1", function (assert) {
 
     var names = ['alonzo church', 'alonzo church', 'stephen_kleene', 'Haskell curry', 'John Von Neumann'];
     var result = [];
@@ -696,7 +696,7 @@ QUnit.test("CH03 - Chain 1", function (assert) {
 });
 
 
-QUnit.test("CH03 - Recursion trees", function (assert) {
+QUnit.test("Recursion trees", function (assert) {
 
     function Person(first, last) {
         this.firstname = first;
@@ -817,7 +817,7 @@ QUnit.test("CH03 - Recursion trees", function (assert) {
     assert.equal(arr.length, 9);
 });
 
-QUnit.test("CH03 - Lodash SQL", function (assert) {
+QUnit.test("Lodash SQL", function (assert) {
 
     function Person(first, last, nationality, birth) {
         this.firstname = first;
@@ -852,7 +852,7 @@ QUnit.test("CH03 - Lodash SQL", function (assert) {
     });
 });
 
-QUnit.test("CH03 - Recursion trees", function (assert) {
+QUnit.test("Recursion trees", function (assert) {
 
     function Person(ssn, first, last) {
         this.ssn = ssn;
@@ -954,7 +954,7 @@ QUnit.test("CH03 - Recursion trees", function (assert) {
 
 
 
-QUnit.test("CH03 - Map skips null", function (assert) {
+QUnit.test("Map skips null", function (assert) {
 
     var result = _.map([1,undefined,3,null,5], _.identity);
     assert.equal(result.length, 5);
