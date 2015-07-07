@@ -777,7 +777,6 @@ QUnit.test("CH03 - Recursion trees", function (assert) {
         return this.root;
     };
 
-
     var node = function (p) {
         return new Node(p);
     };
