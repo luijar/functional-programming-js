@@ -164,9 +164,21 @@ QUnit.test("CH06 - JSCheck Custom Specifier for SSN", function (assert) {
     var validateSsn = R.compose(checkLengthSsn, normalize, trim);
 
     JSC.on_report(function (str) {
-        trace(str);
+        trace('Report'+ str);
     });
 
+
+    JSC.on_fail(function(object) {
+       assert.ok(object.args.length === 9, 'Test failed for: ' + object.args);
+    });
+
+    /**
+     * Produces a valid social security string (with dashes)
+     * @param param1 Valid input -> JSC.integer(100, 999)
+     * @param param2 Valid input -> JSC.integer(10, 99)
+     * @param param3 Valid input -> JSC.integer(1000,9999)
+     * @returns {Function} Specifier function
+     */
     JSC.SSN = function (param1, param2, param3) {
         return function generator() {
             var part1 = typeof param1 === 'function'
