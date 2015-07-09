@@ -678,21 +678,17 @@ QUnit.test("Chain 1", function (assert) {
         }
     }
     result.sort();
+
     assert.equal(result[0], 'Alonzo Church');
     assert.equal(result[1], 'Haskell Curry');
 
-    //var unique = function (acc, value) {
-    //    if (!_.includes(acc, value)) {
-    //        acc.push(value);
-    //    }
-    //    return acc;
-    //};
 
-    result = _.unique(names).map(_.startCase).sort();
-    assert.equal(result[0], 'Alonzo Church');
-    assert.equal(result[1], 'Haskell Curry');
+    var result2 = _.unique(names).map(_.startCase).sort();
+    assert.equal(result2[0], 'Alonzo Church');
+    assert.equal(result2[1], 'Haskell Curry');
 
-    assert.equal(result.length, 4);
+    assert.equal(result2.length, 4);
+    assert.ok(arrayEquals(result, result2));
 });
 
 

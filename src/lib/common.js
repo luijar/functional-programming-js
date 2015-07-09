@@ -603,7 +603,11 @@ var wrap = function (val) {
     return new Wrapper(val);
 };
 
-
+function arrayEquals(arr1, arr2) {
+    return !arr1.some(function (val, idx) {
+        return arr2[idx] !== val;
+    });
+}
 
 
  //
