@@ -131,8 +131,10 @@
             return IO.of(val);
         };
 
-        var addToTable = R.curry(function (elementId, rowInfo) {
-            $('#' + elementId + ' tr:last').after('<tr>' + rowInfo + '</tr>');
+        var addRow = R.curry(function (elementId) {
+            return function (rowInfo) {
+                $('#' + elementId + ' tr:last').after('<tr>' + rowInfo + '</tr>');
+            }
         });
 
         var readRows = function (elementId) {
@@ -145,7 +147,7 @@
         var addToRoster = R.compose(
                 map(debugLog),
                 map(readRows('studentRoster')),
-                map(addToTable('studentRoster')),
+                map(addRow('studentRoster')),
                 liftIO,
                 chain(R.identity),
                 map(toRowInfo),
