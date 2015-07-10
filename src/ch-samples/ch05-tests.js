@@ -438,3 +438,26 @@ QUnit.test("Composition Monad 1", function (assert) {
     processPayment(studentId).orElse(errorLog);
     assert.ok(true);
 });
+
+
+
+QUnit.test("IO Monad 1", function (assert) {
+
+    var trace = _.partial(logger, 'console', 'basic', 'MyLogger', 'TRACE');
+
+    var read = function (id) {
+        return function () {
+            return $('#' + id).text();
+        };
+    };
+
+    var write = function(id) {
+        return (function(value) {
+            $('#' + id).text(value)
+        });
+    };
+
+    var changeToUpperIO = IO.from(read("chap06-test")).map(_.startCase).map(write("chap06-test"));
+    changeToUpperIO.run();
+    assert.equal($('#chap06-test').text(), 'Alonzo Church');
+});

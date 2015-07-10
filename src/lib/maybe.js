@@ -301,3 +301,13 @@ Nothing.prototype.getOrElse = function (a) {
 Just.prototype.getOrElse = function (_) {
     return this.value
 };
+
+Maybe.prototype.orElse = unimplemented
+
+Nothing.prototype.orElse = function(f) {
+    return f()
+}
+
+Just.prototype.orElse = function(_) {
+    return this
+}
