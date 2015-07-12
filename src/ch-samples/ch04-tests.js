@@ -19,7 +19,7 @@ QUnit.test("Simple Composition", function (assert) {
         var size = (arr) => arr.length;
 
         var countWords = R.compose(size, explode);
-    assert.equal(countWords(str), 19);
+        assert.equal(countWords(str), 19);
 });
 
 

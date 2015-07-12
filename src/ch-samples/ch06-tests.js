@@ -208,3 +208,17 @@ QUnit.test("JSCheck Custom Specifier for SSN", function (assert) {
     );
     assert.ok(true);
 });
+
+var counter = 0;
+
+function incrementImp() {
+    return ++counter;
+}
+
+QUnit.test("Increment 1", function (assert) {
+    assert.equal(incrementImp(), 1)
+});
+
+QUnit.test("Increment 2", function (assert) {
+    assert.equal(incrementImp(), 2)
+});
