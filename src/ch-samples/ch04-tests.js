@@ -9,6 +9,20 @@
  */
 "use strict";
 QUnit.module( "Chapter 4" );
+
+QUnit.test("Simple Composition", function (assert) {
+
+        var str = "We can only see a short distance ahead but we can see plenty there that needs to be done";
+
+        var explode = (str) => str.split(/\s+/);
+
+        var size = (arr) => arr.length;
+
+        var countWords = R.compose(size, explode);
+    assert.equal(countWords(str), 19);
+});
+
+
 QUnit.test("Tuple 1", function (assert) {
 
     var p1 = new Person().setFirstname('Alonzo').setLastname('Church').setBirth(1903);
@@ -61,17 +75,11 @@ QUnit.test("Tuple 3 with Error", function (assert) {
 
 QUnit.test("Compose 1", function (assert) {
 
-    var trim = function (str) {
-        return str.replace(/^\s*|\s*$/g, '');
-    };
+    var trim = (str) => str.replace(/^\s*|\s*$/g, '');
 
-    var normalize = function (str) {
-        return str.replace(/\-/g, '');
-    };
+    var normalize = (str) => str.replace(/\-/g, '');
 
-    var validLength = function(param, str) {
-        return str.length === param;
-    };
+    var validLength = (param, str) => str.length === param;
 
     var checkLengthSsn = validLength.bind(undefined, 9);
 
