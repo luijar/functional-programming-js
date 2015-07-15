@@ -215,10 +215,75 @@ function incrementImp() {
     return ++counter;
 }
 
-QUnit.test("Increment 1", function (assert) {
+
+QUnit.test("Increment with zero", function (assert) {
     assert.equal(incrementImp(), 1)
 });
 
-QUnit.test("Increment 2", function (assert) {
-    assert.equal(incrementImp(), 2)
+QUnit.test("Increment with negative", function (assert) {
+    counter = -10;
+    assert.equal(incrementImp(), -9)
 });
+
+QUnit.test("Increment with positive", function (assert) {
+    counter = 10;
+    assert.equal(incrementImp(), 11)
+});
+
+
+QUnit.test("Compute Average Grade", function (assert) {
+
+    var toLetterGrade = function (grade) {
+        if (grade >= 90) return 'A';
+        if (grade >= 80) return 'B';
+        if (grade >= 70) return 'C';
+        if (grade >= 60) return 'D';
+        return 'F';
+    };
+
+    assert.equal(toLetterGrade(90), 'A');
+    assert.equal(toLetterGrade(200), 'A');
+    assert.equal(toLetterGrade(80), 'B');
+    assert.equal(toLetterGrade(89), 'B');
+    assert.equal(toLetterGrade(70), 'C');
+    assert.equal(toLetterGrade(60), 'D');
+    assert.equal(toLetterGrade(59), 'F');
+    assert.equal(toLetterGrade(-10), 'F');
+});
+
+QUnit.test("R.Length", function (assert) {
+
+    assert.equal(R.length([0,1,2,3,4,5,6,7,8,9]), 10);
+    assert.equal(R.length([]), 0);
+});
+
+QUnit.test("R.divide", function (assert) {
+
+    assert.equal(R.divide(6, 3), 2);
+    assert.equal(R.divide(6, 0), Infinity);
+    assert.equal(R.divide(0, 3), 0);
+});
+
+QUnit.test("R.sum", function (assert) {
+
+    assert.equal(R.sum([0,1,2,3,4,5,6,7,8,9]), 45);
+    assert.equal(R.sum([0]), 0);
+    assert.equal(R.sum([-1, -2, -3]), -6);
+});
+
+
+QUnit.test("Functional Combinator: forkJoin", function (assert) {
+
+    var forkJoin = function(join, func1, func2){
+        return function(val) {
+            return join(func1(val), func2(val));
+        };
+    };
+
+    var timesTwo = forkJoin((x) => x + x, R.identity, R.identity);
+    assert.equal(timesTwo(1), 2);
+    assert.equal(timesTwo(2), 4);
+});
+
+
+

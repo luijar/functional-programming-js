@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Functional JavaScript Programming | Luis Atencio</title>
+    <title>CH06 Tests</title>
 
     <script src="../lib/jquery.js"></script>
     <script src="../lib/lodash.js"></script>
@@ -15,6 +15,7 @@
     <script src="../lib/either.js"></script>
     <script src="../lib/io.js"></script>
 
+    <link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-1.18.0.css">
     <style>
         span {
             font-family: "Verdana", Times, sans-serif;
@@ -46,118 +47,116 @@
         <h2><span id="banner">Student Roster:</span></h2>
         <table id="studentRoster">
             <thead>
-                <tr id="header"><td>SSN</td><td>Name</td></tr>
+                <tr id="header"><td id="ssn">SSN</td><td id="firstname">First Name</td><td id="lastname">Last Name</td></tr>
             </thead>
         </table>
     </div>
+
 <script>
-    $(document).ready(function () {
 
-        // Mock DB service
-        // Mock out a synchronous Student Store
-        var Store = function(index) {
+    // Mock DB service
+    // Mock out a synchronous Student Store
+    var Store = function(index) {
 
-            var students = {
-                '444444444': new Student('Alonzo', 'Church').setSsn('444-44-4444'),
-                '555555555': new Student('Alan', 'Turing').setSsn('555-55-5555')
-            };
+        var students = {
+            '444444444': new Student('Alonzo', 'Church').setSsn('444-44-4444'),
+            '555555555': new Student('Alan', 'Turing').setSsn('555-55-5555')
+        };
 
-            return {
-                getRecord: function(id) {
-                    if(index === 'students') {
-                        return students[id];
-                    }
+        return {
+            get: function(id) {
+                if(index === 'students') {
+                    return students[id];
                 }
-            };
-        };
-
-        // safefetchRecord :: Store, string -> Either<Student>
-        var safefetchRecord = R.curry(function (store, studentId) {
-            var student = store.getRecord(studentId);
-            if(student) {
-                return Either.of(student);
             }
-            return Either.Left('Student not found with ID: ' + studentId);
-        });
-
-        var toRowInfo = function (student) {
-            var template =  _.template('<td><%= ssn %></td><td><%= firstname %> <%= lastname %></td> ');
-            return template(student);
         };
+    };
 
-//
-//        var addToTable = R.curry(function (elementId, rowInfo) {
-//            $('#' + elementId + ' tr:last').after('<tr>' + rowInfo + '</tr>');
-//            return $('#' + elementId + ' tr').length - 1; // exclude header
-//        });
-//
-
-        var debugLog = _.partial(logger, 'console', 'basic', 'IO Monad Example', 'TRACE');
-
-        var trace = R.curry(function (msg, obj) {debugLog(msg + ':' + obj);});
-
-        var trim = function (str) {
-            return str.replace(/^\s*|\s*$/g, '');
-        };
-
-        var normalize = function (str) {
-            return str.replace(/\-/g, '');
-        };
-
-        var validLength = function(len, str) {
-            if(str.length === len) {
-                return Either.of(str);
-            }
-            return Either.Left('Input: ' + str + ' length does is not equal to: ' + len);
-        };
-
-        var cleanInput = R.compose(R.tap(trace), normalize, R.tap(trace), trim);
-
-        var checkLengthSsn = validLength.bind(undefined, 9);
-
-        var map = R.curry(function (f, container) {
-            return container.map(f);
-        });
-
-        var chain = R.curry(function (f, container) {
-            return container.chain(f);
-        });
-
-        var lift = R.curry(function (f, value) {
-            return Maybe.fromNullable(value).map(f);
-        });
-
-        var liftIO = function (val) {
-            return IO.of(val);
-        };
-
-        var addRow = R.curry(function (elementId) {
-            return function (rowInfo) {
-                $('#' + elementId + ' tr:last').after('<tr>' + rowInfo + '</tr>');
-            }
-        });
-
-        var readRows = function (elementId) {
-            return function () {
-                return $('#' + elementId + ' tr').length - 1; // exclude header
-            };
-        };
-
-        // Alternate implementation
-        var addToRoster = R.compose(
-                map(debugLog),
-                map(readRows('studentRoster')),
-                map(addRow('studentRoster')),
-                liftIO,
-                chain(R.identity),
-                map(toRowInfo),
-                chain(safefetchRecord (Store('students'))),
-                chain(checkLengthSsn),
-                lift(cleanInput));
-
-        var studentId = '444-44-4444';
-        var result = addToRoster(studentId).run();
+    // safefetchRecord :: Store, string -> Either<Student>
+    var safefetchRecord = R.curry(function (store, studentId) {
+        var student = store.get(studentId);
+        if(student) {
+            return Either.of(student);
+        }
+        return Either.Left('Student not found with ID: ' + studentId);
     });
+
+    var debugLog = _.partial(logger, 'console', 'basic', 'IO Monad Example', 'TRACE');
+
+    var trace = R.curry(function (msg, obj) {debugLog(msg + ':' + obj);});
+
+    var trim = function (str) {
+        return str.replace(/^\s*|\s*$/g, '');
+    };
+
+    var normalize = function (str) {
+        return str.replace(/\-/g, '');
+    };
+
+    var validLength = function(len, str) {
+        if(str.length === len) {
+            return Either.of(str);
+        }
+        return Either.Left('Input: ' + str + ' length does is not equal to: ' + len);
+    };
+
+    var cleanInput = R.compose(R.tap(trace), normalize, R.tap(trace), trim);
+
+    var checkLengthSsn = validLength.bind(undefined, 9);
+
+    var map = R.curry(function (f, container) {
+        return container.map(f);
+    });
+
+    var chain = R.curry(function (f, container) {
+        return container.chain(f);
+    });
+
+    var lift = R.curry(function (f, value) {
+        return Maybe.fromNullable(value).map(f);
+    });
+
+    var liftIO = function (value) {
+        return IO.of(value);
+    };
+
+    var appendToTable = function (elementId) {
+        return function (studentProps) {
+            var cell = _.template('<td><%= a %></td>');
+            var row = _.template('<tr><%= a %></tr>');
+            var obj = function(a) {
+                return {'a': a};
+            };
+
+            var getRow = R.compose(row, obj, R.join(''), R.map(cell), R.map(obj));
+
+            $('#' + elementId + ' tr:last').after(getRow(studentProps));
+            return $('#' + elementId + ' tr').length - 1; // exclude header
+        };
+    };
+
+    var readTableSize = function (elementId) {
+        return function () {
+            return $('#' + elementId + ' tr').length - 1; // exclude header
+        };
+    };
+
+    var findStudent = safefetchRecord(Store('students'));
+
+    // Alternate implementation
+    var addToRoster = R.compose(
+            map(appendToTable('studentRoster')),
+            liftIO,
+            chain(R.props(['ssn', 'firstname', 'lastname'])),
+            chain(findStudent),
+            chain(checkLengthSsn),
+            lift(cleanInput));
+    addToRoster('444-44-4444').run();
 </script>
+<br/>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<script src="http://code.jquery.com/qunit/qunit-1.18.0.js"></script>
+<script src="ch06-tests-compiled.js"></script>
 </body>
 </html>

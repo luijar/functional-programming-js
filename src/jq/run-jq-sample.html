@@ -44,7 +44,7 @@
         <h2><span id="banner">Student Roster:</span></h2>
         <table id="studentRoster">
             <thead>
-                <tr id="header"><td>SSN</td><td>Name</td></tr>
+                <tr id="header"><td>SSN</td><td>First Name</td></tr>
             </thead>
         </table>
     </div>
@@ -126,7 +126,7 @@
         });
 
         // Alternate implementation
-//        var processPayment2 = R.compose(
+//        var addtoRoster2 = R.compose(
 //                R.tap(trace('Students added to roster')),
 //                map(addToTable('studentRoster')),
 //                R.tap(trace('Student converted to row')),
@@ -138,7 +138,7 @@
 //                lift(cleanInput));
 
 
-        function processPayment(studentId) {
+        function addToRoster(studentId) {
             return Maybe.fromNullable(studentId)
                     .map  (cleanInput)
                     .chain(checkLengthSsn)
@@ -148,7 +148,7 @@
         }
 
         var studentId = '444-44-4444';
-        var result = processPayment(studentId).getOrElse(0);
+        var result = addToRoster(studentId).getOrElse(0);
     });
 </script>
 </body>
