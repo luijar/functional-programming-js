@@ -1,7 +1,7 @@
 /**
  * Unit testing with UI code
  */
-QUnit.test("addToRoster: cleanInput", function (assert) {
+QUnit.test("cleanInput", function (assert) {
 
 
     var input = ['', '-44-44-', '44444', '    4    ', '   4-4   '];
@@ -14,7 +14,7 @@ QUnit.test("addToRoster: cleanInput", function (assert) {
 });
 
 
-QUnit.test("addToRoster: checkLengthSsn", function (assert) {
+QUnit.test("checkLengthSsn", function (assert) {
 
     //Either.prototype.isLeft = false
     //Left.prototype.isLeft   = true
@@ -29,26 +29,41 @@ QUnit.test("addToRoster: checkLengthSsn", function (assert) {
 });
 
 
-QUnit.test("addToRoster: findStudent", function (assert) {
+QUnit.test("findStudent returning null", function (assert) {
 
-    var MockStore = function() {
-        var students = {
-            '444444444': new Student('Alonzo', 'Church').setSsn('444-44-4444'),
-            '555555555': new Student('Alan', 'Turing').setSsn('555-55-5555')
-        };
+    var studentStore = Store('students');
+    var mockContext = sinon.mock(studentStore);
 
-        return {
-            get: function(id) {
-                return students[id];
-            }
-        };
-    };
+    mockContext.expects("get").once().returns(null);
 
-    var findStudent = safefetchRecord(MockStore());
+    var findStudent = safefetchRecord(studentStore);
 
-    assert.ok(findStudent('444444444').isRight);
-    assert.ok(findStudent('4').isLeft);
-    assert.equal(findStudent('444444444').chain(R.identity).ssn, '444-44-4444');
+    assert.ok(findStudent('xxx-xx-xxxx').isLeft);
+    mockContext.verify();
+    mockContext.restore();
+});
+
+
+QUnit.test("findStudent returning valid user", function (assert) {
+
+    var studentStore = Store('students');
+    var mockContext = sinon.mock(studentStore);
+
+    mockContext.expects("get").once().returns(new Student('Alonzo', 'Church', 'Princeton').setSsn('444-44-4444'));
+
+    var findStudent = safefetchRecord(studentStore);
+
+    assert.ok(findStudent('444-44-4444').isRight);
+    mockContext.verify();
+    mockContext.restore();
+});
+
+QUnit.test("populateRow", function (assert) {
+
+    assert.equal(populateRow(['']), '<tr><td></td></tr>');
+    assert.equal(populateRow(['Alonzo']), '<tr><td>Alonzo</td></tr>');
+    assert.equal(populateRow(['Alonzo', 'Church']), '<tr><td>Alonzo</td><td>Church</td></tr>');
+    assert.equal(populateRow(['Alonzo', '', 'Church']), '<tr><td>Alonzo</td><td></td><td>Church</td></tr>');
 });
 
 

@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>CH06 Tests</title>
+    <title>Add To Roster</title>
 
     <script src="../lib/jquery.js"></script>
     <script src="../lib/lodash.js"></script>
@@ -14,6 +14,7 @@
     <script src="../lib/id.js"></script>
     <script src="../lib/either.js"></script>
     <script src="../lib/io.js"></script>
+
 
     <link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-1.18.0.css">
     <style>
@@ -81,6 +82,7 @@
         return Either.Left('Student not found with ID: ' + studentId);
     });
 
+
     var debugLog = _.partial(logger, 'console', 'basic', 'IO Monad Example', 'TRACE');
 
     var trace = R.curry(function (msg, obj) {debugLog(msg + ':' + obj);});
@@ -121,24 +123,20 @@
     };
 
     var appendToTable = function (elementId) {
-        return function (studentProps) {
-            var cell = _.template('<td><%= a %></td>');
-            var row = _.template('<tr><%= a %></tr>');
-            var obj = function(a) {
-                return {'a': a};
-            };
-
-            var getRow = R.compose(row, obj, R.join(''), R.map(cell), R.map(obj));
-
-            $('#' + elementId + ' tr:last').after(getRow(studentProps));
+        return function (row) {
+            $('#' + elementId + ' tr:last').after(row);
             return $('#' + elementId + ' tr').length - 1; // exclude header
         };
     };
 
-    var readTableSize = function (elementId) {
-        return function () {
-            return $('#' + elementId + ' tr').length - 1; // exclude header
+    populateRow = function (columns) {
+        var cell_t = _.template('<td><%= a %></td>');
+        var row_t  = _.template('<tr><%= a %></tr>');
+        var obj = function(a) {
+            return {'a': a};
         };
+        var row = R.compose(row_t, obj, R.join(''), R.map(cell_t), R.map(obj));
+        return row(columns);
     };
 
     var findStudent = safefetchRecord(Store('students'));
@@ -147,7 +145,8 @@
     var addToRoster = R.compose(
             map(appendToTable('studentRoster')),
             liftIO,
-            chain(R.props(['ssn', 'firstname', 'lastname'])),
+            chain(populateRow),
+            map(R.props(['ssn', 'firstname', 'lastname'])),
             chain(findStudent),
             chain(checkLengthSsn),
             lift(cleanInput));
@@ -157,6 +156,8 @@
 <div id="qunit"></div>
 <div id="qunit-fixture"></div>
 <script src="http://code.jquery.com/qunit/qunit-1.18.0.js"></script>
+<script src="../lib/sinon-1.15.4.js"></script>
+<script src="../lib/sinon-qunit-1.0.0.js"></script>
 <script src="ch06-tests-compiled.js"></script>
 </body>
 </html>

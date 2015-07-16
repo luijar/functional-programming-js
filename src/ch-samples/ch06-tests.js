@@ -287,3 +287,28 @@ QUnit.test("Functional Combinator: forkJoin", function (assert) {
 
 
 
+QUnit.test("Compute Average Grade", function (assert) {
+
+    var toLetterGrade = function (grade) {
+        if (grade >= 90) return 'A';
+        if (grade >= 80) return 'B';
+        if (grade >= 70) return 'C';
+        if (grade >= 60) return 'D';
+        return 'F';
+    };
+
+    var forkJoin = function(join, func1, func2){
+        return function(val) {
+            return join(func1(val), func2(val));
+        };
+    };
+
+    var computeAverageGrade = R.compose(toLetterGrade, forkJoin(R.divide, R.sum, R.length));
+
+    assert.equal(computeAverageGrade([80, 90, 100]), 'A');
+    assert.equal(computeAverageGrade([80, 85, 89]), 'B');
+    assert.equal(computeAverageGrade([70, 75, 79]), 'C');
+    assert.equal(computeAverageGrade([60, 65, 69]), 'D');
+    assert.equal(computeAverageGrade([50, 55, 59]), 'F');
+    assert.equal(computeAverageGrade([-10]), 'F');
+});
