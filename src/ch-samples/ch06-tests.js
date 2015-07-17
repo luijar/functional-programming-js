@@ -130,11 +130,14 @@ QUnit.test("JSCheck 1", function (assert) {
                     [90, 98, 99],
                     [100, 100, 100]
                 ],
-                [1,1,2,4,3,1]
+                [1,2,3,4,3,2]
             ),
-            JSC.string(1, JSC.one_of("ABCDEF"))
+            JSC.string(1, JSC.one_of("ABCDF"))
         ],
         function (grades, grade) {
+            if(grade === 'E') {
+                return false;
+            }
             return 'Testing for an ' + grade + ' on grades: ' + grades;
         }
     );
