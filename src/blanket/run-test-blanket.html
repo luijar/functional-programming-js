@@ -23,8 +23,8 @@
 <script src="../lib/id.js"></script>
 <script src="../lib/either.js"></script>
 <script src="../lib/jscheck.js"></script>
-<script src="../lib/io.js"></script>
 <script src="../lib/blanket.js"></script>
+<script src="../lib/io.js"></script>
 
 <table id="studentRoster">
     <thead>
@@ -47,14 +47,15 @@
                 if(index === 'students') {
                     return students[id];
                 }
+                return null;
             }
         };
     };
 </script>
 
 <!--  Comment out either one to see coverage for the other-->
-<script src="functional-program.js" data-cover></script>
-<!--<script src="imperative-program.js" data-cover></script>-->
+<!--<script src="functional-program.js" data-cover></script>-->
+<script src="imperative-program.js" data-cover></script>
 <script src="unit-test.js"></script>
 
 </body>

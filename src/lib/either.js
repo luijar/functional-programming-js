@@ -175,7 +175,7 @@ Left.prototype.chain   = noop
 
 Right.prototype.chain = function(f) {
     return f(this.value)
-}
+};
 
 
 // -- Show -------------------------------------------------------------
@@ -328,11 +328,11 @@ Either.prototype.swap = unimplemented
 
 Left.prototype.swap = function() {
     return this.Right(this.value)
-}
+};
 
 Right.prototype.swap = function() {
     return this.Left(this.value)
-}
+};
 
 
 /**
@@ -347,3 +347,20 @@ Right.prototype.leftMap  = noop
 Left.prototype.leftMap = function(f) {
     return this.Left(f(this.value))
 }
+
+Either.prototype.getOrElseThrow = unimplemented
+
+Left.prototype.getOrElseThrow = function(a) {
+    throw new Error(a);
+};
+
+Right.prototype.getOrElseThrow = function(_) {
+    return this.value;
+}
+
+Either.prototype.filter = unimplemented;
+Left.prototype.filter   = noop;
+
+Right.prototype.filter = function(f) {
+    return this.fromNullable(f(this.value) ? this.value : null);
+};

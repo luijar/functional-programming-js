@@ -4,27 +4,33 @@ var tableId = 'studentRoster';
 
 function addToRoster(studentId) {
 
-    studentId = studentId.replace(/^\s*|\-|\s*$/g, '');
-    if(studentId.length !== 9) {
-        throw new Error('Invalid Input');
-    }
+    if(studentId != null) {
+        studentId = studentId.replace(/^\s*|\-|\s*$/g, '');
 
-    var student = store.get(studentId);
+        if(studentId.length !== 9) {
+            throw new Error('Invalid Input');
+        }
 
-    if (student !== null) {
-        var rowInfo = [
-            '<td>' + student.ssn + '</td>',
-            '<td>' + student.firstname + '</td>',
-            '<td>' + student.lastname + '</td>'
-        ];
+        var student = store.get(studentId);
 
-        $('#' + tableId + ' tr:last').after(
-            '<tr>' + rowInfo + '</tr>');
+        if (student) {
+            var rowInfo = [
+                '<td>' + student.ssn + '</td>',
+                '<td>' + student.firstname + '</td>',
+                '<td>' + student.lastname + '</td>'
+            ];
 
-        return $('#' + tableId + ' tr').length - 1;
+            $('#' + tableId + ' tr:last').after(
+                '<tr>' + rowInfo + '</tr>');
+
+            return $('#' + tableId + ' tr').length - 1;
+        }
+        else {
+            throw new Error('Student not found!');
+        }
     }
     else {
-        throw new Exception('Student not found!');
+        return 0;
     }
 }
 
