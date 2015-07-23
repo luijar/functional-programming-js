@@ -36,7 +36,7 @@ var normalize = function (str) {
 
 var cleanInput = R.compose(R.tap(trace), normalize, R.tap(trace), trim);
 
-populateRow = function (columns) {
+var populateRow = function (columns) {
     var cell_t = _.template('<td><%= a %></td>');
     var row_t  = _.template('<tr><%= a %></tr>');
     var obj = function(a) {
