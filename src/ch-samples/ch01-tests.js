@@ -4,7 +4,6 @@
  * Author: Luis Atencio
  * Book: Functional Programming in JavaScript
  */
-
 QUnit.module( "Chapter 1" );
 "use strict";
 

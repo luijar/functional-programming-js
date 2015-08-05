@@ -1,7 +1,3 @@
-/**
- * @module lib/either
- */
-// -- Aliases ----------------------------------------------------------
 var clone         = Object.create
 var unimplemented = function(){ throw new Error('Not implemented.') }
 var noop          = function(){ return this                         }
