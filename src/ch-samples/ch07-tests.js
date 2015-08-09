@@ -55,6 +55,59 @@ QUnit.test("Lazy and shortcut fusion", function (assert) {
         .value();
 
     assert.ok(result.length === 3);
-
-
 });
+
+
+var start = function (name) {
+    return function () {
+        console.time(name);
+    }
+};
+
+var end = function (name) {
+    return function () {
+        console.timeEnd(name);
+    }
+};
+
+
+QUnit.test("Memoization with recursion", function (assert) {
+
+    var fib = (function ( x ) {
+        if(x < 2) return 1; else return fib(x-1) + fib(x-2);
+    }).memoize();
+    var runFib = IO.of(200).map(R.tap(start('fib'))).map(fib).map(R.tap(end('fib')));
+    assert.equal(runFib.run(), 4.53973694165308e+41);  // 7.341ms
+    assert.equal(runFib.run(), 4.53973694165308e+41);  // 0.016ms
+});
+
+QUnit.test("Memoization with md5", function (assert) {
+
+    var m_md5 = md5.memoize();
+
+    var runMd5 = IO.of('GetFunction@l!').map(R.tap(start('md5'))).map(m_md5).map(R.tap(end('md5')));
+    assert.equal(runMd5.run(), '96b50e555c6d9ee4be6a07944695a814');  // 7.341ms
+    assert.equal(runMd5.run(), '96b50e555c6d9ee4be6a07944695a814');  // 0.016ms
+});
+
+
+QUnit.test("Memoization Test (isPrime)", function (assert) {
+
+    var isPrime = (function (num) {
+        var prime = num !== 1;
+        for (var i = 2; i < num; i++) {
+            if (num % i == 0) {
+                prime = false;
+                break;
+            }
+        }
+        return prime;
+    }).memoize();
+
+    assert.ok(isPrime(2), '2 is prime!');
+    assert.ok(isPrime(3), '3 is prime!');
+    assert.ok(isPrime(5), '5 is prime!');
+    assert.ok(isPrime(17), '17 is prime!');
+    assert.ok(!isPrime(6), '6 is not prime!');
+});
+
