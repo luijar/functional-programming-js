@@ -73,7 +73,7 @@ var end = function (name) {
 
 QUnit.test("Memoization with recursion", function (assert) {
 
-    var fib = (function ( x ) {
+    var fib = (function (x) {
         if(x < 2) return 1; else return fib(x-1) + fib(x-2);
     }).memoize();
     var runFib = IO.of(200).map(R.tap(start('fib'))).map(fib).map(R.tap(end('fib')));
