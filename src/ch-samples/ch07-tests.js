@@ -70,7 +70,6 @@ var end = function (name) {
     }
 };
 
-
 QUnit.test("Memoization with recursion", function (assert) {
 
     var fib = (function (x) {
@@ -85,9 +84,17 @@ QUnit.test("Memoization with md5", function (assert) {
 
     var m_md5 = md5.memoize();
 
-    var runMd5 = IO.of('GetFunction@l!').map(R.tap(start('md5'))).map(m_md5).map(R.tap(end('md5')));
-    assert.equal(runMd5.run(), '96b50e555c6d9ee4be6a07944695a814');  // 7.341ms
-    assert.equal(runMd5.run(), '96b50e555c6d9ee4be6a07944695a814');  // 0.016ms
+    var runMd5 = IO.of('Hello Haskell!').map(R.tap(start('md5'))).map(m_md5).map(R.tap(end('md5')));
+    assert.equal(runMd5.run(), '6aa2f515697acb872ea5c84fadb79c96');  // 7.341ms
+    assert.equal(runMd5.run(), '6aa2f515697acb872ea5c84fadb79c96');  // 0.016ms
+});
+
+QUnit.test("Memoization with md5 2", function (assert) {
+
+    var m_md5 = md5.memoize();
+
+    var runMd5 = IO.of('Get Functional!').map(R.tap(start('md5_2'))).map(m_md5).map(R.tap(end('md5_2')));
+    assert.equal(runMd5.run(), '96d18935a41d37a54d60ce997675cc91');  // 7.341ms
 });
 
 
