@@ -157,8 +157,9 @@ QUnit.test("Memoization Test (factorial) 2", function (assert) {
     assert.equal(result, 9.33262154439441e+157);
 
     start('factorial with memo')();
-    factorial(101);
+    result = factorial(101);
     end('factorial with memo')();
+    assert.equal(result, 9.425947759838354e+159);
 });
 
 
