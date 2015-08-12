@@ -10,7 +10,6 @@ var end = function (name) {
     }
 };
 
-// ~ 9.2 ms (no memoization)
 QUnit.test("Functional Add To Roster with valid user", function (assert) {
     start('addToRoster without')();
     var result = addToRoster('444-44-4444').run();

@@ -118,3 +118,48 @@ QUnit.test("Memoization Test (isPrime)", function (assert) {
     assert.ok(!isPrime(6), '6 is not prime!');
 });
 
+QUnit.test("Memoization Test (factorial)", function (assert) {
+
+
+    //var factorial = (n) => n === 0 ? 1 : (n * factorial(n - 1));
+    function factorial(num)
+    {
+        // If the number is less than 0, reject it.
+        if (num < 0) {
+            return -1;
+        }
+        // If the number is 0, its factorial is 1.
+        else if (num == 0) {
+            return 1;
+        }
+        // Otherwise, call this recursive procedure again.
+        else {
+            return (num * factorial(num - 1));
+        }
+    }
+
+    start('factorial')();
+    var result = factorial(100);
+    end('factorial')();
+    assert.equal(result, 9.33262154439441e+157);
+});
+
+
+QUnit.test("Memoization Test (factorial) 2", function (assert) {
+
+    var factorial = ((n) => {
+        if(n === 0)  return 1; else { return (n * factorial(n - 1))}
+    }).memoize();
+
+    start('factorial no memo')();
+    var result = factorial(100);
+    end('factorial no memo')();
+    assert.equal(result, 9.33262154439441e+157);
+
+    start('factorial with memo')();
+    factorial(101);
+    end('factorial with memo')();
+});
+
+
+
