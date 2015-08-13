@@ -162,5 +162,16 @@ QUnit.test("Memoization Test (factorial) 2", function (assert) {
     assert.equal(result, 9.425947759838354e+159);
 });
 
+QUnit.test("Factorial TCO", function (assert) {
+
+    var _fact = (x, n) => (n === 0) ? x : _fact(n * x, n - 1);
+    var factorial = _.partial(_fact, 1);
+
+    var result = factorial(100);
+    assert.equal(result, 9.332621544394418e+157);
+
+    result = factorial(101);
+    assert.equal(result, 9.42594775983836e+159);
+});
 
 
