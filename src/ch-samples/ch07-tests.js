@@ -164,8 +164,7 @@ QUnit.test("Memoization Test (factorial) 2", function (assert) {
 
 QUnit.test("Factorial TCO", function (assert) {
 
-    var _fact = (x, n) => (n === 0) ? x : _fact(n * x, n - 1);
-    var factorial = _.partial(_fact, 1);
+    var factorial = (n, current = 1) => (n === 0) ? current : factorial(n - 1, n * current);
 
     var result = factorial(100);
     assert.equal(result, 9.332621544394418e+157);
@@ -174,4 +173,80 @@ QUnit.test("Factorial TCO", function (assert) {
     assert.equal(result, 9.42594775983836e+159);
 });
 
+QUnit.test("Sum TCO", function (assert) {
 
+    function sum(arr) {
+        var list = _(arr);
+        if(list.isEmpty()) {
+            return 0;
+        }
+        return list.head() + sum(list.tail());
+    }
+
+
+    var result = sum([1,2,3]);
+    assert.equal(result, 6);
+
+
+    var sum2 =  function (arr, acc = 0) {
+        var list = _(arr);
+        if(list.isEmpty()) {
+            return acc;
+        }
+        return sum2(list.tail(), acc +  list.head());
+    };
+
+    var result2 = sum2([1,2,3,4,5,6,7,8,9]);
+    assert.equal(result2, 45);
+});
+
+
+QUnit.test("Factorial TCO looping", function (assert) {
+
+    var factorial = function (n, current = 1) {
+        if(n === 0) return 1;
+        return factorial(n - 1, n * current); // it will eliminated
+    };
+
+    var result = factorial(100);
+    assert.equal(result, 1);
+
+    var factorial2 = function (n) {
+        var result = 1;
+        for(let x = n; x > 1; x--) {
+            result *= x;
+        }
+        return result;
+    }
+    result = factorial2(5);
+    assert.equal(result, 120);
+
+    result = factorial2(0);
+    assert.equal(result, 1);
+});
+
+
+QUnit.test("Lazy eval", function (assert) {
+
+    var student = {};
+    var createNewStudent = function () {
+
+    };
+    Either.of(student).getOrElse(createNewStudent());
+
+    assert.equal([2+1, 3*2, 1/0 , 5-4].length, 4);
+});
+
+QUnit.test("Trampoline and thunk", function (assert) {
+
+    function factorial (n) {
+
+        var factorial_t = trampoline(function myself (n, acc) {
+            return n === 0 ? acc : thunk(myself, n - 1, acc * n);
+        });
+        return factorial_t(n, 1);
+    };
+
+    var result = factorial(5);
+    assert.equal(result, 120);
+});
