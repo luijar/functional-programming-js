@@ -85,16 +85,19 @@ QUnit.test("Memoization with md5", function (assert) {
     var m_md5 = md5.memoize();
 
     var runMd5 = IO.of('Hello Haskell!').map(R.tap(start('md5'))).map(m_md5).map(R.tap(end('md5')));
-    assert.equal(runMd5.run(), '6aa2f515697acb872ea5c84fadb79c96');  // 7.341ms
-    assert.equal(runMd5.run(), '6aa2f515697acb872ea5c84fadb79c96');  // 0.016ms
+    assert.equal(runMd5.run(), '6aa2f515697acb872ea5c84fadb79c96');
+    assert.equal(runMd5.run(), '6aa2f515697acb872ea5c84fadb79c96');
 });
 
 QUnit.test("Memoization with md5 2", function (assert) {
 
     var m_md5 = md5.memoize();
 
-    var runMd5 = IO.of('Get Functional!').map(R.tap(start('md5_2'))).map(m_md5).map(R.tap(end('md5_2')));
-    assert.equal(runMd5.run(), '96d18935a41d37a54d60ce997675cc91');  // 7.341ms
+    var runMd5 = IO.of('We should forget about small efficiencies, say about 97% of the time... premature optimization ' +
+        'is the root of all evil. Yet we should not pass up our opportunities in that critical 3%')
+            .map(R.tap(start('md5_2'))).map(m_md5).map(R.tap(end('md5_2')));
+    assert.equal(runMd5.run(), '3112dc6f7b13d8a5cba99a9b7064f3ca');
+    assert.equal(runMd5.run(), '3112dc6f7b13d8a5cba99a9b7064f3ca');
 });
 
 
@@ -250,3 +253,51 @@ QUnit.test("Trampoline and thunk", function (assert) {
     var result = factorial(5);
     assert.equal(result, 120);
 });
+
+//QUnit.test("Curried vs non-curried", function (assert) {
+//
+//    function curry2(fn) {
+//        return function(secondArg) {
+//            return function(firstArg) {
+//                return fn(firstArg, secondArg);
+//            };
+//        };
+//    }
+//
+//    var add = function (a, b) {
+//        return a + b;
+//    };
+//
+//    var c_add = R.curry(add);
+//    var input = _.range(80000);
+//
+//    start('non_curried_add')();
+//    var result = addAll(input, add); //->511993600000000
+//    end('non_curried_add')();
+//
+//    //start('curried_add')();
+//    //addAll(input, c_add); //-> browser halts
+//    //end('curried_add')();
+//
+//    function addAll(arr, fn) {
+//        let result= 0;
+//        for(let i = 0; i < arr.length; i++) {
+//            for(let j = 0; j < arr.length; j++) {
+//                result += fn(arr[i], arr[j]);
+//            }
+//        }
+//        return result;
+//    }
+//
+//    assert.equal(result, 511993600000000);
+//});
+
+
+//QUnit.test("Measure stack size", function (assert) {
+//    function inc(i = 1) {
+//        console.log(i);
+//        inc(++i);
+//    }
+//    inc();
+//});
+//
