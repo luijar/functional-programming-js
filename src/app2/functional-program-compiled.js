@@ -54,7 +54,7 @@ var populateRow = function populateRow(columns) {
 };
 
 // fetchStudentHttp :: URI , String -> Promise
-var fetchStudentHttp = R.curry(function (uri, studentId) {
+var fetchStudentDB = R.curry(function (uri, studentId) {
     var path = uri + '/student?id =' + studentId;
     return Promise.resolve(path);
 });
@@ -68,7 +68,7 @@ var checkLengthSsn = function checkLengthSsn(str) {
     return Either.of(str).filter(m_validLength9).getOrElseThrow('Input: ' + str + ' is not a valid SSN number');
 };
 var HOST = 'http://localhost:8000';
-var findStudent = fetchStudentHttp(HOST);
+var findStudent = fetchStudentDB(HOST);
 
 var m_checkLengthSsn = checkLengthSsn.memoize();
 var m_findStudent = findStudent.memoize();

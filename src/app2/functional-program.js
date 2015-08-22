@@ -52,7 +52,7 @@ var populateRow = function (columns) {
 
 
 // fetchStudentHttp :: URI , String -> Promise
-var fetchStudentHttp = R.curry(function (uri, studentId) {
+var fetchStudentDB = R.curry(function (uri, studentId) {
     const path = uri + '/student?id =' + studentId;
     return Promise.resolve(path);
 });
@@ -67,7 +67,7 @@ var checkLengthSsn = function (str) {
         .getOrElseThrow('Input: ' + str + ' is not a valid SSN number');
 };
 const HOST = 'http://localhost:8000';
-var findStudent = fetchStudentHttp(HOST);
+var findStudent = fetchStudentDB(HOST);
 
 var m_checkLengthSsn = checkLengthSsn.memoize();
 var m_findStudent = findStudent.memoize();

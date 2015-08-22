@@ -3,18 +3,13 @@
 <head>
     <meta charset="utf-8">
     <title>Functional JavaScript Programming | Luis Atencio</title>
-    <link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-1.16.0.css">
 </head>
 <body>
-<div id="qunit"></div>
-<div id="qunit-fixture"></div>
-<script src="http://code.jquery.com/qunit/qunit-1.16.0.js"></script>
 
 <!-- Source -->
 <!-- Dependencies -->
 <script src="../lib/lodash.js"></script>
 <script src="../lib/common.js"></script>
-<script src="../lib/log4js.js"></script>
 <script src="../lib/ramda.js"></script>
 <script src="../lib/jquery.js"></script>
 <script src="../lib/maybe.js"></script>
@@ -22,6 +17,7 @@
 <script src="../lib/either.js"></script>
 <script src="../lib/io.js"></script>
 <script src="../lib/memo.js"></script>
+<script src="db.js"></script>
 
 <table id="studentRoster">
     <thead>
@@ -30,8 +26,19 @@
 </table>
 
 <!--  Comment out either one to see coverage for the other-->
-<script src="functional-program.js" data-cover></script>
+<!--<script src="functional-program.js" data-cover></script>-->
 <script>
+    open().then(function () {
+        addStudent('Haskell Curry', '444-44-4445').then(function () {
+            console.log('student added');
+            getAllStudents().then(function (data) {
+                alert(data);
+            });
+        });
+    });
+
+
+//    deleteTodo();
 
 </script>
 
