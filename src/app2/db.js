@@ -98,7 +98,7 @@ var addStudent = function(name, ssn) {
     return promise;
 };
 
-var deleteTodo = function(id) {
+var deleteStudent = function(id) {
     var promise = new Promise(function(resolve, reject){
         var trans = db.transaction(["students"], "readwrite");
         var store = trans.objectStore("students");

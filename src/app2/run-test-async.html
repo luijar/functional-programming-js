@@ -29,10 +29,11 @@
 <!--<script src="functional-program.js" data-cover></script>-->
 <script>
     open().then(function () {
-        addStudent('Haskell Curry', '444-44-4445').then(function () {
-            console.log('student added');
+        addStudent('Haskell Curry', '444-44-4446').then(function () {
             getAllStudents().then(function (data) {
-                alert(data);
+                data.forEach(function (student) {
+                    deleteStudent(student.ssn);
+                })
             });
         });
     });
