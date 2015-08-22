@@ -31,6 +31,7 @@
     open().then(function () {
         addStudent('Haskell Curry', '444-44-4446').then(function () {
             getAllStudents().then(function (data) {
+                console.log('Fetched '  + data.length + ' students');
                 data.forEach(function (student) {
                     deleteStudent(student.ssn);
                 })
