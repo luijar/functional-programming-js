@@ -1,10 +1,9 @@
-var lastIndex = 0;
-var db;
 var open = function() {
     const version = 2;
     var promise = new Promise(function(resolve, reject) {
         //Opening the DB
         var request = indexedDB.open("studentData", version);
+        var db;
 
         //Handling onupgradeneeded
         //Will be called if the database is new or the version is modified
@@ -23,18 +22,18 @@ var open = function() {
         //If opening DB succeeds
         request.onsuccess = function(e) {
             db = e.target.result;
-            resolve();
+            resolve(db);
         };
 
         //If DB couldn't be opened for some reason
         request.onerror = function(e) {
-            reject("Couldn't open DB");
+            reject(Error("Couldn't open DB"));
         };
     });
     return promise;
 };
 
-var getAllStudents = function() {
+var getAllStudents = function(db) {
     var studentArr = [];
 
     //Creating a transaction object to perform Read/Write operations
@@ -55,7 +54,7 @@ var getAllStudents = function() {
 
             //Resolving the promise with todo items when the result id empty
             if(result === null || result === undefined){
-                resolve(studentArr);
+                resolve(db, studentArr);
             }
             //Pushing result into the todo list
             else{
@@ -72,7 +71,7 @@ var getAllStudents = function() {
     return promise;
 };
 
-var addStudent = function(name, ssn) {
+var addStudent = function(db, name, ssn) {
     //Creating a transaction object to perform read-write operations
     var trans = db.transaction(["students"], "readwrite");
     var store = trans.objectStore("students");
@@ -86,7 +85,7 @@ var addStudent = function(name, ssn) {
 
         //success callback
         request.onsuccess = function(e) {
-            resolve();
+            resolve(db);
         };
 
         //error callback
@@ -98,7 +97,7 @@ var addStudent = function(name, ssn) {
     return promise;
 };
 
-var deleteStudent = function(id) {
+var deleteStudent = function(db, id) {
     var promise = new Promise(function(resolve, reject){
         var trans = db.transaction(["students"], "readwrite");
         var store = trans.objectStore("students");

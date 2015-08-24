@@ -28,20 +28,16 @@
 <!--  Comment out either one to see coverage for the other-->
 <!--<script src="functional-program.js" data-cover></script>-->
 <script>
-    open().then(function () {
-        addStudent('Haskell Curry', '444-44-4446').then(function () {
-            getAllStudents().then(function (data) {
+    open().then(function (db) {
+        addStudent(db, 'Haskell Curry', '444-44-4447').then(function (db) {
+            getAllStudents(db).then(function (db, data) {
                 console.log('Fetched '  + data.length + ' students');
                 data.forEach(function (student) {
-                    deleteStudent(student.ssn);
+                    deleteStudent(db, student.ssn);
                 })
             });
         });
     });
-
-
-//    deleteTodo();
-
 </script>
 
 </body>
