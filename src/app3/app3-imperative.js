@@ -18,7 +18,6 @@ var getJSON = function (url, resolve, reject) {
     req.send();
 };
 
-
 var addStudentToRoster = function (student, grade) {
     $('#studentRoster tr:last').after("<tr><td>" + student.ssn + "</td>" +
         "<td>" + student.firstname + "</td>" +
@@ -34,6 +33,7 @@ function average(grades) {
 }
 
 getJSON(HOST + '/students', function(students) {  // #A
+        $('#spinner').hide();
         students.sort(function(a, b){
             if(a.ssn < b.ssn) return -1;
             if(a.ssn > b.ssn) return 1;
@@ -44,7 +44,6 @@ getJSON(HOST + '/students', function(students) {  // #A
             if(student.address.country === 'US') {
                 getJSON(HOST + '/grades?ssn=' + student.ssn,  // #B
                     function (grades) {
-
                         addStudentToRoster(student, average(grades)); // #C
                     },
                     function (error) { // #B
