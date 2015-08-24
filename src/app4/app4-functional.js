@@ -36,18 +36,14 @@ getJSON(HOST + '/students')
     .then(hide('spinner'))
     .then(R.sortBy(R.prop('ssn')))
     .then(R.filter((s) => s.address.country == 'US'))
-    .then(R.reduce(function (sequence, student) {
-            return sequence.then(function() {
-                return getJSON(HOST + '/grades?ssn=' + student.ssn);
-            })
-            .then(average)
-            .then(function (grade) {
-                addStudentToRoster(student, grade);
-            });
-        },
-        Promise.resolve()))
+    .then(R.map(function (student) {
+            getJSON(HOST + '/grades?ssn=' + student.ssn)
+                .then(average)
+                .then(function (grade) {
+                    addStudentToRoster(student, grade);
+                });
+        }))
     .catch(function(error) {
         alert('Erro occurred: ' + error.message);
     }
 );
-
