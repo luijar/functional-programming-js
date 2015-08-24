@@ -21,15 +21,28 @@ var getJSON = function (url) {
     });
 };
 
-var average = (grades) => { /*alert(grades);*/ return Math.ceil(grades.reduce(function (acc, val) { return acc + val; }, 0) / grades.length)};
+var forkJoin = function(join, func1, func2){
+    return function(val) {
+        return join(func1(val), func2(val));
+    };
+};
 var hide = (id) => $('#' + id).hide();
 
-var addStudentToRoster = function (student, grade) {
-    $('#studentRoster tr:last').after("<tr><td>" + student.ssn + "</td>" +
-        "<td>" + student.firstname + "</td>" +
-        "<td>" + student.lastname + "</td>" +
-        "<td>" +  grade + "</td>" +
-        "</tr>");
+var populateRow = function (columns) {
+    var cell_t = _.template('<td><%= a %></td>');
+    var row_t  = _.template('<tr><%= a %></tr>');
+    var obj = function(a) {
+        return {'a': a};
+    };
+    var row = R.compose(row_t, obj, R.join(''), R.map(cell_t), R.map(obj));
+    return row(columns);
+};
+
+var appendToTable = function (elementId) {
+    return function (row) {
+        $('#' + elementId + ' tr:last').after(row);
+        return $('#' + elementId + ' tr').length - 1; // exclude header
+    };
 };
 
 getJSON(HOST + '/students')
@@ -38,9 +51,12 @@ getJSON(HOST + '/students')
     .then(R.filter((s) => s.address.country == 'US'))
     .then(R.map(function (student) {
             getJSON(HOST + '/grades?ssn=' + student.ssn)
-                .then(average)
+                .then(R.compose(Math.ceil, forkJoin(R.divide, R.sum, R.length)))
                 .then(function (grade) {
-                    addStudentToRoster(student, grade);
+                    const data = R.merge(student, {'grade': grade});
+                    var unsafeIO = IO.of(data).map(R.props(['ssn', 'firstname', 'lastname', 'grade']))
+                        .map(populateRow).map(appendToTable('studentRoster'));
+                    unsafeIO.run();
                 });
         }))
     .catch(function(error) {
