@@ -72,6 +72,8 @@ var write = function(id) {
     });
 };
 
+var average = R.compose(Math.ceil, forkJoin(R.divide, R.sum, R.length));
+
 // 2
 getJSON(HOST + '/students')
     .then(hide('spinner'))
@@ -79,11 +81,11 @@ getJSON(HOST + '/students')
     .then(function (gradeUrls) {
         return Promise.all(R.map(getJSON, gradeUrls))
     })
-    .then(R.map(R.compose(Math.ceil, forkJoin(R.divide, R.sum, R.length))))
-    .then(R.compose(Math.ceil, forkJoin(R.divide, R.sum, R.length)))
+    .then(R.map(average))
+    .then(average)
     .then(function (grade) {
         IO.of(grade).map(write('total')).run();
     })
     .catch(function(error) {
-        alert('Erro occurred: ' + error.message);
+        alert('Error occurred: ' + error.message);
     });

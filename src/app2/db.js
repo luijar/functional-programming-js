@@ -1,6 +1,8 @@
+
+const DB_NAME = 'students';
 var open = function() {
     const version = 2;
-    var promise = new Promise(function(resolve, reject) {
+    return new Promise(function(resolve, reject) {
         //Opening the DB
         var request = indexedDB.open("studentData", version);
         var db;
@@ -12,8 +14,8 @@ var open = function() {
             e.target.transaction.onerror = indexedDB.onerror;
 
             //Deleting DB if already exists
-            if(db.objectStoreNames.contains("students")) {
-                db.deleteObjectStore("students");
+            if(db.objectStoreNames.contains(DB_NAME)) {
+                db.deleteObjectStore(DB_NAME);
             }
             //Creating a new DB store with a paecified key property
             var store = db.createObjectStore("students", {keyPath: "ssn", autoIncrement: true});
@@ -30,20 +32,19 @@ var open = function() {
             reject(Error("Couldn't open DB"));
         };
     });
-    return promise;
 };
 
 var getAllStudents = function(db) {
     var studentArr = [];
 
     //Creating a transaction object to perform Read/Write operations
-    var trans = db.transaction(["students"], "readwrite");
+    var trans = db.transaction([DB_NAME], "readwrite");
 
     //Getting a reference of the todo store
-    var store = trans.objectStore("students");
+    var store = trans.objectStore(DB_NAME);
 
     //Wrapping all the logic inside a promise
-    var promise = new Promise(function(resolve, reject){
+    return new Promise(function(resolve, reject) {
         //Opening a cursor to fetch items from lower bound in the DB
         //var keyRange = IDBKeyRange.lowerBound(0);
         var cursorRequest = store.openCursor();
@@ -53,8 +54,12 @@ var getAllStudents = function(db) {
             var result = e.target.result;
 
             //Resolving the promise with todo items when the result id empty
-            if(result === null || result === undefined){
-                resolve(db, studentArr);
+            if(result === null || result === undefined) {
+
+                resolve({
+                    'db': db,
+                    'data': studentArr
+                });
             }
             //Pushing result into the todo list
             else{
@@ -68,16 +73,15 @@ var getAllStudents = function(db) {
             reject("Couldn't fetch items from the DB");
         };
     });
-    return promise;
 };
 
 var addStudent = function(db, name, ssn) {
     //Creating a transaction object to perform read-write operations
-    var trans = db.transaction(["students"], "readwrite");
-    var store = trans.objectStore("students");
+    var trans = db.transaction([DB_NAME], "readwrite");
+    var store = trans.objectStore(DB_NAME);
 
     //Wrapping logic inside a promise
-    var promise = new Promise(function(resolve, reject){
+    return new Promise(function(resolve, reject){
         //Sending a request to add an item
         var request = store.add({
             ssn: ssn, name: name
@@ -94,17 +98,16 @@ var addStudent = function(db, name, ssn) {
             reject("Couldn't add the passed item");
         };
     });
-    return promise;
 };
 
 var deleteStudent = function(db, id) {
-    var promise = new Promise(function(resolve, reject){
-        var trans = db.transaction(["students"], "readwrite");
-        var store = trans.objectStore("students");
+    return new Promise(function(resolve, reject){
+        var trans = db.transaction([DB_NAME], "readwrite");
+        var store = trans.objectStore(DB_NAME);
         var request = store.delete(id);
 
         request.onsuccess = function(e) {
-            resolve();
+            resolve(true);
         };
 
         request.onerror = function(e) {
@@ -112,5 +115,4 @@ var deleteStudent = function(db, id) {
             reject("Couldn't delete the item");
         };
     });
-    return promise;
 };
