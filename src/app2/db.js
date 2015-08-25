@@ -34,6 +34,21 @@ var open = function() {
     });
 };
 
+var find = function (db, studentId) {
+    const trans = db.transaction(['students'], 'readonly');
+    const store = trans.objectStore('students');
+    return new Promise(function(resolve, reject) {
+        var request = store.get(studentId);
+
+        request.onerror = function() {
+            reject(new Error('Student not found!'));
+        };
+        request.onsuccess = function() {
+            resolve(request.result);
+        };
+    });
+};
+
 var getAllStudents = function(db) {
     var studentArr = [];
 
@@ -75,7 +90,7 @@ var getAllStudents = function(db) {
     });
 };
 
-var addStudent = function(db, name, ssn) {
+var addStudent = function(db, firstname, lastname, ssn) {
     //Creating a transaction object to perform read-write operations
     var trans = db.transaction([DB_NAME], "readwrite");
     var store = trans.objectStore(DB_NAME);
@@ -84,7 +99,7 @@ var addStudent = function(db, name, ssn) {
     return new Promise(function(resolve, reject){
         //Sending a request to add an item
         var request = store.add({
-            ssn: ssn, name: name
+            ssn: ssn, firstname: firstname, lastname: lastname
         });
 
         //success callback
