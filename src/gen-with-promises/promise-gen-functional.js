@@ -77,12 +77,12 @@ spawn(function *() {
         // Map our array of chapter urls to
         // an array of chapter json promises.
         // This makes sure they all download parallel.
-        let students = R.compose(
+        let students = yield getJSON(HOST + '/students');
+        students = R.compose(
                          R.sortBy(R.prop('ssn')),
-                         R.filter(function (s) { return s.address.country === 'US'}))
-                            (yield getJSON(HOST + '/students'));
+                         R.filter(function (s) { return s.address.country === 'US'}))(students);
 
-        for (let student of students) {
+        for (let student of students) {  //must use for loop you cannot use yield within another function
             // Wait for each student grade to be ready, then add it to the page
             let grade = average(yield getJSON(HOST + '/grades?ssn=' + student.ssn));
             const data = R.merge(student, {'grade': grade});
