@@ -74,9 +74,7 @@ spawn(function *() {
 
         // 'yield' effectively does an async wait,
         // returning the result of the promise
-        // Map our array of chapter urls to
-        // an array of chapter json promises.
-        // This makes sure they all download parallel.
+        // Map our array of student urls to
         let students = yield getJSON(HOST + '/students');
         students = R.compose(
                          R.sortBy(R.prop('ssn')),
@@ -93,7 +91,6 @@ spawn(function *() {
     }
     catch (err) {
         // try/catch just works, rejected promises are thrown here
-        //addTextToPage("Argh, broken: " + err.message);
         alert('error occurred' + err);
     }
 });
