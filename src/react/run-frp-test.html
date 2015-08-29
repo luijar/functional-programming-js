@@ -125,12 +125,7 @@
             };
 
             function search(query) {
-                if(query.isLeft) {
-                    // error
-                    return Bacon.once(null);  // so that it gets lifted into Maybe
-                }
-                var _s = R.compose(Bacon.fromPromise, find(db), chain(R.identity));
-                return _s(query);
+                return query.map(find(db)).map(Bacon.fromPromise).getOrElse(Bacon.once(null));
             }
 
             var map = R.curry(function (f, container) {
@@ -169,14 +164,6 @@
                         chain(populateRow),
                         map(R.props(['ssn', 'firstname', 'lastname'])),
                         Maybe.fromNullable));
-
-//            suggestions.onValue(function (data) {
-//                if(!R.isEmpty(data)) {
-//                    var unsafeIO = IO.of(data).map(R.props(['ssn', 'firstname', 'lastname']))
-//                            .map(populateRow).map(appendToTable('studentRoster'));
-//                    unsafeIO.run();
-//                }
-//            });
             //========================================================//
 
             getAllStudents(db).then(function (data) {
