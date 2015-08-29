@@ -266,7 +266,7 @@ Right.prototype.orElse  = noop
 
 Left.prototype.orElse = function(f) {
     return f(this.value)
-}
+};
 
 
 /**

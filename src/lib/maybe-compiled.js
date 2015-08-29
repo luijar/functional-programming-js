@@ -298,4 +298,10 @@ Just.prototype.orElse = function (_) {
     return this;
 };
 
+Maybe.prototype.filter = unimplemented;
+Nothing.prototype.filter = noop;
+Just.prototype.filter = function (f) {
+    return this.fromNullable(f(this.value) ? this.value : null);
+};
+
 //# sourceMappingURL=maybe-compiled.js.map

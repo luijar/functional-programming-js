@@ -124,22 +124,22 @@ var addStudents = function(db, arr) {
 
     //Wrapping logic inside a promise
     return new Promise(function(resolve, reject){
-        //for(let i in arr) {
-        //    //Sending a request to add an item
-        //    var request = store.add(arr[i]);
-        //
-        //    //success callback
-        //    request.onsuccess = function(e) {
-        //        // continue
-        //        console.log('Added student: ' + arr[i].ssn);
-        //    };
-        //
-        //    //error callback
-        //    request.onerror = function(e) {
-        //        console.log(e.value);
-        //        reject("Couldn't add the passed item");
-        //    };
-        //}
+        for(let i in arr) {
+            //Sending a request to add an item
+            var request = store.add(arr[i]);
+
+            //success callback
+            request.onsuccess = function(e) {
+                // continue
+                console.log('Added student: ' + arr[i].ssn);
+            };
+
+            //error callback
+            request.onerror = function(e) {
+                console.log(e.value);
+                reject("Couldn't add the passed item");
+            };
+        }
         resolve(db);
     });
 };

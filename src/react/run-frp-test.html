@@ -94,6 +94,7 @@
 
             // cleanInput :: String => String
             var cleanInput = R.compose(R.tap(traceLog), normalize, R.tap(traceLog), trim);
+            var m_cleanInput = cleanInput.memoize();
 
             var validLength = function(len, str) {
                 return str.length === len;
@@ -101,8 +102,7 @@
             var m_validLength9 = validLength.bind(undefined, 9).memoize();
 
             var checkLengthSsn = function (str) {
-                return Either.of(str).filter(m_validLength9)
-                        .getOrElseThrow('Input: ' + str + ' is not a valid SSN number');
+                return Either.of(str).filter(m_validLength9);
             };
 
             var m_checkLengthSsn = checkLengthSsn.memoize();
@@ -111,7 +111,7 @@
                 var cell_t = _.template('<td><%= a %></td>');
                 var row_t  = _.template('<tr><%= a %></tr>');
                 var obj = function(a) {
-                    return {'a': a};
+                    return {'a': R.isEmpty(a) ? '' : a};
                 };
                 var row = R.compose(row_t, obj, R.join(''), R.map(cell_t), R.map(obj));
                 return row(columns);
@@ -125,10 +125,12 @@
             };
 
             function search(query) {
-                if(query.length < 9) {
-                    return Bacon.once([]);
+                if(query.isLeft) {
+                    // error
+                    return Bacon.once(null);  // so that it gets lifted into Maybe
                 }
-                return Bacon.fromPromise(find(db, query));
+                var _s = R.compose(Bacon.fromPromise, find(db), chain(R.identity));
+                return _s(query);
             }
 
             var map = R.curry(function (f, container) {
@@ -139,33 +141,35 @@
                 return container.chain(f);
             });
 
-            var lift = R.curry(function (f, value) {
-                return Maybe.fromNullable(value).map(f);
+            var runUnsafeIO = R.curry(function (io) {
+                return io.run();
             });
 
-            var liftIO = function (value) {
+             var liftIO = function (value) {
                 return IO.of(value);
             };
                         // handle input
             var input = $('#student-search')
                     .asEventStream('keydown')
+                    .skipDuplicates()
                     .debounce(300)
                     .map(getEventValue)
-                    .map(cleanInput)
-                    .skipDuplicates();
+                    .map(m_cleanInput)
+                    .map(m_checkLengthSsn);
 
             var suggestions = input.flatMapLatest(search);
 
             input.awaiting(suggestions).onValue( function (x) { if(x) {$('#results').html('Searching')}});
-
+//
             suggestions.onValue(
                     R.compose(
+                        runUnsafeIO,
                         map(appendToTable('studentRoster')),
                         liftIO,
                         chain(populateRow),
                         map(R.props(['ssn', 'firstname', 'lastname'])),
-                        lift));
-//
+                        Maybe.fromNullable));
+
 //            suggestions.onValue(function (data) {
 //                if(!R.isEmpty(data)) {
 //                    var unsafeIO = IO.of(data).map(R.props(['ssn', 'firstname', 'lastname']))
@@ -173,7 +177,6 @@
 //                    unsafeIO.run();
 //                }
 //            });
-
             //========================================================//
 
             getAllStudents(db).then(function (data) {
