@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Functional JavaScript Programming | Luis Atencio</title>
+    <style>
+        span {
+            font-family: "Verdana", Times, sans-serif;
+        }
+        td {
+            font-family: "Verdana", Times, sans-serif;
+        }
+        table, thead {
+            border: 1px solid black;
+        }
+        #header td{
+            border: 1px solid black;
+        }
+        td {
+            padding: 15px;
+        }
+        table, td, th {
+            border: 1px solid darkgray;
+        }
+
+        #header td {
+            background-color: lightgray;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Source -->
+<!-- Dependencies -->
+<script src="../lib/lodash.js"></script>
+<script src="../lib/common.js"></script>
+<script src="../lib/ramda.js"></script>
+<script src="../lib/jquery.js"></script>
+<script src="../lib/maybe.js"></script>
+<script src="../lib/id.js"></script>
+<script src="../lib/either.js"></script>
+<script src="../lib/io.js"></script>
+<script src="../lib/memo.js"></script>
+<script src="../lib/bacon.min.js"></script>
+<script src="../lib/bacon.jquery.min.js"></script>
+<script src="db-compiled.js"></script>
+<script src="../lib/log4js.js"></script>
+
+<div>
+    <input type="text" id="student-search"/>
+    <table id="studentRoster">
+        <thead>
+        <tr id="header"><td id="ssn">SSN</td><td id="firstname">First Name</td><td id="lastname">Last Name</td></tr>
+        </thead>
+    </table>
+</div>
+
+<script>
+    openDB().then(function (db) {
+        addStudents(db, [
+                {firstname: 'Haskell', lastname: 'Curry', ssn: '444444444'},
+                {firstname: 'Barkley', lastname: 'Rosser', ssn: '55555555'},
+                {firstname: 'John', lastname: 'von Neumann', ssn: '333333333'},
+                {firstname: 'Alonzo', lastname: 'Church', ssn: '666666666'},
+                {firstname: 'David', lastname: 'Hilbert', ssn: '111111111'},
+                {firstname: 'Alan', lastname: 'Turing', ssn: '222222222'},
+                {firstname: 'Stephen', lastname: 'Kleene', ssn: '777777777'}
+            ])
+            .then(function (db) {
+
+            // Functional program starts here
+            //========================================================//
+
+            // setup loggers for this module
+            var log = R.curry(logger, 'console', 'basic', 'FJS Event Handling');
+            var infoLog  = log('INFO');
+            var errorLog = log('ERROR');
+            var traceLog = log('TRACE');
+
+            // getEventValue :: Event => value
+            var getEventValue = function(event) {
+                return $(event.target).val();
+            };
+
+            var trim = function (str) {
+                return str.replace(/^\s*|\s*$/g, '');
+            };
+
+            var normalize = function (str) {
+                return str.replace(/\-/g, '');
+            };
+
+            // cleanInput :: String => String
+            var cleanInput = R.compose(R.tap(traceLog), normalize, R.tap(traceLog), trim);
+
+            var validLength = function(len, str) {
+                return str.length === len;
+            };
+            var m_validLength9 = validLength.bind(undefined, 9).memoize();
+
+            var checkLengthSsn = function (str) {
+                return Either.of(str).filter(m_validLength9)
+                        .getOrElseThrow('Input: ' + str + ' is not a valid SSN number');
+            };
+
+            var m_checkLengthSsn = checkLengthSsn.memoize();
+
+            var populateRow = function (columns) {
+                var cell_t = _.template('<td><%= a %></td>');
+                var row_t  = _.template('<tr><%= a %></tr>');
+                var obj = function(a) {
+                    return {'a': a};
+                };
+                var row = R.compose(row_t, obj, R.join(''), R.map(cell_t), R.map(obj));
+                return row(columns);
+            };
+
+            var appendToTable = function (elementId) {
+                return function (row) {
+                    $('#' + elementId + ' tr:last').after(row);
+                    return $('#' + elementId + ' tr').length - 1; // exclude header
+                };
+            };
+
+            function search(query) {
+                if(query.length < 9) {
+                    return Bacon.once([]);
+                }
+                return Bacon.fromPromise(find(db, query));
+            }
+
+            var map = R.curry(function (f, container) {
+                return container.map(f);
+            });
+
+            var chain = R.curry(function (f, container) {
+                return container.chain(f);
+            });
+
+            var lift = R.curry(function (f, value) {
+                return Maybe.fromNullable(value).map(f);
+            });
+
+            var liftIO = function (value) {
+                return IO.of(value);
+            };
+                        // handle input
+            var input = $('#student-search')
+                    .asEventStream('keydown')
+                    .debounce(300)
+                    .map(getEventValue)
+                    .map(cleanInput)
+                    .skipDuplicates();
+
+            var suggestions = input.flatMapLatest(search);
+
+            input.awaiting(suggestions).onValue( function (x) { if(x) {$('#results').html('Searching')}});
+
+            suggestions.onValue(
+                    R.compose(
+                        map(appendToTable('studentRoster')),
+                        liftIO,
+                        chain(populateRow),
+                        map(R.props(['ssn', 'firstname', 'lastname'])),
+                        lift));
+//
+//            suggestions.onValue(function (data) {
+//                if(!R.isEmpty(data)) {
+//                    var unsafeIO = IO.of(data).map(R.props(['ssn', 'firstname', 'lastname']))
+//                            .map(populateRow).map(appendToTable('studentRoster'));
+//                    unsafeIO.run();
+//                }
+//            });
+
+            //========================================================//
+
+            getAllStudents(db).then(function (data) {
+//                data['data'].forEach(function (student) {
+////                    deleteStudent(data['db'], student.ssn).then(function (outcome) {
+////                        if(outcome) {
+////                            alert('student added and deleted');
+////                        }
+////                    });
+//                })
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
