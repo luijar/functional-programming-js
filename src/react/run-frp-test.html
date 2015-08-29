@@ -49,7 +49,8 @@
 <script src="../lib/log4js.js"></script>
 
 <div>
-    <input type="text" id="student-search"/>
+    <label>Search: </label><input type="text" id="student-search"/>
+
     <table id="studentRoster">
         <thead>
         <tr id="header"><td id="ssn">SSN</td><td id="firstname">First Name</td><td id="lastname">Last Name</td></tr>
@@ -155,7 +156,7 @@
             var suggestions = input.flatMapLatest(search);
 
             input.awaiting(suggestions).onValue( function (x) { if(x) {$('#results').html('Searching')}});
-//
+
             suggestions.onValue(
                     R.compose(
                         runUnsafeIO,
