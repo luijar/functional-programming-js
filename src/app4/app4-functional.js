@@ -52,7 +52,7 @@ getJSON(HOST + '/students')
     .then(R.sortBy(R.prop('ssn')))
     .then(R.filter((s) => s.address.country == 'US'))
     .then(R.map(function (student) {
-            getJSON(HOST + '/grades?ssn=' + student.ssn)
+            return getJSON(HOST + '/grades?ssn=' + student.ssn)
                 .then(R.compose(Math.ceil, forkJoin(R.divide, R.sum, R.length)))
                 .then(function (grade) {
                     const data = R.merge(student, {'grade': grade});
@@ -74,18 +74,18 @@ var write = function(id) {
 
 var average = R.compose(Math.ceil, forkJoin(R.divide, R.sum, R.length));
 
-// 2
-getJSON(HOST + '/students')
-    .then(hide('spinner'))
-    .then(R.map((student) => HOST + '/grades?ssn=' + student.ssn))
-    .then(function (gradeUrls) {
-        return Promise.all(R.map(getJSON, gradeUrls))
-    })
-    .then(R.map(average))
-    .then(average)
-    .then(function (grade) {
-        IO.of(grade).map(write('total')).run();
-    })
-    .catch(function(error) {
-        alert('Error occurred: ' + error.message);
-    });
+//// 2
+//getJSON(HOST + '/students')
+//    .then(hide('spinner'))
+//    .then(R.map((student) => HOST + '/grades?ssn=' + student.ssn))
+//    .then(function (gradeUrls) {
+//        return Promise.all(R.map(getJSON, gradeUrls))
+//    })
+//    .then(R.map(average))
+//    .then(average)
+//    .then(function (grade) {
+//        IO.of(grade).map(write('total')).run();
+//    })
+//    .catch(function(error) {
+//        alert('Error occurred: ' + error.message);
+//    });

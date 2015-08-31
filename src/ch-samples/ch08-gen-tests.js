@@ -22,3 +22,19 @@ QUnit.test("Generator 1", function (assert) {
     assert.equal(adder.next().value, 0)
     assert.equal(adder.next(5).value, 5);
 });
+
+QUnit.test("Generator 2", function (assert) {
+
+    function *range(start, finish) {
+        for(let i = start; i < finish; i++) {
+            yield i;
+        }
+    }
+
+    var r = range(0, Number.POSITIVE_INFINITY);
+    assert.equal(r.next().value, 0)
+    assert.equal(r.next().value, 1);
+    assert.equal(r.next().value, 2);
+
+
+});

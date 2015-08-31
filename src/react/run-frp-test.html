@@ -81,7 +81,7 @@
             var traceLog = log('TRACE');
 
             // getEventValue :: Event => value
-            var getEventValue = function(event) {
+            var eventValue = function(event) {
                 return $(event.target).val();
             };
 
@@ -144,12 +144,12 @@
              var liftIO = function (value) {
                 return IO.of(value);
             };
-                        // handle input
+
             var input = $('#student-search')
                     .asEventStream('keydown')
                     .skipDuplicates()
                     .debounce(300)
-                    .map(getEventValue)
+                    .map(eventValue)
                     .map(m_cleanInput)
                     .map(m_checkLengthSsn);
 
