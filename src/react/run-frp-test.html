@@ -49,11 +49,22 @@
 <script src="../lib/log4js.js"></script>
 
 <div>
-    <label>Search: </label><input type="text" id="student-search"/>
-
-    <table id="studentRoster">
+    <span>
+        <label style="font-family: Verdana">Search: </label><input type="text" id="student-search"/>
+    </span>
+    <span>
+        <input type="checkbox" class="presets" value="444444444"> Curry
+        <input type="checkbox" class="presets" value="666666666"> Church
+    </span>
+    <br/>
+    <br/>
+    <table id="studentRoster" style="display:none;">
         <thead>
-        <tr id="header"><td id="ssn">SSN</td><td id="firstname">First Name</td><td id="lastname">Last Name</td></tr>
+            <tr id="header">
+                <td id="ssn">SSN</td>
+                <td id="firstname">First Name</td>
+                <td id="lastname">Last Name</td>
+            </tr>
         </thead>
     </table>
 </div>
@@ -70,6 +81,12 @@
                 {firstname: 'Stephen', lastname: 'Kleene', ssn: '777777777'}
             ])
             .then(function (db) {
+
+            var show = function (id) {
+                return function () {
+                    $('#' + id).show()
+                }
+            };
 
             // Functional program starts here
             //========================================================//
@@ -125,8 +142,10 @@
                 };
             };
 
+            var m_findStudentAsync = find(db).memoize();
+
             function search(query) {
-                return query.map(find(db)).map(Bacon.fromPromise).getOrElse(Bacon.once(null));
+                return query.map(m_findStudentAsync).map(Bacon.fromPromise).getOrElse(Bacon.once(null));
             }
 
             var map = R.curry(function (f, container) {
@@ -147,11 +166,13 @@
 
             var input = $('#student-search')
                     .asEventStream('keydown')
+                    .merge($('.presets').asEventStream('click'))
                     .skipDuplicates()
-                    .debounce(300)
+                    .debounce(1000)
                     .map(eventValue)
                     .map(m_cleanInput)
                     .map(m_checkLengthSsn);
+
 
             var suggestions = input.flatMapLatest(search);
 
@@ -161,6 +182,7 @@
                     R.compose(
                         runUnsafeIO,
                         map(appendToTable('studentRoster')),
+                        map(R.tap(show('studentRoster'))),
                         liftIO,
                         chain(populateRow),
                         map(R.props(['ssn', 'firstname', 'lastname'])),
