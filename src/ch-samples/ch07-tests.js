@@ -68,6 +68,34 @@ QUnit.test("Memoization with md5 2", function (assert) {
 });
 
 
+QUnit.test("Memoization with performance API", function (assert) {
+
+    var m_md5 = md5.memoize();
+
+    var call = function (fn, input) {
+        return () => fn(input);
+    };
+
+    var p_start = function () {
+        return performance.now();
+    };
+
+
+    var p_end = function (start) {
+        const end = performance.now();
+        return (end - start).toFixed(3);
+    };
+
+    console.log('Measuring with performance API');
+    var runMd5 = IO.of(p_start())
+        .map(R.tap(call(m_md5, 'We should forget about small efficiencies, say about 97% of the time... premature optimization ' +
+                 'is the root of all evil. Yet we should not pass up our opportunities in that critical 3%')))
+        .map(p_end);
+
+    assert.ok(runMd5.run()  > 0);
+});
+
+
 QUnit.test("Memoization Test (isPrime)", function (assert) {
 
     var isPrime = (function (num) {
@@ -131,6 +159,7 @@ QUnit.test("Memoization Test (factorial) 2", function (assert) {
     end('factorial with memo')();
     assert.equal(result, 9.425947759838354e+159);
 });
+
 
 QUnit.test("Factorial TCO", function (assert) {
 

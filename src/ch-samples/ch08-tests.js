@@ -20,7 +20,7 @@ QUnit.test("Promises 1", function (assert) {
         console.log('Students found: ' + result.length);
     },
     function (error) {
-        alert('Error!');
+        console.error('Error!');
     });
     assert.ok(true);
 });
@@ -49,7 +49,7 @@ QUnit.test("Imperative promise", function (assert) {
                 }
             }
         }, function (error) { // #A
-            alert(error);
+            console.error(error);
         }
     );
     assert.ok(true);
@@ -73,7 +73,7 @@ QUnit.test("Promises 2 with filter", function (assert) {
             }
             ,Promise.resolve()))
         .catch(function(error) {
-            alert("Failed!" + error);
+            console.error("Failed!" + error);
         });
     assert.ok(true);
 });
@@ -81,7 +81,7 @@ QUnit.test("Promises 2 with filter", function (assert) {
 QUnit.test("Promises 3 with filter", function (assert) {
 
     var addStudentToRoster = function (student, grades) {
-        alert(student.firstname + " " + grades);
+        console.error(student.firstname + " " + grades);
     };
 
     Promise.resolve($.getJSON(HOST + '/students'))
@@ -95,7 +95,7 @@ QUnit.test("Promises 3 with filter", function (assert) {
             }
             ,Promise.resolve()))
         .catch(function(error) {
-            alert("Catch all:" + error);
+            console.error("Catch all:" + error);
         });
     assert.ok(true);
 });
