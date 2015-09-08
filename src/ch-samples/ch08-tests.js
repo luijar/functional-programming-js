@@ -99,3 +99,83 @@ QUnit.test("Promises 3 with filter", function (assert) {
         });
     assert.ok(true);
 });
+
+
+
+
+QUnit.test("Classes", function (assert) {
+
+    class Person {
+        constructor(firstname, lastname) {
+            this._firstname = firstname;
+            this._lastname = lastname;
+            this._friends = ['a'];
+        }
+
+        set firstname(f) {
+            this._firstname = f;
+        }
+
+        set lastname(l) {
+            this._lastname  = l;
+        }
+
+        get firstname() {
+            return this._firstname;
+        }
+
+        get lastname() {
+            return this._lastname;
+        }
+
+        set country(c) {
+            this._country = c;
+        }
+
+        get country() {
+            return this._country;
+        }
+
+        get getFriendsInSameCountry() {
+            var result = [];
+            for (var idx in this.friends) {
+                var friend = this.friends[idx];
+                if (friend.country === this.country) {
+                    result.push(friend);
+                }
+            }
+            return result;
+        }
+    }
+
+    class Student extends Person {
+        constructor(firstname, lastname, school) {
+            super(firstname, lastname);
+            this._school = school;
+        }
+
+        set school(s) {
+            this._school = s;
+        }
+
+        get school() {
+            return this._school;
+        }
+
+        get getFriendsInSameCountryAndSchool() {
+            var closeFriends = super.getFriendsInSameCountry();
+            var result = [];
+            for (var idx in closeFriends) {
+                var student = closeFriends[idx];
+                if (friend.school === this.school) {
+                    result.push(friend);
+                }
+            }
+            return result;
+        };
+    }
+
+    var s = new Student('Luis', 'Atencio', 'Princeton');
+    assert.equal(s.school, 'Princeton');
+});
+

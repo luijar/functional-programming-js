@@ -581,6 +581,3 @@ QUnit.test(" Functional version of getCountry", function (assert) {
     grades = [100, 80, 90];
     assert.equal(addAndcomputeAverageGrade2(grades, 100), 93);
 });
-
-
-

@@ -710,41 +710,71 @@ QUnit.test("Recursion trees", function (assert) {
         return _.map(this, _.identity);
     };
 
-    var Node = function (val) {
-        this.val = val;
-        this.parent = null;
-        this.children = [];
-    };
-    Node.prototype.isRoot = function () {
-        return _.isUndefined(this.parent);
-    };
-    Node.prototype.getChildren = function () {
-        return this.children;
-    };
-    Node.prototype.hasChildren = function () {
-        return this.children.length > 0;
-    };
-    Node.prototype.get = function () {
-        return this.val;
-    };
-    Node.prototype.append = function (child) {
-        child.parent = this;
-        this.children.push(child);
-        return this;
-    };
+    //var Node = function (val) {
+    //    this.val = val;
+    //    this.parent = null;
+    //    this.children = [];
+    //};
+    //Node.prototype.isRoot = function () {
+    //    return _.isUndefined(this.parent);
+    //};
+    //Node.prototype.getChildren = function () {
+    //    return this.children;
+    //};
+    //Node.prototype.hasChildren = function () {
+    //    return this.children.length > 0;
+    //};
+    //Node.prototype.get = function () {
+    //    return this.val;
+    //};
+    //Node.prototype.append = function (child) {
+    //    child.parent = this;
+    //    this.children.push(child);
+    //    return this;
+    //};
+
+    class Node {
+        constructor(val) {
+            this._val = val;
+            this._parent = null;
+            this._children = [];
+        }
+
+        isRoot() {
+            return _.isUndefined(this._parent);
+        }
+
+        get children() {
+            return this._children;
+        }
+
+        hasChildren() {
+            return this._children.length > 0;
+        }
+
+        get value() {
+            return this._val;
+        }
+
+        append(child) {
+            child._parent = this;
+            this._children.push(child);
+            return this;
+        };
+    }
 
     var Tree = function (root) {
         this.root = root;
 
         var _visit = function (node, callback) {
 
-            callback(node.get());
+            callback(node.value);
 
             if (!node.hasChildren()) {
                 return; // end of path
             }
 
-            _.map(node.getChildren(), function (c) {
+            _.map(node.children, function (c) {
                 _visit(c, callback);
             });
         };
@@ -753,7 +783,7 @@ QUnit.test("Recursion trees", function (assert) {
 
             arr.push(node);
 
-            _.map(node.getChildren(), function (n) {
+            _.map(node.children, function (n) {
                 _arr(arr, n);
             });
             return arr;
@@ -866,27 +896,28 @@ QUnit.test("Recursion trees", function (assert) {
         return this.getFullName();
     };
 
-    var BiNode = function (val) {
-        Pair.call(this);
-        this.val = val;
-        this.parent = parent;
-    };
-    BiNode.prototype = Object.create(Pair.prototype);
-    BiNode.prototype.constructor = BiNode;
+    class BiNode extends Pair {
+        constructor(val) {
+            this._val = val;
+            this._parent = null;
+        }
+        isRoot() {
+            return _.isUndefined(this._parent);
+        }
 
-    BiNode.prototype.isRoot = function () {
-        return _.isUndefined(this.parent);
-    };
-    BiNode.prototype.get = function () {
-        return this.val;
-    };
-    BiNode.prototype.append = function (left, right) {
-        left.parent = this;
-        right.parent = this;
-        this.right = right;
-        this.left = left;
-        return this;
-    };
+        get value() {
+            return this._val;
+        }
+
+        append(left, right) { //#A
+            left._parent = this;
+            right._parent = this;
+            super._right = right;
+            super._left = left;
+            return this;
+        }
+    }
+
 
     var Tree = function (root) {
         this.root = root;
@@ -894,16 +925,16 @@ QUnit.test("Recursion trees", function (assert) {
         var _search = function (node, callback) {
 
             //traverse the left subtree
-            if (node.getLeft()) {
-                _search(node.getLeft(), callback);
+            if (node.left) {
+                _search(node.left, callback);
             }
 
             // call on parent node
-            callback.call(this, node.get());
+            callback.call(this, node.value);
 
             //traverse the right subtree
-            if (node.getRight()) {
-                _search(node.getRight(), callback);
+            if (node.right) {
+                _search(node.right, callback);
             }
         };
         this.searchRoot = _.bind(_search, this, this.root);
