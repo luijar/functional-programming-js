@@ -22,27 +22,27 @@ QUnit.test("Simple Composition", function (assert) {
         assert.equal(countWords(str), 19);
 });
 
-
-QUnit.test("Tuple 1", function (assert) {
-
-    var p1 = new Person().setFirstname('Alonzo').setLastname('Church').setBirth(1903);
-    var p2 = new Person().setFirstname('Stephen').setLastname('Kleene').setBirth(1909);
-
-    function findPersonBornIn(arr, year) {
-        var result = _(arr).find(function (p) {
-            return p.getBirth() === year;
-        });
-        var person = Tuple(String, Number);
-        return new person(result.getFullName(), result.getBirth());
-    }
-
-    var tuple = findPersonBornIn([p1, p2], 1903);
-    assert.equal(tuple._1, p1.getFullName());
-    //tuple._1 = 'Something else';  (not allowed)
-    //assert.equal(tuple._1, p1.getFullName());
-    assert.equal(tuple.toString(), '(Alonzo Church, 1903)');
-    assert.equal(tuple + "", '(Alonzo Church, 1903)');
-});
+//
+//QUnit.test("Tuple 1", function (assert) {
+//
+//    var p1 = new Person().setFirstname('Alonzo').setLastname('Church').setBirth(1903);
+//    var p2 = new Person().setFirstname('Stephen').setLastname('Kleene').setBirth(1909);
+//
+//    function findPersonBornIn(arr, year) {
+//        var result = _(arr).find(function (p) {
+//            return p.getBirth() === year;
+//        });
+//        var person = Tuple(String, Number);
+//        return new person(result.getFullName(), result.getBirth());
+//    }
+//
+//    var tuple = findPersonBornIn([p1, p2], 1903);
+//    assert.equal(tuple._1, p1.getFullName());
+//    //tuple._1 = 'Something else';  (not allowed)
+//    //assert.equal(tuple._1, p1.getFullName());
+//    assert.equal(tuple.toString(), '(Alonzo Church, 1903)');
+//    assert.equal(tuple + "", '(Alonzo Church, 1903)');
+//});
 
 QUnit.test("Tuple 2", function (assert) {
 
@@ -273,7 +273,6 @@ QUnit.test("Binding 2", function (assert) {
     }, 20);
     assert.ok(true);
 });
-
 
 QUnit.test("Partial 3", function (assert) {
 

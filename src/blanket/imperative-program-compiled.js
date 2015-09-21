@@ -15,10 +15,8 @@ function addToRoster(studentId) {
         var student = store.get(studentId);
 
         if (student) {
-            var rowInfo = ['<td>' + student.ssn + '</td>', '<td>' + student.firstname + '</td>', '<td>' + student.lastname + '</td>'];
-
+            var rowInfo = '<td>' + student.ssn + '</td><td>' + student.firstname + '</td><td>' + student.lastname + '</td>';
             $('#' + tableId + ' tr:last').after('<tr>' + rowInfo + '</tr>');
-
             return $('#' + tableId + ' tr').length - 1;
         } else {
             throw new Error('Student not found!');

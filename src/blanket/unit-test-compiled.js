@@ -27,10 +27,12 @@
 //    assert.equal(result, 1);
 //});
 
-//QUnit.test("Imperative Add To Roster with null", function (assert) {
-//    var result = addToRoster(null);
-//    assert.equal(result, 0);
-//});
+"use strict";
+
+QUnit.test("Imperative Add To Roster with null", function (assert) {
+    var result = addToRoster(null);
+    assert.equal(result, 0);
+});
 
 // ======= 100 % code coverage ===================== //
 // %79
@@ -59,12 +61,10 @@
 //    assert.equal(result, 1);
 //});
 // 67%
-"use strict";
-
-QUnit.test("Functional Add To Roster with null", function (assert) {
-    var result = addToRoster(null).run();
-    assert.equal(result, 0);
-});
+//QUnit.test("Functional Add To Roster with null", function (assert) {
+//    var result = addToRoster(null).run();
+//    assert.equal(result, 0);
+//});
 
 //QUnit.test("Functional Check Length SSN", function (assert) {
 //    var output = checkLengthSsn('123456789');

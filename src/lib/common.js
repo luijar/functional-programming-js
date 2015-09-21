@@ -455,7 +455,7 @@ var Tuple = function( /* types */ ) {
 
     var _tuple =  function( /* values */ ) {
 
-        var values = Array.prototype.slice.call(arguments, 0);
+        var values = this.values = Array.prototype.slice.call(arguments, 0);
 
         // Check nulls
         if(values.some(function(val){ return val === null || val === undefined})) {
@@ -478,6 +478,10 @@ var Tuple = function( /* types */ ) {
         return '(' + Object.keys(this).map(function(k) {
                 return this[k];
             }, this).join(', ') + ')';
+    };
+
+    _tuple.prototype.values = function() {
+        return this.values;
     };
     return _tuple;
 };

@@ -446,7 +446,7 @@ var Tuple = function Tuple() {
 
     var _tuple = function _tuple() {
 
-        var values = Array.prototype.slice.call(arguments, 0);
+        var values = this.values = Array.prototype.slice.call(arguments, 0);
 
         // Check nulls
         if (values.some(function (val) {
@@ -471,6 +471,10 @@ var Tuple = function Tuple() {
         return "(" + Object.keys(this).map(function (k) {
             return this[k];
         }, this).join(", ") + ")";
+    };
+
+    _tuple.prototype.values = function () {
+        return this.values;
     };
     return _tuple;
 };
