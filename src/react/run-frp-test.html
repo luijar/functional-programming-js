@@ -51,6 +51,7 @@ $ php -S localhost:8000 -t ~/Code/JS/functiol-programming-js/src/ch-samples/
 <script src="db-compiled.js"></script>
 <script src="../lib/log4js.js"></script>
 
+
 <div>
     <span>
         <label style="font-family: Verdana">Search: </label><input type="text" id="student-search"/>
@@ -168,7 +169,7 @@ $ php -S localhost:8000 -t ~/Code/JS/functiol-programming-js/src/ch-samples/
             };
 
             var input = $('#student-search')
-                    .asEventStream('keydown')
+                    .asEventStream('change')
                     .merge($('.presets').asEventStream('click'))
                     .skipDuplicates()
                     .debounce(1000)
@@ -203,6 +204,104 @@ $ php -S localhost:8000 -t ~/Code/JS/functiol-programming-js/src/ch-samples/
             });
         });
     });
+</script>
+
+<br/>
+
+<div>
+    <input id="student-name" type="text">
+</div>
+<script>
+    var trim = function (str) {
+        return str.replace(/^\s*|\s*$/g, '');
+    };
+
+    var normalize = function (str) {
+        return str.replace(/\-/g, '');
+    };
+
+    var validLength = function(len, str) {
+        return str.length === len;
+    };
+    var m_validLength9 = validLength.bind(undefined, 9).memoize();
+
+    var checkLengthSsn = function (str) {
+        return Either.of(str).filter(m_validLength9);
+    };
+
+    var eventValue = function(event) {
+        return $(event.target).val();
+    };
+
+
+    var m_checkLengthSsn = checkLengthSsn.memoize();
+
+    // cleanInput :: String => String
+    var cleanInput = R.compose(normalize, trim);
+    var m_cleanInput = cleanInput.memoize();
+
+    var input = $('#student-name')
+                    .asEventStream('change')
+                    .map(eventValue)
+                    .map(m_cleanInput)
+                    .map(m_checkLengthSsn)
+                    .toProperty()
+                    .onValue(function (value)  {
+                        $('#output').text(value);
+                    });
+</script>
+
+<div id="output"></div>
+
+
+<div>
+    <input id="student-name2" type="text">
+</div>
+
+<script>
+    var trim = function (str) {
+        return str.replace(/^\s*|\s*$/g, '');
+    };
+
+    var normalize = function (str) {
+        return str.replace(/\-/g, '');
+    };
+
+    var validLength = function(len, str) {
+        return str.length === len;
+    };
+    var m_validLength9 = validLength.bind(undefined, 9).memoize();
+
+    var checkLengthSsn = function (str) {
+        return Either.of(str).filter(m_validLength9);
+    };
+
+    var eventValue = function(event) {
+        return $(event.target).val();
+    };
+
+
+    var m_checkLengthSsn = checkLengthSsn.memoize();
+
+    // cleanInput :: String => String
+    var cleanInput = R.compose(normalize, trim);
+    var m_cleanInput = cleanInput.memoize();
+
+    $('#student-name2').change(function () {
+        var value = $(this).val();
+        value = value.replace(/^\s*|\-|\s*$/g, '');
+        $('#message').text(value.length !== 9 ? 'Invalid' : 'Invalid');
+    });
+
+    var input = $('#student-name')
+            .asEventStream('change')
+            .map(eventValue)
+            .map(m_cleanInput)
+            .map(m_checkLengthSsn)
+            .toProperty()
+            .onValue(function (value)  {
+                $('#output').text(value.isRight ? 'Is valid react' : 'Invalid');
+            });
 </script>
 
 </body>
