@@ -463,6 +463,9 @@ QUnit.test(" Recursion vs Looping", function (assert) {
 });
 
 
+
+
+
 QUnit.test(" Students enrolled in more than 1 class", function (assert) {
 
     var roster = [{name: 'Alonzo', enrolled: 3, grade: 99},
@@ -513,6 +516,8 @@ QUnit.test(" Students enrolled in more than 1 class", function (assert) {
     };
     assert.equal(average3(roster), average);
 });
+
+
 
 //QUnit.test(" Fucntional version of getCountry", function (assert) {
 //

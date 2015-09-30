@@ -405,7 +405,7 @@ QUnit.test("Map/Reduce 1", function (assert) {
         return stat;
     };
 
-    var stats = [p1, p2, p3, p4].map(getNationality).reduce(gatherStats, {});
+    var stats = [p1, p2, p3, p4].map(_.property('nationality')).reduce(gatherStats, {});
 
     assert.equal(stats['American'], 2);
     assert.equal(stats['Greek'], 1);
@@ -683,7 +683,7 @@ QUnit.test("Chain 1", function (assert) {
     assert.equal(result[1], 'Haskell Curry');
 
 
-    var result2 = _.unique(names).map(_.startCase).sort();
+    var result2 = _.chain(names).map((s) => s.replace(/_/, ' ')).uniq().map(_.startCase).sort().value();
     assert.equal(result2[0], 'Alonzo Church');
     assert.equal(result2[1], 'Haskell Curry');
 
@@ -709,6 +709,7 @@ QUnit.test("Recursion trees", function (assert) {
     Array.prototype.copy = function () {
         return _.map(this, _.identity);
     };
+
 
     //var Node = function (val) {
     //    this.val = val;
@@ -820,8 +821,6 @@ QUnit.test("Recursion trees", function (assert) {
     var mendelson = node(new Person('Elliot', 'Mendelson'));
     var sacks = node(new Person('Gerald', 'Sacks'));
 
-
-
     church = church.append(rosser).append(turing).append(kleene);
     kleene = kleene.append(nelson).append(constable);
     rosser = rosser.append(mendelson).append(sacks);
@@ -896,8 +895,28 @@ QUnit.test("Recursion trees", function (assert) {
         return this.getFullName();
     };
 
+    class Pair {
+        constructor(a, b) {
+            this._left = a;
+            this._right = b;
+        }
+
+        asArray() {
+            return [this._left, this._right];
+        }
+
+        getLeft() {
+            return this._left;
+        }
+
+        getRight() {
+            return this._right;
+        }
+    }
+
     class BiNode extends Pair {
         constructor(val) {
+            super();
             this._val = val;
             this._parent = null;
         }
@@ -977,8 +996,8 @@ QUnit.test("Recursion trees", function (assert) {
             assert.ok(found);
         }
     });
+    assert.ok(found == true);
 });
-
 
 
 QUnit.test("Map skips null", function (assert) {
