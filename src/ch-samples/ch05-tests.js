@@ -308,6 +308,18 @@ QUnit.test("Either monad 2", function (assert) {
     assert.equal(decode('http%3A%2F%2Fexample.com').get(), 'http://example.com');
 });
 
+QUnit.test("Ramda test", function (assert) {
+
+    var obj = {x: 1, y: {z: 'z'}};
+    var zLens = R.lens(R.path(['y', 'z']), R.assocPath(['y', 'z']));
+
+
+    var z = R.view(zLens, obj);            //=> z
+    assert.equal(z, 'z');
+
+    //R.set(xLens, 4, {x: 1, y: 2});          //=> {x: 4, y: 2}
+    //R.over(xLens, R.negate, {x: 1, y: 2});  //=> {x: -1, y: 2}
+});
 
 QUnit.test("Composition Monad 1", function (assert) {
 

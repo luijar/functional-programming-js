@@ -431,8 +431,8 @@ QUnit.test("Lens 1", function (assert) {
      var person = new Person('Alonzo', 'Church');
      var lastnameLens = R.lensProp('lastname');
 
-     assert.equal(lastnameLens(person), 'Church');
-     var mourning = lastnameLens.set('Mourning', person);
+     assert.equal(R.view(lastnameLens, person), 'Church');
+     var mourning = R.set(lastnameLens, 'Mourning', person);
      assert.equal(mourning.getLastName(), 'Mourning');
 });
 
@@ -445,13 +445,9 @@ QUnit.test("Lens 2", function (assert) {
         'Princeton', ZipCode('08544','1234'),
         'NJ', 'USA');
 
-    var addressLens = R.lensProp('address');
-    var zipLens = R.lensProp('zip');
+    var addressLens = R.lens(R.path(['address', 'zip']), R.assocPath(['address', 'zip']));
 
-    assert.equal(addressLens(person).city, 'Princeton');
-    assert.equal(zipLens(person.address).code(), '08544');
-
-    //assert.equal(addressZipLens.location(), '1234');
+    assert.equal(R.view(addressLens, person).code(), '08544');
 });
 
 QUnit.test("Lens 3", function (assert) {
@@ -512,7 +508,7 @@ QUnit.test("Lens 5", function (assert) {
 
     var setter = function (prop, val) {
         var propLens = R.lensProp(prop);
-        return propLens.set(val, this);
+        return R.set(propLens, val, this);
     };
 
     _.mixin(person, {'set': setter});
@@ -524,24 +520,6 @@ QUnit.test("Lens 5", function (assert) {
 
 });
 
-
-QUnit.test("Lens 6 With Ramda", function (assert) {
-
-    var person = new Person('Alonzo', 'Church');
-    person.address = new Address(
-        'Alexander St.',
-        'Princeton', ZipCode('08544','1234'),
-        'NJ', 'USA');
-
-    var addressLens = R.lensProp('address');
-    var zipLens = R.lensProp('zip');
-
-    var addressZipLens = R.composeL(zipLens, addressLens);
-    var zip = addressZipLens(person);
-
-    assert.equal(zip.code(), '08544');
-    assert.equal(zip.location(), '1234');
-});
 
 var spread = R.curryN(2, function(cf, args) {
     var fn = this;
