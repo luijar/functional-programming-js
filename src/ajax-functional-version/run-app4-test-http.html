@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Functional JavaScript Programming | Luis Atencio</title>
+    <style>
+        span {
+            font-family: "Verdana", Times, sans-serif;
+        }
+        td {
+            font-family: "Verdana", Times, sans-serif;
+        }
+        table, thead {
+            border: 1px solid black;
+        }
+        #header td{
+            border: 1px solid black;
+        }
+        td {
+            padding: 15px;
+        }
+        table, td, th {
+            border: 1px solid darkgray;
+        }
+
+        #header td {
+            background-color: lightgray;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Source -->
+<!-- Dependencies -->
+<script src="../lib/lodash.js"></script>
+<script src="../lib/common.js"></script>
+<script src="../lib/ramda.js"></script>
+<script src="../lib/jquery.js"></script>
+<script src="../lib/maybe.js"></script>
+<script src="../lib/id.js"></script>
+<script src="../lib/either.js"></script>
+<script src="../lib/io.js"></script>
+<script src="../lib/memo.js"></script>
+
+<div id="spinner">loading...</div>
+<table id="studentRoster">
+    <thead>
+    <tr id="header"><td id="ssn">SSN</td><td id="firstname">First Name</td><td id="lastname">Last Name</td><td id="grades">Grade</td></tr>
+    </thead>
+</table>
+
+<label>Total: </label><span id="total">0</span>
+
+<script src="app4-functional-compiled.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Functional JavaScript Programming | Luis Atencio</title>
+    <link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-1.16.0.css">
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<script src="http://code.jquery.com/qunit/qunit-1.16.0.js"></script>
+
+<!-- Source -->
+<!-- Dependencies -->
+<script src="../lib/lazy.js"></script>
+<script src="../lib/lodash.js"></script>
+<script src="../lib/stream-min.js"></script>
+<script src="../lib/common.js"></script>
+<script src="../lib/log4js.js"></script>
+<script src="../lib/ramda.js"></script>
+<script src="../lib/jquery.js"></script>
+<script src="../lib/maybe.js"></script>
+<script src="../lib/id.js"></script>
+<script src="../lib/either.js"></script>
+<script src="../lib/jscheck.js"></script>
+<script src="../lib/blanket.js"></script>
+<script src="../lib/io.js"></script>
+
+<table id="studentRoster">
+    <thead>
+    <tr id="header"><td id="ssn">SSN</td><td id="firstname">First Name</td><td id="lastname">Last Name</td></tr>
+    </thead>
+</table>
+
+<script>
+    // Mock DB service
+    // Mock out a synchronous Student Store
+    var Store = function(index) {
+
+        var students = {
+            '444444444': new Student('Alonzo', 'Church').setSsn('444-44-4444'),
+            '555555555': new Student('Alan', 'Turing').setSsn('555-55-5555')
+        };
+
+        return {
+            get: function(id) {
+                if(index === 'students') {
+                    return students[id];
+                }
+                return null;
+            }
+        };
+    };
+</script>
+
+<!--  Comment out either one to see coverage for the other-->
+<!--<script src="functional-program.js" data-cover></script>-->
+<script src="imperative-program-compiled.js" data-cover></script>
+<script src="unit-test.js"></script>
+
+</body>
+</html>

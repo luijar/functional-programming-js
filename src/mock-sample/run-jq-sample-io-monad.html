@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Add To Roster</title>
+
+    <script src="../lib/jquery.js"></script>
+    <script src="../lib/lodash.js"></script>
+    <script src="../lib/stream-min.js"></script>
+    <script src="../lib/common.js"></script>
+    <script src="../lib/log4js.js"></script>
+    <script src="../lib/ramda.js"></script>
+    <script src="../lib/maybe.js"></script>
+    <script src="../lib/id.js"></script>
+    <script src="../lib/either.js"></script>
+    <script src="../lib/io.js"></script>
+
+
+    <link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-1.18.0.css">
+    <style>
+        span {
+            font-family: "Verdana", Times, sans-serif;
+        }
+        td {
+            font-family: "Verdana", Times, sans-serif;
+        }
+        table, thead {
+            border: 1px solid black;
+        }
+        #header td{
+            border: 1px solid black;
+        }
+        td {
+            padding: 15px;
+        }
+        table, td, th {
+            border: 1px solid darkgray;
+        }
+
+        #header td {
+            background-color: lightgray;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h2><span id="banner">Student Roster:</span></h2>
+        <table id="studentRoster">
+            <thead>
+                <tr id="header"><td id="ssn">SSN</td><td id="firstname">First Name</td><td id="lastname">Last Name</td></tr>
+            </thead>
+        </table>
+    </div>
+
+<script>
+
+    // Mock DB service
+    // Mock out a synchronous Student Store
+    var Store = function(index) {
+
+        var students = {
+            '444444444': new Student('Alonzo', 'Church').setSsn('444-44-4444'),
+            '555555555': new Student('Alan', 'Turing').setSsn('555-55-5555')
+        };
+
+        return {
+            get: function(id) {
+                if(index === 'students') {
+                    return students[id];
+                }
+                return null;
+            }
+        };
+    };
+
+    // safefetchRecord :: Store, string -> Either<Student>
+    var safefetchRecord = R.curry(function (store, studentId) {
+        var student = store.get(studentId);
+        if(student) {
+            return Either.of(student);
+        }
+        return Either.Left('Student not found with ID: ' + studentId);
+    });
+
+
+    var debugLog = _.partial(logger, 'console', 'basic', 'IO Monad Example', 'TRACE');
+
+    var trace = R.curry(function (msg, obj) {debugLog(msg + ':' + obj);});
+
+    var trim = function (str) {
+        return str.replace(/^\s*|\s*$/g, '');
+    };
+
+    var normalize = function (str) {
+        return str.replace(/\-/g, '');
+    };
+
+    var validLength = function(len, str) {
+        if(str.length === len) {
+            return Either.of(str);
+        }
+        return Either.Left('Input: ' + str + ' length does is not equal to: ' + len);
+    };
+
+    var cleanInput = R.compose(R.tap(trace), normalize, R.tap(trace), trim);
+
+    var checkLengthSsn = validLength.bind(undefined, 9);
+
+    var map = R.curry(function (f, container) {
+        return container.map(f);
+    });
+
+    var chain = R.curry(function (f, container) {
+        return container.chain(f);
+    });
+
+    var lift = R.curry(function (f, value) {
+        return Maybe.fromNullable(value).map(f);
+    });
+
+    var liftIO = function (value) {
+        return IO.of(value);
+    };
+
+    var appendToTable = function (elementId) {
+        return function (row) {
+            $('#' + elementId + ' tr:last').after(row);
+            return $('#' + elementId + ' tr').length - 1; // exclude header
+        };
+    };
+
+    populateRow = function (columns) {
+        var cell_t = _.template('<td><%= a %></td>');
+        var row_t  = _.template('<tr><%= a %></tr>');
+        var obj = function(a) {
+            return {'a': a};
+        };
+        var row = R.compose(row_t, obj, R.join(''), R.map(cell_t), R.map(obj));
+        return row(columns);
+    };
+
+    var findStudent = safefetchRecord(Store('students'));
+
+    // Alternate implementation
+    var addToRoster = R.compose(
+            map(appendToTable('studentRoster')),
+            liftIO,
+            chain(populateRow),
+            map(R.props(['ssn', 'firstname', 'lastname'])),
+            chain(findStudent),
+            chain(checkLengthSsn),
+            lift(cleanInput));
+    addToRoster('444-44-4444').run();
+</script>
+<br/>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<script src="http://code.jquery.com/qunit/qunit-1.18.0.js"></script>
+<script src="../lib/sinon-1.15.4.js"></script>
+<script src="../lib/sinon-qunit-1.0.0.js"></script>
+<script src="ch06-tests-compiled.js"></script>
+</body>
+</html>
