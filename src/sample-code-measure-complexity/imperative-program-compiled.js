@@ -1,28 +1,29 @@
 'use strict';
 
-var store = Store('students');
-var tableId = 'studentRoster';
+var store = DB('students');
+var elementId = 'student-info';
 
-function addToRoster(studentId) {
+function showStudent(ssn) {
+    if (ssn != null) {
+        ssn = ssn.replace(/^\s*|\-|\s*$/g, '');
 
-    if (studentId != null) {
-        studentId = studentId.replace(/^\s*|\-|\s*$/g, '');
-
-        if (studentId.length !== 9) {
-            throw new Error('Invalid Input');
+        if (ssn.length !== 9) {
+            throw new Error('Invalid input');
         }
 
-        var student = store.get(studentId);
+        var student = store.get(ssn);
 
         if (student) {
-            var rowInfo = '<td>' + student.ssn + '</td><td>' + student.firstname + '</td><td>' + student.lastname + '</td>';
-            $('#' + tableId + ' tr:last').after('<tr>' + rowInfo + '</tr>');
-            return $('#' + tableId + ' tr').length - 1;
+            var info = student.ssn + ', ' + student.firstname + ', ' + student.lastname;
+
+            document.querySelector('#' + elementId).innerHTML = info;
+
+            return info;
         } else {
             throw new Error('Student not found!');
         }
     } else {
-        return 0;
+        return null;
     }
 }
 

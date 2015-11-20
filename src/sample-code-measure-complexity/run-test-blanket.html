@@ -32,10 +32,12 @@
     </thead>
 </table>
 
+<div id="student-info"></div>
+
 <script>
     // Mock DB service
     // Mock out a synchronous Student Store
-    var Store = function(index) {
+    var DB = function(index) {
 
         var students = {
             '444444444': new Student('Alonzo', 'Church').setSsn('444-44-4444'),
@@ -54,8 +56,9 @@
 </script>
 
 <!--  Comment out either one to see coverage for the other-->
-<!--<script src="functional-program.js" data-cover></script>-->
-<script src="imperative-program-compiled.js" data-cover></script>
+<script src="functional-program.js" data-cover data-cover-ecmaVersion="6"></script>
+<!--<script src="imperative-program-compiled.js" data-cover data-cover-ecmaVersion="6"></script>-->
+
 <script src="unit-test.js"></script>
 
 </body>

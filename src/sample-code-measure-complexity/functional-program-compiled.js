@@ -16,10 +16,10 @@ var liftIO = function liftIO(value) {
     return IO.of(value);
 };
 
-var appendToTable = function appendToTable(elementId) {
-    return function (row) {
-        $('#' + elementId + ' tr:last').after(row);
-        return $('#' + elementId + ' tr').length - 1; // exclude header
+var append = function append(elementId) {
+    return function (info) {
+        document.querySelector('#' + elementId).innerHTML = info;
+        return info;
     };
 };
 
@@ -39,14 +39,8 @@ var normalize = function normalize(str) {
 
 var cleanInput = R.compose(R.tap(trace), normalize, R.tap(trace), trim);
 
-var populateRow = function populateRow(columns) {
-    var cell_t = _.template('<td><%= a %></td>');
-    var row_t = _.template('<tr><%= a %></tr>');
-    var obj = function obj(a) {
-        return { 'a': a };
-    };
-    var row = R.compose(row_t, obj, R.join(''), R.map(cell_t), R.map(obj));
-    return row(columns);
+var csv = function csv(columns) {
+    return columns.join(', ');
 };
 
 var safeFetchRecord = R.curry(function (store, studentId) {
@@ -60,9 +54,9 @@ var validLength = function validLength(len, str) {
 var checkLengthSsn = function checkLengthSsn(str) {
     return Either.of(str).filter(validLength.bind(undefined, 9)).getOrElseThrow('Input: ' + str + ' is not a valid SSN number');
 };
-var findStudent = safeFetchRecord(Store('students'));
+var findStudent = safeFetchRecord(DB('students'));
 
 // Alternate implementation
-var addToRoster = R.compose(map(appendToTable('studentRoster')), liftIO, chain(populateRow), map(R.props(['ssn', 'firstname', 'lastname'])), map(findStudent), map(checkLengthSsn), lift(cleanInput));
+var showStudent = R.compose(map(append('studentRoster')), liftIO, chain(csv), map(R.props(['ssn', 'firstname', 'lastname'])), map(findStudent), map(checkLengthSsn), lift(cleanInput));
 
 //# sourceMappingURL=functional-program-compiled.js.map

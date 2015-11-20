@@ -21,16 +21,17 @@
 //    );
 //});
 
-// 78%
+// 80%
 //QUnit.test("Imperative Add To Roster with valid user", function (assert) {
-//    var result = addToRoster('444-44-4444');
-//    assert.equal(result, 1);
+//    var result = showStudent('444-44-4444');
+//    assert.equal(result, '444-44-4444, Alonzo, Church');
 //});
 
-QUnit.test("Imperative Add To Roster with null", function (assert) {
-    var result = addToRoster(null);
-    assert.equal(result, 0);
-});
+// 40%
+//QUnit.test("Imperative Add To Roster with null", function (assert) {
+//    var result = showStudent(null);
+//    assert.equal(result, null);
+//});
 
 
 
@@ -57,14 +58,17 @@ QUnit.test("Imperative Add To Roster with null", function (assert) {
 //
 //// 100%
 //QUnit.test("Functional Add To Roster with valid user", function (assert) {
-//    var result = addToRoster('444-44-4444').run();
-//    assert.equal(result, 1);
+//    var result = showStudent('444-44-4444').run();
+//    assert.equal(result, '444-44-4444, Alonzo, Church');
 //});
+
 // 67%
-//QUnit.test("Functional Add To Roster with null", function (assert) {
-//    var result = addToRoster(null).run();
-//    assert.equal(result, 0);
-//});
+QUnit.test("Functional Add To Roster with null", function (assert) {
+    var result = showStudent(null).run();
+    assert.ok(result instanceof Maybe);
+    assert.ok(result.isNothing);
+    assert.equal(result.toString(), 'Maybe.Nothing');
+});
 
 
 //QUnit.test("Functional Check Length SSN", function (assert) {
