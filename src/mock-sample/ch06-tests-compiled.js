@@ -56,7 +56,7 @@ QUnit.test('findStudent returning valid user', function (assert) {
     mockContext.restore();
 });
 
-QUnit.test('populateRow', function (assert) {
+QUnit.test('csv', function (assert) {
 
     assert.equal(populateRow(['']), '<tr><td></td></tr>');
     assert.equal(populateRow(['Alonzo']), '<tr><td>Alonzo</td></tr>');

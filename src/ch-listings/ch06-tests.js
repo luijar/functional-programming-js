@@ -9,7 +9,7 @@
  */
 
 "use strict";
-//QUnit.module( "Chapter 6" );
+QUnit.module( "Chapter 6" );
 //QUnit.test("RT example", function (assert) {
 //
 //    var increment = function (val) {
@@ -64,140 +64,140 @@
 //    assert.ok(true);
 //});
 
-QUnit.test("JSCheck 1", function (assert) {
-
-    Array.prototype.equals = function (array) {
-        // if the other array is a falsy value, return
-        if (!array)
-            return false;
-
-        // compare lengths - can save a lot of time
-        if (this.length != array.length)
-            return false;
-
-        for (var i = 0, l=this.length; i < l; i++) {
-            // Check if we have nested arrays
-            if (this[i] instanceof Array && array[i] instanceof Array) {
-                // recurse into the nested arrays
-                if (!this[i].equals(array[i]))
-                    return false;
-            }
-            else if (this[i] != array[i]) {
-                // Warning - two different object instances will never be equal: {x:20} != {x:20}
-                return false;
-            }
-        }
-        return true;
-    };
-
-    var trace = _.curry(logger)('console', 'json', 'JSCheck', 'TRACE');
-
-    JSC.clear();
-
-    var toLetterGrade = function (grade) {
-        if (grade >= 90) return 'A';
-        if (grade >= 80) return 'B';
-        if (grade >= 70) return 'C';
-        if (grade >= 60) return 'D';
-        return 'F';
-    };
-
-    var forkJoin = function(join, func1, func2){
-        return function(val) {
-            return join(func1(val), func2(val));
-        };
-    };
-
-
-    JSC.on_report(function (str) {
-        trace(str);
-    });
-
-    var computeAverageGrade = R.compose(toLetterGrade, forkJoin(R.divide, R.sum, R.length));
-
-    JSC.test(
-        "Compute Average Grade",
-        function (verdict, grades, grade) {
-            return verdict(computeAverageGrade(grades) === grade);
-        },
-        [
-            JSC.array(JSC.integer(20), JSC.number(90, 100)),
-            'A'
-        ],
-        function (grades, grade) {
-            return 'Testing for an ' + grade + ' on grades: ' + grades;
-        }
-    );
-    assert.ok(true);
-});
-
-//QUnit.test("JSCheck Custom Specifier for SSN", function (assert) {
+//QUnit.test("JSCheck 1", function (assert) {
+//
+//    Array.prototype.equals = function (array) {
+//        // if the other array is a falsy value, return
+//        if (!array)
+//            return false;
+//
+//        // compare lengths - can save a lot of time
+//        if (this.length != array.length)
+//            return false;
+//
+//        for (var i = 0, l=this.length; i < l; i++) {
+//            // Check if we have nested arrays
+//            if (this[i] instanceof Array && array[i] instanceof Array) {
+//                // recurse into the nested arrays
+//                if (!this[i].equals(array[i]))
+//                    return false;
+//            }
+//            else if (this[i] != array[i]) {
+//                // Warning - two different object instances will never be equal: {x:20} != {x:20}
+//                return false;
+//            }
+//        }
+//        return true;
+//    };
 //
 //    var trace = _.curry(logger)('console', 'json', 'JSCheck', 'TRACE');
-//    var debug = _.curry(logger)('console', 'json', 'JSCheck', 'DEBUG');
 //
 //    JSC.clear();
 //
-//    var trim = function (str) {
-//        return str.replace(/^\s*|\s*$/g, '');
+//    var toLetterGrade = function (grade) {
+//        if (grade >= 90) return 'A';
+//        if (grade >= 80) return 'B';
+//        if (grade >= 70) return 'C';
+//        if (grade >= 60) return 'D';
+//        return 'F';
 //    };
 //
-//    var normalize = function (str) {
-//        return str.replace(/\-/g, '');
-//    };
-//
-//    var validLength = function(param, str) {
-//        return str.length === param;
-//    };
-//
-//    var checkLengthSsn = R.partial(validLength, 9);
-//    var validateSsn = R.compose(checkLengthSsn, normalize, trim);
-//
-//    JSC.on_report(function (str) {
-//        trace('Report'+ str);
-//    });
-//
-//
-//    JSC.on_fail(function(object) {
-//       assert.ok(object.args.length === 9, 'Test failed for: ' + object.args);
-//    });
-//
-//    /**
-//     * Produces a valid social security string (with dashes)
-//     * @param param1 Valid input -> JSC.integer(100, 999)
-//     * @param param2 Valid input -> JSC.integer(10, 99)
-//     * @param param3 Valid input -> JSC.integer(1000,9999)
-//     * @returns {Function} Specifier function
-//     */
-//    JSC.SSN = function (param1, param2, param3) {
-//        return function generator() {
-//            var part1 = typeof param1 === 'function'
-//                ? param1(): param1;
-//
-//            var part2 = typeof param2 === 'function'
-//                ? param2(): param2;
-//
-//            var part3 = typeof param3 === 'function'
-//                ? param3(): param3;
-//
-//            return [part1 , part2, part3].join('-');
+//    var forkJoin = function(join, func1, func2){
+//        return function(val) {
+//            return join(func1(val), func2(val));
 //        };
 //    };
 //
+//
+//    JSC.on_report(function (str) {
+//        trace(str);
+//    });
+//
+//    var computeAverageGrade = R.compose(toLetterGrade, forkJoin(R.divide, R.sum, R.length));
+//
 //    JSC.test(
-//        "Validate SSN",
-//        function (verdict, ssn) {
-//            return verdict(validateSsn(ssn));
+//        "Compute Average Grade",
+//        function (verdict, grades, grade) {
+//            return verdict(computeAverageGrade(grades) === grade);
 //        },
 //        [
-//            JSC.SSN(JSC.integer(100, 999), JSC.integer(10, 99), JSC.integer(1000,9999))  // make it fail by misconfiguring a parameter
+//            JSC.array(JSC.integer(20), JSC.number(90, 100)),
+//            'A'
 //        ],
-//        function (ssn) {
-//            return 'Testing Custom SSN:  ' + ssn;
+//        function (grades, grade) {
+//            return 'Testing for an ' + grade + ' on grades: ' + grades;
 //        }
 //    );
 //    assert.ok(true);
 //});
+
+QUnit.test("JSCheck Custom Specifier for SSN", function (assert) {
+
+    var trace = _.curry(logger)('console', 'json', 'JSCheck', 'TRACE');
+    var debug = _.curry(logger)('console', 'json', 'JSCheck', 'DEBUG');
+
+    JSC.clear();
+
+    var trim = function (str) {
+        return str.replace(/^\s*|\s*$/g, '');
+    };
+
+    var normalize = function (str) {
+        return str.replace(/\-/g, '');
+    };
+
+    var validLength = function(param, str) {
+        return str.length === param;
+    };
+
+    var checkLengthSsn = R.partial(validLength, 9);
+    var validateSsn = R.compose(checkLengthSsn, normalize, trim);
+
+    JSC.on_report(function (str) {
+        trace('Report'+ str);
+    });
+
+
+    JSC.on_fail(function(object) {
+       assert.ok(object.args.length === 9, 'Test failed for: ' + object.args);
+    });
+
+    /**
+     * Produces a valid social security string (with dashes)
+     * @param param1 Valid input -> JSC.integer(100, 999)
+     * @param param2 Valid input -> JSC.integer(10, 99)
+     * @param param3 Valid input -> JSC.integer(1000,9999)
+     * @returns {Function} Specifier function
+     */
+    JSC.SSN = function (param1, param2, param3) {
+        return function generator() {
+            var part1 = typeof param1 === 'function'
+                ? param1(): param1;
+
+            var part2 = typeof param2 === 'function'
+                ? param2(): param2;
+
+            var part3 = typeof param3 === 'function'
+                ? param3(): param3;
+
+            return [part1 , part2, part3].join('-');
+        };
+    };
+
+    JSC.test(
+        "Validate SSN",
+        function (verdict, ssn) {
+            return verdict(validateSsn(ssn));
+        },
+        [
+            JSC.SSN(JSC.integer(100, 999), JSC.integer(10, 999), JSC.integer(1000,9999))  // make it fail by misconfiguring a parameter
+        ],
+        function (ssn) {
+            return 'Testing Custom SSN:  ' + ssn;
+        }
+    );
+    assert.ok(true);
+});
 //
 //var counter = 0;
 //

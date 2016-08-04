@@ -2,7 +2,7 @@
 // Simple script that returns student information
 // Chapter 8
 // Luis Atencio
-// php -S localhost:8000 -t ~/Code/JS/functional-programming-js/src/ch-samples
+// php -S localhost:8000 -t ~/Code/JS/functional-programming-js/src/ch-listings
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');

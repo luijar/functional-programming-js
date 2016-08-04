@@ -1,10 +1,10 @@
-# Functional JavaScript Programming
+#Functional JavaScript Programming
+##### By Luis Atencio
 
-Since this code uses ES6 artifacts, you must transpile your JavaScript code with either:
+##Since this code uses ES6 artifacts, you must transpile your JavaScript code with either:
 
 * Babel
 * Traceur
-
 
 In this code repository you will find:
 
@@ -13,3 +13,6 @@ In this code repository you will find:
 * Functional data types like Optional, Either, Maybe, etc
 * Access to some JavaScript functional libraries like lodash.js, streams.js, bacon.js, etc.
 
+##Libraries Requires
+###QUnit
+npm install qunit
