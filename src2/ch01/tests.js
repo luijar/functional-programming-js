@@ -126,7 +126,8 @@ QUnit.test("Listing 1.5 Programming with function chains", function () {
 		},		
 	];
 
-	const result = _.chain(enrollments)
+	const result = 
+	          _.chain(enrollments)
 	 		   .filter(student => student.enrolled > 1)
 	           .map(_.property('grade'))
 	           .mean()
@@ -137,6 +138,12 @@ QUnit.test("Listing 1.5 Programming with function chains", function () {
 	assert.equal(result, 90);               
 });
 
+
+QUnit.test("Listing 1.6 Imperative Progam that reads and validates a student SSN", function () {
+	
+	
+	              
+});
 
 
 

@@ -1,6 +1,9 @@
 #Functional JavaScript Programming
 ##### By Luis Atencio
 
+Status:
+![Build Status](https://circleci.com/gh/luijar/functional-programming-js.png?circle-token=:circle-token)
+
 ##Since this code uses ES6 artifacts, you must transpile your JavaScript code with either when running the code in a modern browser:
 
 * Babel
@@ -28,4 +31,9 @@ npm install lodash
 ##Running the tests
 Once QUnit is installed. You can run each file with: 
 
+~~~
 $> node <path-to-qunit-cli.js> -t <chapter-num>/tests.js -c <chapter-num>/tests.js
+~~~
+
+You can find <path-to-qunit-cli.js> node_modules/qunit/bin/cli.js
+<chapter-num> will be any of ch01...ch08
