@@ -1,13 +1,13 @@
 /**
-  Chapter 1 code listings
+  Chapter 8 code listings
   Author: Luis Atencio
 */
 
 "use strict";
 
-QUnit.module('Chapter 1');
+QUnit.module('Chapter 8');
 
-QUnit.test("a basic test example", function () {
+QUnit.test("Under Construction", function () {
     	
 });
  

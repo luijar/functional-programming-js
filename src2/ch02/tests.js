@@ -5,9 +5,9 @@
 
 "use strict";
 
-QUnit.module('Chapter 1');
+QUnit.module('Chapter 2');
 
-QUnit.test("a basic test example", function () {
+QUnit.test("Under Construction", function () {
     	
 });
  
