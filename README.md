@@ -20,7 +20,10 @@ In this code repository you will find:
 ##Libraries Requires
 ###QUnit
 npm install qunit
-
+###Ramda
+npm install ramda
+###Lodash
+npm install lodash
 
 ##Running the tests
 Once QUnit is installed. You can run each file with: 

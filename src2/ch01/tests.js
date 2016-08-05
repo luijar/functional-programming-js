@@ -6,6 +6,10 @@
 "use strict";
 
 const R = require('ramda');
+const _ = require('lodash');
+
+// Print versions
+console.log('Using Lodash: ' + _.VERSION);
 
 QUnit.module('Chapter 1');
 
@@ -71,6 +75,68 @@ QUnit.test("Listing 1.3 Imperative showStudent function with side effects", func
     
     assert.equal(showStudent('444-44-4444'), '<p>444-44-4444,Alonzo,Church</p>');
 });
+
+// Using alias for curry
+const curry = R.curry;
+
+QUnit.test("Listing 1.4 Decomposing the showStudent program", function () {
+    // The book uses a mock storage object in chapter 1.
+    // Instead of appending to the DOM, I write to the console
+
+    const db = require('./helper').db;
+    
+    const find = curry(function (db, id) {
+    	let obj = db.find(id);
+    	if(obj === null) {
+    		throw new Error('Object not found!');
+    	}
+    	return obj;
+    });
+    
+    const csv = student => `${student.ssn}, ${student.firstname}, ${student.lastname}`;
+
+    const append = curry(function (source, info) {
+    	source(info);
+    	return info;
+    });
+
+    const showStudent = run(
+    	append(console.log),
+    	csv,
+    	find(db)
+	);
+
+	assert.equal(showStudent('444-44-4444'), '444-44-4444, Alonzo, Church');
+});
+
+QUnit.test("Listing 1.5 Programming with function chains", function () {
+	// array with 3 student enrollment data
+	const enrollments = [
+		{
+			enrolled: 3,  // student enrolled in 3 courses, with avg grade of 90
+			grade: 90
+		},
+		{
+			enrolled: 1,  // student enrolled in 1 course, with avg grade of 100
+			grade: 100
+		},
+		{
+			enrolled: 1,  // student enrolled in 1 course, with avg grade of 87
+			grade: 87
+		},		
+	];
+
+	const result = _.chain(enrollments)
+	 		   .filter(student => student.enrolled > 1)
+	           .map(_.property('grade'))
+	           .mean()
+	           .value();
+
+	console.log(result);    
+	           
+	assert.equal(result, 90);               
+});
+
 
 
 
