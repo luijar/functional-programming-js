@@ -1,10 +1,14 @@
 #Functional JavaScript Programming
 ##### By Luis Atencio
 
-##Since this code uses ES6 artifacts, you must transpile your JavaScript code with either:
+##Since this code uses ES6 artifacts, you must transpile your JavaScript code with either when running the code in a modern browser:
 
 * Babel
 * Traceur
+
+For Node.js users. This code requires: 
+
+node --version > 6.3.1
 
 In this code repository you will find:
 
@@ -16,3 +20,9 @@ In this code repository you will find:
 ##Libraries Requires
 ###QUnit
 npm install qunit
+
+
+##Running the tests
+Once QUnit is installed. You can run each file with: 
+
+$> node <path-to-qunit-cli.js> -t <chapter-num>/tests.js -c <chapter-num>/tests.js
