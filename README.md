@@ -1,9 +1,6 @@
 #Functional JavaScript Programming
 ##### By Luis Atencio
 
-Status:
-![Build Status](https://circleci.com/gh/luijar/functional-programming-js.png?circle-token=:circle-token)
-
 ##Since this code uses ES6 artifacts, you must transpile your JavaScript code with either when running the code in a modern browser:
 
 * Babel

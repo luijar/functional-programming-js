@@ -139,12 +139,4 @@ QUnit.test("Listing 1.5 Programming with function chains", function () {
 });
 
 
-QUnit.test("Listing 1.6 Imperative Progam that reads and validates a student SSN", function () {
-	
-	
-	              
-});
-
-
-
  
