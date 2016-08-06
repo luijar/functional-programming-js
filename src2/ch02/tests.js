@@ -59,7 +59,7 @@ QUnit.test("Playing with Lenses", function () {
 	let newStudent = R.set(zipLens, beverlyHills, student);
 	console.log(R.view(zipLens, newStudent));
 	assert.deepEqual(R.view(zipLens, newStudent).code(), beverlyHills.code());
-	assert.deepEqual(R.view(zipLens, student), z); // TODO
+	assert.deepEqual(R.view(zipLens, student), z);
 	assert.ok(newStudent !== student);
 });
  
