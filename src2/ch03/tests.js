@@ -181,8 +181,7 @@ QUnit.test("Recursive addition", function () {
 		}
 		return _.first(arr) + sum(_.tail(arr));
 	};
-
-	//expect(0);
+	
 	assert.equal(sum([]), 0); //-> 0
 	assert.equal(sum([1,2,3,4,5,6,7,8,9]), 45); //->45
 });  
@@ -202,11 +201,13 @@ QUnit.test("Tree navigation", function () {
 	const sacks = new Node(new Person('454-76-3434', 'Gerald', 'Sacks'));
 	const gandy = new Node(new Person('454-78-3432','Robert', 'Gandy'));
 
+	// Create tree structure
 	church.append(rosser).append(turing).append(kleene);
 	kleene.append(nelson).append(constable);
 	rosser.append(mendelson).append(sacks);
 	turing.append(gandy);
 
+	// Use Tree structure to apply a map operation over all nodes
 	let newTree = Tree.map(church, p => p.fullname);
 	assert.deepEqual(newTree.toArray(), ['Alonzo Church', 'Barkley Rosser', 'Elliot Mendelson', 
 		'Gerald Sacks', 'Alan Turing', 'Robert Gandy', 'Stephen Kleene', 'Nels Nelson', 'Robert Constable']);	
