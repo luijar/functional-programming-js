@@ -3,7 +3,7 @@
  * Domain model object for LMS use cases covered in the book
  * Author: Luis Atencio
  */
-class Person {
+exports.Person = class Person {
 	constructor(ssn,firstname, lastname, birthYear = null, address = null) {
 		this._ssn = ssn;
 		this._firstname = firstname;
@@ -20,6 +20,11 @@ class Person {
 		return this._firstname;
 	}
 
+	set firstname(firstname) {
+		this._firstname = firstname;
+		return this;
+	}
+
 	get lastname() {
 		return this._lastname;
 	}
@@ -31,6 +36,4 @@ class Person {
 	get address() {
 		return this._address;
 	}
-}
-
-exports.Person = Person;
+};
