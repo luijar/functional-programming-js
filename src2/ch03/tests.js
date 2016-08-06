@@ -211,10 +211,7 @@ QUnit.test("Tree navigation", function () {
 	let newTree = Tree.map(church, p => p.fullname);
 	assert.deepEqual(newTree.toArray(), ['Alonzo Church', 'Barkley Rosser', 'Elliot Mendelson', 
 		'Gerald Sacks', 'Alan Turing', 'Robert Gandy', 'Stephen Kleene', 'Nels Nelson', 'Robert Constable']);	
-});  
-
-
-
+});
 
 
  
