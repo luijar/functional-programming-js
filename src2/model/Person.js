@@ -36,4 +36,8 @@ exports.Person = class Person {
 	get address() {
 		return this._address;
 	}
+
+	get fullname() {
+		return `${this._firstname} ${this._lastname}`;  
+	}
 };

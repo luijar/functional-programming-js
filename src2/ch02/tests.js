@@ -52,13 +52,14 @@ QUnit.test("Playing with Lenses", function () {
 		'Princeton University', 1960, address);	
 	
 	let zipPath = ['address', 'zip'];
-	var zipLens = R.lens(R.path(zipPath), R.assocPath(zipPath));
+	var zipLens = R.lensPath(zipPath);
 	assert.deepEqual(R.view(zipLens, student), z);
 
 	let beverlyHills = zipCode('90210', '5678');
-	let newStudent = R.set(zipLens, student, beverlyHills);
-	//assert.deepEqual(R.view(zipLens, newStudent), beverlyHills); // TODO
-	//assert.deepEqual(R.view(zipLens, student), z); // TODO
+	let newStudent = R.set(zipLens, beverlyHills, student);
+	console.log(R.view(zipLens, newStudent));
+	assert.deepEqual(R.view(zipLens, newStudent).code(), beverlyHills.code());
+	assert.deepEqual(R.view(zipLens, student), z); // TODO
 	assert.ok(newStudent !== student);
 });
  
