@@ -39,6 +39,10 @@ exports.Just = class Just extends exports.Maybe {
 		return exports.Maybe.of(f(this._value));
 	}
 
+	chain(f) {
+		return f(this._value);
+	}
+
 	getOrElse() {
 		return this._value;
 	}
@@ -62,6 +66,10 @@ exports.Nothing = class Nothing extends exports.Maybe {
 		return this;
 	}
 	
+	chain(f) {
+		return this;
+	}
+
 	get value() {
 		throw new TypeError("Can't extract the value of a Nothing.");
 	}
