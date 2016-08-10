@@ -11,6 +11,7 @@ const R = require('ramda');
 const Wrapper = require('../model/Wrapper.js').Wrapper;
 const wrap = require('../model/Wrapper.js').wrap;
 const empty = require('../model/Empty.js').empty;
+const Maybe = require('../model/monad/Maybe.js').Maybe;
 
 QUnit.test("Simple Wrapper test", function () {
 	const wrappedValue = wrap('Get Functional');
@@ -68,6 +69,16 @@ QUnit.test("Simple empty container", function () {
  	
  	assert.deepEqual(result, new WrapperMonad('HELLO MONADS!'));
 });
+
+QUnit.test("Simple Maybe Test", function () {	
+	let result = Maybe.of('Hello Maybe!').map(R.toUpper);
+ 	assert.deepEqual(result, Maybe.of('HELLO MAYBE!'));
+
+	const Nothing = require('../model/monad/Maybe.js').Nothing;
+ 	result = Maybe.fromNullable(null);
+ 	assert.deepEqual(result, new Nothing(null));
+});
+
 
 
 
