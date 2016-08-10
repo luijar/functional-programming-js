@@ -5,7 +5,7 @@
 *Code has been changed and fixed for Errata purposes, GitHub issues, and ES6 updates.*
 *The old code now lives under the legacy.*
 
-##Since this code uses ES6 artifacts, you must transpile your JavaScript code with either when running the code in a modern browser:
+Since this code uses ES6 artifacts, any code meant to run on the browser must be transpiled with either:
 
 * Babel
 * Traceur
@@ -14,14 +14,15 @@ For Node.js users. This code requires:
 
 node --version > 6.3.1
 
-In this code repository you will find:
+In this repo you will find:
 
 * All code samples (as runnable unit tests) of code used in chapters
-* Sample application (Under Construction)
+* JS targeted for browser
 * Functional data types like Optional, Either, Maybe, etc
 * Access to some JavaScript functional libraries like lodash.js, streams.js, bacon.js, etc.
 
-##Libraries Requires
+##Libraries Requires (you can run "npm install" to obtain these)
+
 ###QUnit
 npm install qunit
 ###Ramda

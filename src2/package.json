@@ -1,4 +1,10 @@
 {
-  "name": "Functional_Programming_in_JS_Code_Samples",
-  "version": "2.0.0"  
+  "name": "fp-js-manning",
+  "description": "Code samples for Functional Programming in JavaScript",
+  "version": "2.0.0",
+  "devDependencies": {
+    "lodash": "4.14.2",
+    "ramda": "0.22.0",
+    "qunit": "0.9.1"
+  }  
 }
