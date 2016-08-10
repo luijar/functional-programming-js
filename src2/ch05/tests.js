@@ -136,6 +136,3 @@ QUnit.test("Simple Either monad test", function () {
 
 
 
-
-
-
