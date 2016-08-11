@@ -170,7 +170,7 @@ QUnit.test("Using Either in show Student", function () {
 		 	.chain(findStudent)
 		    .map(R.props(['ssn', 'firstname', 'lastname']))
 		    .map (csv)
-			.map (R.tap(console.log));
+			.map (R.tap(console.log));  //-> Using R.tap to simulate the side effect (in the book we write to the DOM)
 
 	let result = showStudent('444-44-4444').getOrElse('Student not found!')
 	assert.equal(result, '444-44-4444,Alonzo,Church');
@@ -179,27 +179,37 @@ QUnit.test("Using Either in show Student", function () {
 	assert.equal(result, 'Student not found!');
 });
 
-// QUnit.test("Monads as programmable commas", function () {	
+QUnit.test("Monads as programmable commas", function () {	
 
-// 	// map :: (ObjectA -> ObjectB), Monad -> Monad[ObjectB]
-// 	const map = R.curry((f, container) => container.map(f));
-// 	// chain :: (ObjectA -> ObjectB), M -> ObjectB
-// 	const chain = R.curry((f, container) => container.chain(f));
+	// map :: (ObjectA -> ObjectB), Monad -> Monad[ObjectB]
+	const map = R.curry((f, container) => container.map(f));
+	// chain :: (ObjectA -> ObjectB), M -> ObjectB
+	const chain = R.curry((f, container) => container.chain(f));
 
-// 	const showStudent = R.compose(
-// 		R.tap(trace('Student added to HTML page'))
-// 		map(append('#student-info')),
-// 		R.tap(trace('Student info converted to CSV')),
-// 		map(csv),
-// 		map(R.props(['ssn', 'firstname', 'lastname'])),
-// 		R.tap(trace('Record fetched successfully!')),
-// 		chain(findStudent),
-// 		R.tap(trace('Input was valid')),
-// 		chain(checkLengthSsn),
-// 		lift(cleanInput));
+	const lift = R.curry((f, obj) => Maybe.fromNullable(f(obj)));
 
+	const trace = R.curry((msg, obj) => console.log(msg));
 
-// });
+	const showStudent = R.compose(
+		R.tap(trace('Student printed to the console')),
+		map(R.tap(console.log)),   //-> Using R.tap to simulate the side effect (in the book we write to the DOM)
+
+		R.tap(trace('Student info converted to CSV')),
+		map(csv),
+
+		map(R.props(['ssn', 'firstname', 'lastname'])),
+
+		R.tap(trace('Record fetched successfully!')),
+		chain(findStudent),
+
+		R.tap(trace('Input was valid')),
+		chain(checkLengthSsn),
+		lift(cleanInput)
+		);
+
+	let result = showStudent('444-44-4444').getOrElse('Student not found!');
+	assert.equal(result, '444-44-4444,Alonzo,Church');
+});
 
 
 
