@@ -58,6 +58,14 @@ exports.Left = class Left extends exports.Either {
 		return this;
 	}
 	
+	get isRight() {
+		return false;
+	}
+
+	get isLeft() {
+		return true;
+	}
+
 	toString() {
 		return `Either.Left(${this._value})`;
 	}
@@ -87,6 +95,14 @@ exports.Right = class Right extends exports.Either {
 	
 	filter(f) {		
 		return exports.Either.fromNullable(f(this._value) ? this._value : null);
+	}
+
+	get isRight() {
+		return true;
+	}
+
+	get isLeft() {
+		return false;
 	}
 	
 	toString() {

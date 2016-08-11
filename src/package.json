@@ -5,6 +5,7 @@
   "devDependencies": {
     "lodash": "4.14.2",
     "ramda": "0.22.0",
-    "qunit": "0.9.1"
+    "qunit": "0.9.1",
+    "sinon-qunit": "2.0.0"
   }  
 }
