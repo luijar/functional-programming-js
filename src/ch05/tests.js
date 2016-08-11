@@ -132,6 +132,76 @@ QUnit.test("Simple Either monad test", function () {
 	}, TypeError);
 });
 
+// Common code used in the next unit tests
+
+// Use helper DB created in chapter 1	
+const db = require('../ch01/helper').db;	
+
+// validLength :: Number, String -> Boolean
+const validLength = (len, str) => str.length === len;
+
+const find = R.curry((db, id) => db.find(id));
+
+// checkLengthSsn :: String -> Either(String)
+const checkLengthSsn = ssn => {		
+	return Either.of(ssn)
+		.filter(R.partial(validLength, [9]));
+};
+
+// safeFindObject :: Store, string -> Either(Object)
+const safeFindObject = R.curry((db, id) => Either.fromNullable(find(db, id)));
+
+// finStudent :: String -> Either(Student)
+const findStudent = safeFindObject(db);
+
+// csv :: Array => String
+const csv = arr => arr.join(',');
+
+const trim = (str) => str.replace(/^\s*|\s*$/g, '');
+const normalize = (str) => str.replace(/\-/g, '');
+const cleanInput = R.compose(normalize, trim);
+
+QUnit.test("Using Either in show Student", function () {	
+
+	const showStudent = (ssn) =>
+		Maybe.fromNullable(ssn)
+			.map(cleanInput)
+			.chain(checkLengthSsn)
+		 	.chain(findStudent)
+		    .map(R.props(['ssn', 'firstname', 'lastname']))
+		    .map (csv)
+			.map (R.tap(console.log));
+
+	let result = showStudent('444-44-4444').getOrElse('Student not found!')
+	assert.equal(result, '444-44-4444,Alonzo,Church');
+
+	result = showStudent('xxx-xx-xxxx').getOrElse('Student not found!');
+	assert.equal(result, 'Student not found!');
+});
+
+// QUnit.test("Monads as programmable commas", function () {	
+
+// 	// map :: (ObjectA -> ObjectB), Monad -> Monad[ObjectB]
+// 	const map = R.curry((f, container) => container.map(f));
+// 	// chain :: (ObjectA -> ObjectB), M -> ObjectB
+// 	const chain = R.curry((f, container) => container.chain(f));
+
+// 	const showStudent = R.compose(
+// 		R.tap(trace('Student added to HTML page'))
+// 		map(append('#student-info')),
+// 		R.tap(trace('Student info converted to CSV')),
+// 		map(csv),
+// 		map(R.props(['ssn', 'firstname', 'lastname'])),
+// 		R.tap(trace('Record fetched successfully!')),
+// 		chain(findStudent),
+// 		R.tap(trace('Input was valid')),
+// 		chain(checkLengthSsn),
+// 		lift(cleanInput));
+
+
+// });
+
+
 
 
 

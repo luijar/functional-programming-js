@@ -20,7 +20,7 @@ exports.Either = class Either {
 	}
 	
 	static fromNullable(val) {
-		return val !== null ? Either.right(val): Either.left(val);
+		return val !== null && val !== undefined ? Either.right(val) : Either.left(val);
 	}
 	
 	static of(a){
@@ -29,7 +29,8 @@ exports.Either = class Either {
 };
 
 exports.Left = class Left extends exports.Either {
-	map(_) {
+	
+	map(_) {		
 		return this; // noop
 	}
 	
@@ -48,6 +49,7 @@ exports.Left = class Left extends exports.Either {
 	chain(f) {
 		return this;
 	}
+
 	getOrElseThrow(a) {
 		throw new Error(a);
 	}
@@ -62,24 +64,31 @@ exports.Left = class Left extends exports.Either {
 };
 
 exports.Right = class Right extends exports.Either {
-	map(f) {
+	
+	map(f) {		
 		return exports.Either.of(f(this._value));
 	}
+	
 	getOrElse(other) {
 		return this._value;
 	}
+	
 	orElse() {
 		return this;
 	}
-	chain(f) {
+	
+	chain(f) {		
 		return f(this._value);
 	}
+	
 	getOrElseThrow(_) {
 		return this._value;
 	}
-	filter(f) {
+	
+	filter(f) {		
 		return exports.Either.fromNullable(f(this._value) ? this._value : null);
 	}
+	
 	toString() {
 		return `Either.Right(${this.value})`;
 	}
