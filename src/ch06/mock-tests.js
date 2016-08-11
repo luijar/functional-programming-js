@@ -4,7 +4,6 @@
 */
 "use strict";
 
-//require('sinon-qunit');
 const _ = require('lodash');
 const R = require('ramda');
 const sinon = require('sinon');

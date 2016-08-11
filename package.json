@@ -7,6 +7,7 @@
     "ramda": "0.22.0",
     "qunit": "0.9.1",
     "sinon": "1.17.5",
-    "sinon-qunit": "2.0.0"
+    "sinon-qunit": "2.0.0",
+    "jscheck": "0.2.0"
   }  
 }
