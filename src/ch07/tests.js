@@ -7,8 +7,15 @@
 
 QUnit.module('Chapter 7');
 
-QUnit.test("Under Construction", function () {
-	// In the process of being cleaned up and updated to ES6
-	expect(0);
+// Installs memoization
+require('./memoization');
+
+QUnit.test("Memoization test", function () {
+	let rot13 = (s =>
+		s.replace(/[a-zA-Z]/g, c =>
+			String.fromCharCode((c <= 'Z' ? 90 : 122)
+				>= (c = c.charCodeAt(0) + 13) ? c : c - 26))).memoize();
+	
+	assert.equal(rot13('functional_js_50_off'), 'shapgvbany_wf_50_bss');
 });
  
