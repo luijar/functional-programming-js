@@ -18,4 +18,8 @@ QUnit.test("Memoization test", function () {
 	
 	assert.equal(rot13('functional_js_50_off'), 'shapgvbany_wf_50_bss');
 });
- 
+
+/*
+   The remaining code listings are based on previous functions that are memoized.
+   Execution and results are exactly the same...
+*/
