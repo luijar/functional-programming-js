@@ -14,6 +14,14 @@ For Node.js users. This code requires:
 
 node --version > 6.3.1
 
+Please begin the project with 
+
+~~~
+npm install
+~~~
+
+To load all of the required functional libraries.
+
 In this repo you will find:
 
 * All code samples (as runnable unit tests) of code used in chapters
@@ -21,17 +29,23 @@ In this repo you will find:
 * Functional data types like Optional, Either, Maybe, etc
 * Access to some JavaScript functional libraries like lodash.js, streams.js, bacon.js, etc.
 
-##Libraries Requires (you can run "npm install" to obtain these)
+##Some of the libraries you will find in this book are  (you can run "npm install" to obtain these)
 
 ###QUnit
 npm install qunit
+
 ###Ramda
 npm install ramda
+
 ###Lodash
 npm install lodash
 
+###RxJS
+npm install rxjs
+
+
 ##Running the tests
-Once QUnit is installed. You can run each file with: 
+Once QUnit is installed. You can run each test file with: 
 
 ~~~
 $> node <path-to-qunit-cli.js> -t <chapter-num>/tests.js -c <chapter-num>/tests.js
