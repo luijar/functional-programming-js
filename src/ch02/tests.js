@@ -56,8 +56,7 @@ QUnit.test("Playing with Lenses", function () {
 	assert.deepEqual(R.view(zipLens, student), z);
 
 	let beverlyHills = zipCode('90210', '5678');
-	let newStudent = R.set(zipLens, beverlyHills, student);
-	console.log(R.view(zipLens, newStudent));
+	let newStudent = R.set(zipLens, beverlyHills, student);	
 	assert.deepEqual(R.view(zipLens, newStudent).code(), beverlyHills.code());
 	assert.deepEqual(R.view(zipLens, student), z);
 	assert.ok(newStudent !== student);
@@ -79,6 +78,36 @@ QUnit.test("Negation", function () {
 	assert.ok(!isNotNull(null)); //-> false
 	assert.ok(isNotNull({}));    //-> true
 });
+
+
+QUnit.test("Immutable setters", function () {
+	// thanks to feedback from ChernikovP	
+	class Address {
+	  constructor(street) {
+	    this.street = street;
+	  }
+	}
+
+	class Person {
+	  constructor(name, address) {
+	    this.name = name;
+	    this.address = address;
+
+	  }
+	}
+
+	const person = new Person('John Doe', new Address('100 Main Street'));
+
+	const streetLens = R.lens(R.path(['address', 'street']), R.assocPath(['address', 'street']));
+
+	const newPerson = R.set(streetLens, '200 Broadway Street', person);
+
+	assert.ok(person instanceof Person); // true
+	assert.ok(!(newPerson instanceof Person)); // false	
+	assert.ok(newPerson instanceof Object) // true
+});
+
+
 
 
 

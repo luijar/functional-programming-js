@@ -159,19 +159,18 @@ QUnit.test("Lazy function chains", function () {
 
 QUnit.test("SQL-like JavaScript", function () {
 
-	_.mixin({'select': _.pluck,  //<- fix this code
+	_.mixin({'select': _.map, 
 			 'from': _.chain,
-			 'where': _.filter,
-			 'groupBy': _.sortByOrder}); // <- check this one as well
+			 'where': _.filter
+			});			 
 
-	// let result = _.from(persons)
-	// 	.where(p => p.birthYear > 1900 && p.address.country !== 'US')
-	// 	.groupBy(['firstname', 'birthYear'])
-	// 	.select('firstname', 'birthYear')
-	// 	.value();		
+	let result = _.from(persons)
+		.where(p => p.birthYear > 1900 && p.address.country !== 'US')
+		.sortBy(['_firstname'])
+		.select(rec => rec.firstname)
+		.value();		
 
-	//assert.deepEqual(result, ['Alan', 'Barkley', 'John']);
-	expect(0);
+	assert.deepEqual(result, ['Barkley', 'John']);	
 });  
 
 QUnit.test("Recursive addition", function () {
