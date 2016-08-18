@@ -44,11 +44,11 @@ QUnit.test("Simple find with wrapper", function () {
 
 	const find = R.curry((db, id) => db.find(id));
 
-	const findStudent = R.curry(function(db, ssn) {
+	const findStudent = R.curry((db, ssn) => {
 		return wrap(find(db, ssn));
 	});
 	
-	const getAddress = function(student) {
+	const getAddress = (student) => {
 		return wrap(student.fmap(R.prop('firstname')));
 	};
 

@@ -36,6 +36,7 @@ QUnit.test("Check Type tests", function () {
 	const checkType = require('./helper').checkType;	
 	assert.equal(checkType(String)('Curry'), 'Curry');
 	assert.equal(checkType(Number)(3), 3);
+	assert.equal(checkType(Number)(3.5), 3.5);
 	let now = new Date();
 	assert.equal(checkType(Date)(now), now);
 	assert.deepEqual(checkType(Object)({}), {});	

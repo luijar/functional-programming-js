@@ -106,6 +106,6 @@ exports.Right = class Right extends exports.Either {
 	}
 	
 	toString() {
-		return `Either.Right(${this.value})`;
+		return `Either.Right(${this._value})`;
 	}
 };

@@ -85,7 +85,7 @@ QUnit.test("Listing 1.4 Decomposing the showStudent program", function () {
 
     const db = require('./helper').db;
     
-    const find = curry(function (db, id) {
+    const find = curry((db, id) => {
     	let obj = db.find(id);
     	if(obj === null) {
     		throw new Error('Object not found!');
@@ -95,7 +95,7 @@ QUnit.test("Listing 1.4 Decomposing the showStudent program", function () {
     
     const csv = student => `${student.ssn}, ${student.firstname}, ${student.lastname}`;
 
-    const append = curry(function (source, info) {
+    const append = curry( (source, info) => {
     	source(info);
     	return info;
     });
