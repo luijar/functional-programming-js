@@ -1,4 +1,4 @@
-exports.Wrapper = class Wrapper {
+class Wrapper {
 	constructor(value) {
 		this._value = value;
 	}
@@ -18,8 +18,9 @@ exports.Wrapper = class Wrapper {
 };
 
 // wrap :: A -> Wrapper(A)
-const wrap = (val) => new exports.Wrapper(val);
+const wrap = (val) => new Wrapper(val);
 
 module.exports = {
-	wrap: wrap
+	wrap: wrap,
+	Wrapper: Wrapper
 };
