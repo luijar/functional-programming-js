@@ -51,5 +51,4 @@ Once QUnit is installed. You can run each test file with:
 $> node <path-to-qunit-cli.js> -t <chapter-num>/tests.js -c <chapter-num>/tests.js
 ~~~
 
-You can find <path-to-qunit-cli.js> node_modules/qunit/bin/cli.js
-<chapter-num> will be any of ch01...ch08
+You can find "path-to-qunit-cli.js" in node_modules/qunit/bin/cli.js and "chapter-num" will be any of ch01...ch08

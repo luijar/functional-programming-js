@@ -36,7 +36,7 @@ exports.Just = class Just extends exports.Maybe {
 	}
 	
 	map(f) {
-		return exports.Maybe.of(f(this._value));
+		return exports.Maybe.fromNullable(f(this._value));
 	}
 
 	chain(f) {
