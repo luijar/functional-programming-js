@@ -14,7 +14,7 @@ exports.Node = class Node {
 	}
 
 	isRoot() {
-		return isValid(this._parent);
+		return !isValid(this._parent);
 	}
 	
 	get children() {
