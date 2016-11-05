@@ -19,5 +19,8 @@
     "presets": [
       "es2015-node5"
     ]
-  }
+  },
+  "scripts" : { 
+    "test" : ""
+  }  
 }
