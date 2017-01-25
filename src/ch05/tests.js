@@ -16,6 +16,7 @@ const wrap = require('../model/Wrapper.js').wrap;
 const empty = require('../model/Empty.js').empty;
 const Maybe = require('../model/monad/Maybe.js').Maybe;
 const Either = require('../model/monad/Either.js').Either;
+const IO = require('../model/monad/IO.js').IO;
 
 // Models used
 const Student = require('../model/Student.js').Student;
@@ -224,6 +225,44 @@ QUnit.test("Monads as programmable commas", function () {
 	assert.equal(result, '444-44-4444,Alonzo,Church');
 });
 
+
+QUnit.test("Complete showStudent program", function () {	
+
+	// map :: (ObjectA -> ObjectB), Monad -> Monad[ObjectB]
+	const map = R.curry((f, container) => container.map(f));
+	// chain :: (ObjectA -> ObjectB), M -> ObjectB
+	const chain = R.curry((f, container) => container.chain(f));
+
+	const lift = R.curry((f, obj) => Maybe.fromNullable(f(obj)));
+
+	const liftIO = function (val) {				
+   		return IO.of(val);
+	};
+
+	// For unit testing purposes, this could be replaced with R.tap	
+	const append = R.curry(function (elementId, info) {
+		console.log('Simulating effect. Appending: ' + info)   		
+   		return info;
+	});
+
+	const getOrElse = R.curry((message, container) => {		
+		return container.getOrElse(message);
+	});
+
+	const showStudent = R.compose(		
+		map(append('#some-element-id')), 
+		liftIO,
+		getOrElse('unable to find a student'),
+		map(csv),
+		map(R.props(['ssn', 'firstname', 'lastname'])),
+		chain(findStudent),
+		chain(checkLengthSsn),
+		lift(cleanInput)
+	);
+
+	let result = showStudent('444-44-4444').run();
+	assert.equal(result, '444-44-4444,Alonzo,Church');
+});
 
 
 
