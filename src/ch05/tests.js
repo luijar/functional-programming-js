@@ -156,14 +156,15 @@ const validLength = (len, str) => str.length === len;
 
 const find = R.curry((db, id) => db.find(id));
 
-// checkLengthSsn :: String -> Either(String)
-const checkLengthSsn = ssn => {		
-	return Either.of(ssn)
-		.filter(R.partial(validLength, [9]));
-};
-
 // safeFindObject :: Store, string -> Either(Object)
-const safeFindObject = R.curry((db, id) => Either.fromNullable(find(db, id)));
+const safeFindObject = R.curry((db, id) => {
+  const val = find(db, id);
+  return val? Either.right(val) : Either.left(`Object not found with ID: ${id}`);
+});
+
+// checkLengthSsn :: String -> Either(String)
+const checkLengthSsn = ssn => 
+validLength(9,ssn) ? Either.right(ssn): Either.left('invalid SSN'); 
 
 // finStudent :: String -> Either(Student)
 const findStudent = safeFindObject(db);
@@ -245,14 +246,12 @@ QUnit.test("Complete showStudent program", function () {
    		return info;
 	});
 
-	const getOrElse = R.curry((message, container) => {		
-		return container.getOrElse(message);
-	});
+	const getOrElse = R.curry((message, container) => container.getOrElse(message));
 
 	const showStudent = R.compose(		
-		map(append('#some-element-id')), 
+		map(append('#student-info')), 
 		liftIO,
-		getOrElse('unable to find a student'),
+		getOrElse('unable to find student'),
 		map(csv),
 		map(R.props(['ssn', 'firstname', 'lastname'])),
 		chain(findStudent),
@@ -262,6 +261,10 @@ QUnit.test("Complete showStudent program", function () {
 
 	let result = showStudent('444-44-4444').run();
 	assert.equal(result, '444-44-4444,Alonzo,Church');
+
+
+	let result2 = showStudent('xxx-xx-xxxx').run();
+	assert.equal(result2, 'unable to find student');
 });
 
 
