@@ -10,11 +10,11 @@ Since this code uses ES6 artifacts, any code meant to run on the browser must be
 * Babel
 * Traceur
 
-For Node.js users. This code requires: 
+For Node.js users. This code requires:
 
 node --version > 6.3.1
 
-Please begin the project with 
+Please begin the project with
 
 ~~~
 npm install
@@ -45,10 +45,10 @@ npm install rxjs
 
 
 ##Running the tests
-Once QUnit is installed. You can run each test file with: 
+Once QUnit is installed. You can run each test with the QUnit CLI by specifying the chapter number.
 
 ~~~
-$> node <path-to-qunit-cli.js> -t <chapter-num>/tests.js -c <chapter-num>/tests.js
+$> npm run ch[1-8]
 ~~~
 
 You can find "path-to-qunit-cli.js" in node_modules/qunit/bin/cli.js and "chapter-num" will be any of ch01...ch08

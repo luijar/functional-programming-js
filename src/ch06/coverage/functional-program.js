@@ -1,6 +1,4 @@
 // Functional Libraries used in this chapter
-const _ = require('lodash');
-const R = require('ramda');
 
 // Monads/functors used
 const Wrapper = require('../../model/Wrapper.js').Wrapper;

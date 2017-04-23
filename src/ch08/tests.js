@@ -75,7 +75,7 @@ QUnit.test("Fetching student data with async calls", function (assert) {
     getJSON('/students')
 		.then(R.tap(() => console.log('Hiding spinner')))  // <- simulate a spinner being hidden on the site
 		.then(R.filter(s => s.address.country === 'US'))		
-		.then(R.sortBy(R.prop('ssn')))		
+		.then(R.sortBy(R.prop('_ssn')))		
 		.then(R.map(student => {
 			return getJSON('/grades?ssn=' + student.ssn)
 				.then(R.compose(Math.ceil, fork(R.divide, R.sum, R.length)))												
@@ -89,7 +89,7 @@ QUnit.test("Fetching student data with async calls", function (assert) {
 		.catch(function (error) {
 			console.log('Error occurred: ' + error.message);
 		});	
-	expect(0); // when run this code prints to the screen all of the outut through the IO monad, so nothing to expect
+	expect(0); // when run this code prints to the screen all of the output through the IO monad, so nothing to expect
 });
 
 
