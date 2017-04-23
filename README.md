@@ -1,4 +1,4 @@
-#Functional JavaScript Programming
+# Functional JavaScript Programming
 ##### By Luis Atencio
 
 ##Update
@@ -29,26 +29,23 @@ In this repo you will find:
 * Functional data types like Optional, Either, Maybe, etc
 * Access to some JavaScript functional libraries like lodash.js, streams.js, bacon.js, etc.
 
-##Some of the libraries you will find in this book are  (you can run "npm install" to obtain these)
+## Some of the libraries you will find in this book are  (you can run "npm install" to obtain these)
 
-###QUnit
+### QUnit
 npm install qunit
 
-###Ramda
+### Ramda
 npm install ramda
 
-###Lodash
+### Lodash
 npm install lodash
 
-###RxJS
+### RxJS
 npm install rxjs
 
 
 ##Running the tests
 Once QUnit is installed. You can run each test with the QUnit CLI by specifying the chapter number.
-
 ~~~
 $> npm run ch[1-8]
 ~~~
-
-You can find "path-to-qunit-cli.js" in node_modules/qunit/bin/cli.js and "chapter-num" will be any of ch01...ch08
