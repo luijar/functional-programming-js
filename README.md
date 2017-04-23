@@ -1,10 +1,6 @@
 # Functional JavaScript Programming
 ##### By Luis Atencio
 
-##Update
-*Code has been changed and fixed for Errata purposes, GitHub issues, and ES6 updates.*
-*The old code now lives under the legacy.*
-
 Since this code uses ES6 artifacts, any code meant to run on the browser must be transpiled with either:
 
 * Babel
@@ -27,9 +23,7 @@ In this repo you will find:
 * All code samples (as runnable unit tests) of code used in chapters
 * JS targeted for browser
 * Functional data types like Optional, Either, Maybe, etc
-* Access to some JavaScript functional libraries like lodash.js, streams.js, bacon.js, etc.
-
-## Some of the libraries you will find in this book are  (you can run "npm install" to obtain these)
+* Access to some JavaScript functional libraries like lodash.js, rxjs, etc.
 
 ### QUnit
 npm install qunit
@@ -44,7 +38,7 @@ npm install lodash
 npm install rxjs
 
 
-##Running the tests
+## Running the tests
 Once QUnit is installed. You can run each test with the QUnit CLI by specifying the chapter number.
 ~~~
 $> npm run ch[1-8]
