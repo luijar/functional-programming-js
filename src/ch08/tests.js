@@ -65,6 +65,29 @@ QUnit.test("Generator 2", function (assert) {
     assert.equal(r.next().value, 2);
 });
 
+QUnit.test("Generator 3", function (assert) {
+  function range(start, end) {
+    return {
+      [Symbol.iterator]() {
+        return this;
+      },
+
+      next() {
+        if(start < end) {
+          return { value: start++, done:false };
+        }
+        return { done: true, value:end };
+      }
+    };
+  }
+
+  let res = [];
+  for(let num of range(0,5)) {
+    console.log(num);
+    res.push(num);
+  }
+  assert.deepEqual(res, [0,1,2,3,4]);
+});
 
 QUnit.test("Fetching student data with async calls", function (assert) {
 
@@ -89,34 +112,8 @@ QUnit.test("Fetching student data with async calls", function (assert) {
 		.catch(function (error) {
 			console.log('Error occurred: ' + error.message);
 		});	
-	expect(0); // when run this code prints to the screen all of the output through the IO monad, so nothing to expect
+	assert.expect(0); // when run this code prints to the screen all of the output through the IO monad, so nothing to expect
 });
-
-
-QUnit.test("Fetching student data with async calls", function (assert) {
-	function range(start, end) {
-		return {
-			[Symbol.iterator]() {
-				return this;
-			},
-			
-			next() {
-				if(start < end) {
-					return { value: start++, done:false };
-				}	
-			return { done: true, value:end };
-			}
-		};
-	}
-
-	let res = [];
-	for(let num of range(0,5)) {
-		console.log(num);
-		res.push(num);
-	}
-	assert.deepEqual(res, [0,1,2,3,4]);
-});
-
 
 QUnit.test("Rx test", function (assert) {
 
