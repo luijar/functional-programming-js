@@ -44,7 +44,7 @@ QUnit.test('showStudent: cleanInput', function (assert) {
 
 	const input = ['', '-44-44-', '44444', ' 4 ', ' 4-4 '];
 	const assertions = ['', '4444', '44444', '4', '44'];
-	expect(input.length);
+	assert.expect(input.length);
 	input.forEach(function (val, key) {
 		assert.equal(cleanInput(val), assertions[key]);
 	});

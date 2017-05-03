@@ -21,11 +21,8 @@ exports.IO = class IO {
     return new exports.IO(fn);
   }
   
-  map(fn) {    
-    var self = this;
-    return new exports.IO(function () {
-      return fn(self.effect());
-    });
+  map(fn) {
+    return new IO(() => fn(this.effect()));
   }
 
    chain(fn) {
