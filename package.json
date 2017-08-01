@@ -6,6 +6,7 @@
     "@reactivex/rxjs": "^5.0.0-beta.11",
     "babel-preset-es2015": "^6.13.2",
     "blanket": "1.2.3",
+    "jest": "~20.0.4",
     "jscheck": "0.2.0",
     "lodash": "4.14.2",
     "performance-now": "^2.0.0",
@@ -22,13 +23,8 @@
     ]
   },
   "scripts": {
-    "ch01": "qunit -t src/ch01/tests.js -c src/ch01/tests.js",
-    "ch02": "qunit -t src/ch02/tests.js -c src/ch02/tests.js",
-    "ch03": "qunit -t src/ch03/tests.js -c src/ch03/tests.js",
-    "ch04": "qunit -t src/ch04/tests.js -c src/ch04/tests.js",
-    "ch05": "qunit -t src/ch05/tests.js -c src/ch05/tests.js",
-    "ch06": "qunit -t src/ch06/tests.js -c src/ch06/tests.js",
-    "ch07": "qunit -t src/ch07/tests.js -c src/ch07/tests.js",
-    "ch08": "qunit -t src/ch08/tests.js -c src/ch08/tests.js"
+    "test": "jest",
+    "ch03": "jest --testNamePattern=ch03",
+    "cover": "jest --coverage --coverageDirectory=coverage"
   }
 }
