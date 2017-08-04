@@ -48,6 +48,12 @@ To run a chapter test:
 $ jest ch[01-08]
 ```
 
+To run tests in `watch` mode:
+
+```bash
+$ jest --watchAll
+```
+
 And for code coverage:
 
 ```bash
