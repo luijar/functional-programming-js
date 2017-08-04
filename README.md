@@ -42,14 +42,14 @@ To run all tests:
 $ npm test
 ```
 
-And for code coverage:
-
-```bash
-$ npm run cover
-```
-
 To run a chapter test:
 
 ```bash
 $ jest ch[01-08]
+```
+
+And for code coverage:
+
+```bash
+$ npm run cover
 ```
