@@ -23,8 +23,8 @@
     ]
   },
   "scripts": {
-    "test": "jest",
-    "ch03": "jest --testNamePattern=ch03",
+    "test": "jest --verbose",
+    "ch03": "jest --testPathPattern=jest",
     "cover": "jest --coverage --coverageDirectory=coverage"
   }
 }
