@@ -80,7 +80,7 @@ describe('Chapter 4', function () {
 	});
 
 
-	test("Compsition", function () {
+	test("Composition", function () {
 		const str = `We can only see a short distance ahead but we can see plenty there that needs to be done`;
 		const explode = (str) => str.split(/\s+/);
 		const count = (arr) => arr.length;
@@ -89,7 +89,7 @@ describe('Chapter 4', function () {
 	});
 
 
-	test("More compsition", function () {
+	test("More composition", function () {
 		const trim = (str) => str.replace(/^\s*|\s*$/g, '');
 		const normalize = (str) => str.replace(/\-/g, '');
 		const validLength = (param, str) => str.length === param;

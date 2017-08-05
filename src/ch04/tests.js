@@ -81,7 +81,7 @@ QUnit.test("Extending the core language", function () {
 });
 
 
-QUnit.test("Compsition", function () {
+QUnit.test("Composition", function () {
 	const str = `We can only see a short distance ahead but we can see plenty there that needs to be done`;
 	const explode = (str) => str.split(/\s+/);
 	const count = (arr) => arr.length;
@@ -90,7 +90,7 @@ QUnit.test("Compsition", function () {
 });
 
 
-QUnit.test("More compsition", function () {
+QUnit.test("More composition", function () {
 	const trim = (str) => str.replace(/^\s*|\s*$/g, '');
 	const normalize = (str) => str.replace(/\-/g, '');
 	const validLength = (param, str) => str.length === param;
