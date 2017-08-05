@@ -27,14 +27,14 @@ In this repo you will find:
 
 ## Running the tests
 
-### [QUnit](https://api.qunitjs.com/)
-Once QUnit is installed, you can run each test with the QUnit CLI by specifying the chapter number.
+### QUnit
+Once [QUnit](https://api.qunitjs.com/) is installed, you can run each test with the QUnit CLI by specifying the chapter number.
 
 ```bash
 $ npm run ch[01-08]
 ```
-### [Jest](https://facebook.github.io/jest/)
-Additionally, you may also run unit tests using the [jest](https://facebook.github.io/jest/) test runner.
+### Jest
+Additionally, you may also run unit tests using the [Jest](https://facebook.github.io/jest/) test runner.
 
 To run all tests:
 
