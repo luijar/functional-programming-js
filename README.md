@@ -35,6 +35,7 @@ $ npm run ch[01-08]
 ```
 ### Jest
 Additionally, you may also run unit tests using the [Jest](https://facebook.github.io/jest/) test runner.
+Disclaimer: This is not part of the book, but an extra feature courtesy of the JS community :-) 
 
 To run all tests:
 
