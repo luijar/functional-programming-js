@@ -18,9 +18,7 @@
     "sinon-qunit": "2.0.0"
   },
   "babel": {
-    "presets": [
-      "es2015-node5"
-    ]
+    "presets": ["es2015"]
   },
   "scripts": {
     "ch01": "qunit -t src/ch01/tests.js -c src/ch01/tests.js",
